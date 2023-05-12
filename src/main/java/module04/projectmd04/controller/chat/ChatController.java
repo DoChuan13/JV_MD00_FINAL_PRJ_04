@@ -1,5 +1,8 @@
 package module04.projectmd04.controller.chat;
 
+import module04.projectmd04.service.Services;
+import module04.projectmd04.service.user.IUserService;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +11,7 @@ import java.io.IOException;
 
 public final class ChatController extends HttpServlet {
     private static ChatController instance = null;
+    private static final IUserService userService = Services.getUserService();
 
     public ChatController() {
     }
@@ -19,6 +23,7 @@ public final class ChatController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("Do Get in chat");
     }
 
     @Override

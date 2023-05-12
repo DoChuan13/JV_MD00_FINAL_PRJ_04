@@ -1,5 +1,8 @@
 package module04.projectmd04.controller.user;
 
+import module04.projectmd04.service.Services;
+import module04.projectmd04.service.user.IUserService;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +11,7 @@ import java.io.IOException;
 
 public final class UserController extends HttpServlet {
     private static UserController instance = null;
+    private static final IUserService userService = Services.getUserService();
 
     public UserController() {
     }
@@ -20,6 +24,7 @@ public final class UserController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        System.out.println("Do Get in user");
     }
 
     @Override
