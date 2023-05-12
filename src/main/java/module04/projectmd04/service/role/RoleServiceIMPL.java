@@ -1,6 +1,7 @@
 package module04.projectmd04.service.role;
 
 import module04.projectmd04.config.Configs;
+import module04.projectmd04.config.detail.SQLQuery;
 import module04.projectmd04.model.role.Role;
 import module04.projectmd04.model.role.RoleName;
 
@@ -16,8 +17,7 @@ public class RoleServiceIMPL implements IRoleService {
     public Role findByRoleName(RoleName name) {
         Role role = null;
         try {
-            String SELECT_ROLE_NAME = "select * from role where name = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_NAME);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ROLE_NAME);
             preparedStatement.setString(1, String.valueOf(name));
             preparedStatement.executeUpdate();
 
