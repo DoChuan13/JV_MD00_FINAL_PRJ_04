@@ -12,7 +12,7 @@ public class PostController extends HttpServlet {
     public PostController() {
     }
 
-    public static PostController getInstance() {
+    public static synchronized PostController getInstance() {
         if (instance == null) instance = new PostController();
         return instance;
     }

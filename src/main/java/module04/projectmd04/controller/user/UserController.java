@@ -1,6 +1,7 @@
 package module04.projectmd04.controller.user;
 
 import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.config.detail.Validate;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
@@ -22,11 +23,11 @@ public class UserController extends HttpServlet {
     private static UserController instance = null;
     private static final IUserService userService = Services.getUserService();
     private static final IRoleService roleService = Services.getRoleService();
-    private final String VALIDATE = "validate";
-    private final String LOGIN_USER = "loginUser";
-    private String ALERT;
-    String PATH_FORM_REGISTER = "WEB-INF/register/register.jsp";
-    String PATH_FORM_LOGIN = "WEB-INF/login/login.jsp";
+    private static final String PATH_FORM_LOGIN = "WEB-INF/login/login.jsp";
+    private static final String PATH_FORM_REGISTER = "WEB-INF/register/register.jsp";
+    private static final String VALIDATE = "validate", LOGIN_USER = "loginUser", NAME = "name", USER_NAME = "userName",
+            EMAIL = "email", PASSWORD = "password";
+    private String alert;
 
     public UserController() {
     }
@@ -55,6 +56,7 @@ public class UserController extends HttpServlet {
             case "logout":
                 logoutUser(request, response);
             default:
+                System.out.println("Break here");
         }
     }
 
@@ -75,12 +77,12 @@ public class UserController extends HttpServlet {
                 actionLogin(request, response);
                 break;
             default:
-
+                System.out.println("Break here");
         }
     }
 
     private void showFormRegister(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(PATH_FORM_REGISTER);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PATH_FORM_REGISTER);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
@@ -89,7 +91,7 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormLogin(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(PATH_FORM_LOGIN);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(PATH_FORM_LOGIN);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
@@ -122,22 +124,50 @@ public class UserController extends HttpServlet {
         stringSet.add(userRole);
         Set<Role> roleSet = generateRoleSet(stringSet);
 
+        if (!Validate.validateName(name)) {
+            alert = "Name is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validateUserName(userName)) {
+            alert = "UserName is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validateEmail(email)) {
+            alert = "Email is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validatePassword(password)) {
+            alert = "Password is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
         if (userService.existedByUserName(userName)) {
-            ALERT = "UserName is existed!";
-            request.setAttribute(VALIDATE, ALERT);
+            alert = "UserName is existed!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormRegister(request, response);
             return;
         }
         if (userService.existByEmail(email)) {
-            ALERT = "Email is existed!";
-            request.setAttribute(VALIDATE, ALERT);
+            alert = "Email is existed!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormRegister(request, response);
             return;
         }
 
         if (!password.equals(rePassword)) {
-            ALERT = "Password not match!";
-            request.setAttribute(VALIDATE, ALERT);
+            alert = "Password not match!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormRegister(request, response);
             return;
         }
@@ -145,7 +175,7 @@ public class UserController extends HttpServlet {
         User user = new User(name, userName, email, password, roleSet);
         userService.save(user);
         try {
-            response.sendRedirect("/user?action=login");
+            response.sendRedirect(URL.PATH_USER_LOGIN);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -157,8 +187,8 @@ public class UserController extends HttpServlet {
 
         User user = userService.userLogin(userName, password);
         if (user == null) {
-            ALERT = "Login failed!!! Please try again";
-            request.setAttribute(VALIDATE, ALERT);
+            alert = "Login failed!!! Please try again";
+            setAttributeLoginRequest(request, alert, userName, password);
             showFormLogin(request, response);
             return;
         }
@@ -189,5 +219,20 @@ public class UserController extends HttpServlet {
             }
         });
         return roleSet;
+    }
+
+    private void setAttributeRegisterRequest(HttpServletRequest request, String alert, String name, String userName,
+                                             String email, String password) {
+        request.setAttribute(VALIDATE, alert);
+        request.setAttribute(NAME, name);
+        request.setAttribute(USER_NAME, userName);
+        request.setAttribute(EMAIL, email);
+        request.setAttribute(PASSWORD, password);
+    }
+
+    private void setAttributeLoginRequest(HttpServletRequest request, String alert, String userName, String password) {
+        request.setAttribute(VALIDATE, alert);
+        request.setAttribute(USER_NAME, userName);
+        request.setAttribute(PASSWORD, password);
     }
 }

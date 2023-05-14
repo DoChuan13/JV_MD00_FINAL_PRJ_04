@@ -12,7 +12,7 @@ public class FriendController extends HttpServlet {
     public FriendController() {
     }
 
-    public static FriendController getInstance() {
+    public static synchronized FriendController getInstance() {
         if (instance == null) instance = new FriendController();
         return instance;
     }

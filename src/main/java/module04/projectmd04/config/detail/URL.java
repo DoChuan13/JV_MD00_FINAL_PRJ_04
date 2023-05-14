@@ -6,4 +6,5 @@ public final class URL {
     public static final String PATH_FRIEND = "/friend";
     public static final String PATH_POST = "/post";
     public static final String PATH_USER = "/user";
+    public static final String PATH_USER_LOGIN = "/user?action=login";
 }
