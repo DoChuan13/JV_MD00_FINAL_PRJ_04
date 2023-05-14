@@ -1,8 +1,8 @@
 package module04.projectmd04.service.role;
 
 import module04.projectmd04.config.Configs;
-import module04.projectmd04.model.role.Role;
-import module04.projectmd04.model.role.RoleName;
+import module04.projectmd04.model.Role;
+import module04.projectmd04.model.RoleName;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

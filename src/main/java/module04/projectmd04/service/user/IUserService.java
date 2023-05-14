@@ -1,8 +1,8 @@
 package module04.projectmd04.service.user;
 
 
-import module04.projectmd04.model.role.Role;
-import module04.projectmd04.model.user.User;
+import module04.projectmd04.model.Role;
+import module04.projectmd04.model.User;
 import module04.projectmd04.service.generic.IGenericService;
 
 import java.util.Set;

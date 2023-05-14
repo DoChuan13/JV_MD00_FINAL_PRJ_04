@@ -1,8 +1,9 @@
 package module04.projectmd04.controller.user;
 
-import module04.projectmd04.model.role.Role;
-import module04.projectmd04.model.role.RoleName;
-import module04.projectmd04.model.user.User;
+import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.model.Role;
+import module04.projectmd04.model.RoleName;
+import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.role.IRoleService;
 import module04.projectmd04.service.user.IUserService;
@@ -17,15 +18,15 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class UserController extends HttpServlet {
+public class UserController extends HttpServlet {
     private static UserController instance = null;
     private static final IUserService userService = Services.getUserService();
     private static final IRoleService roleService = Services.getRoleService();
     private final String VALIDATE = "validate";
+    private final String LOGIN_USER = "loginUser";
     private String ALERT;
     String PATH_FORM_REGISTER = "WEB-INF/register/register.jsp";
     String PATH_FORM_LOGIN = "WEB-INF/login/login.jsp";
-    String PATH_HOME = "/";
 
     public UserController() {
     }
@@ -38,7 +39,11 @@ public final class UserController extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter("action");
-        System.out.println("Do Get in user");
+        System.out.printf("Do Get in User ==> %s%n", action);
+
+        if (action == null) {
+            action = "";
+        }
 
         switch (action) {
             case "register":
@@ -47,15 +52,20 @@ public final class UserController extends HttpServlet {
             case "login":
                 showFormLogin(request, response);
                 break;
+            case "logout":
+                logoutUser(request, response);
             default:
-
         }
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter("action");
-        System.out.println("Do Post in user");
+        System.out.printf("Do Post in User ==> %s%n", action);
+
+        if (action == null) {
+            action = "";
+        }
 
         switch (action) {
             case "register":
@@ -84,6 +94,19 @@ public final class UserController extends HttpServlet {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session.getAttribute(LOGIN_USER) != null) {
+            session.removeAttribute(LOGIN_USER);
+            session.invalidate();
+            try {
+                response.sendRedirect(URL.PATH_HOME);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -140,9 +163,9 @@ public final class UserController extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
-        session.setAttribute("loginUser", user);
+        session.setAttribute(LOGIN_USER, user);
         try {
-            response.sendRedirect(PATH_HOME);
+            response.sendRedirect(URL.PATH_HOME);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,6 +1,4 @@
-package module04.projectmd04.model.user;
-
-import module04.projectmd04.model.role.Role;
+package module04.projectmd04.model;
 
 import java.io.Serializable;
 import java.util.HashSet;

@@ -1,9 +1,9 @@
 package module04.projectmd04.service.user;
 
 import module04.projectmd04.config.Configs;
-import module04.projectmd04.model.role.Role;
-import module04.projectmd04.model.role.RoleName;
-import module04.projectmd04.model.user.User;
+import module04.projectmd04.model.Role;
+import module04.projectmd04.model.RoleName;
+import module04.projectmd04.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,10 +16,13 @@ public class UserServiceIMPL implements IUserService {
     String SELECT_USER_FROM_USER = "select userName from user;";
     String SELECT_EMAIL_FROM_USER = "select email from user;";
     String SELECT_USER_LIST = "select * from user;";
-    String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) values (?, ?, ?, ?, ?);";
+    String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " +
+            "values (?, ?, ?, ?, ?);";
     String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
-    String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
-    String SELECT_LOGIN_USER = "select * from user where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
+    String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
+            "join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
+    String SELECT_LOGIN_USER = "select * from user " +
+            "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
     String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
     String DELETE_USER_BY_ID = "delete from user where userId = ?;";
 
