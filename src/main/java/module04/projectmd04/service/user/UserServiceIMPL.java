@@ -1,7 +1,6 @@
 package module04.projectmd04.service.user;
 
 import module04.projectmd04.config.Configs;
-import module04.projectmd04.config.detail.SQLQuery;
 import module04.projectmd04.model.role.Role;
 import module04.projectmd04.model.role.RoleName;
 import module04.projectmd04.model.user.User;
@@ -14,15 +13,24 @@ import java.util.Set;
 
 public class UserServiceIMPL implements IUserService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
+    String SELECT_USER_FROM_USER = "select userName from user;";
+    String SELECT_EMAIL_FROM_USER = "select email from user;";
+    String SELECT_USER_LIST = "select * from user;";
+    String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) values (?, ?, ?, ?, ?);";
+    String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
+    String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
+    String SELECT_LOGIN_USER = "select * from user where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
+    String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
+    String DELETE_USER_BY_ID = "delete from user where userId = ?;";
 
     @Override
     public List<User> findAll() {
         List<User> userList = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_LIST);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_LIST);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int userId = resultSet.getInt("id");
+                int userId = resultSet.getInt("userId");
                 String name = resultSet.getString("name");
                 String userName = resultSet.getString("userName");
                 String email = resultSet.getString("email");
@@ -41,8 +49,7 @@ public class UserServiceIMPL implements IUserService {
     public void save(User user) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.INSERT_INTO_USER,
-                                                                              Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_USER, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getUserName());
             preparedStatement.setString(3, user.getEmail());
@@ -62,7 +69,7 @@ public class UserServiceIMPL implements IUserService {
                 roleIntList.add(role.getId());
             }
 
-            PreparedStatement preparedStatement1 = connection.prepareStatement(SQLQuery.INSERT_INTO_USER_ROLE);
+            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_USER_ROLE);
             for (Integer roleId : roleIntList) {
                 preparedStatement1.setInt(1, userId);
                 preparedStatement1.setInt(2, roleId);
@@ -76,25 +83,28 @@ public class UserServiceIMPL implements IUserService {
     }
 
     @Override
-    public User findById(int id) {
-        return null;
-    }
-
-    @Override
     public void delete(int id) {
-
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Set<Role> findRoleByUserId(int userId) {
         Set<Role> roleSet = new HashSet<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ROLE_BY_USER_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_BY_USER_ID);
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                RoleName name = RoleName.valueOf(resultSet.getString("name"));
+                int id = resultSet.getInt("roleId");
+                RoleName name = RoleName.valueOf(resultSet.getString("roleName"));
                 roleSet.add(new Role(id, name));
             }
         } catch (SQLException e) {
@@ -107,7 +117,7 @@ public class UserServiceIMPL implements IUserService {
     public boolean existedByUserName(String userName) {
         List<String> userNameList = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_FROM_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_FROM_USER);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 userNameList.add(resultSet.getString("userName"));
@@ -127,7 +137,7 @@ public class UserServiceIMPL implements IUserService {
     public boolean existByEmail(String email) {
         List<String> emailList = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_EMAIL_FROM_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_EMAIL_FROM_USER);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 emailList.add(resultSet.getString("email"));
@@ -145,11 +155,38 @@ public class UserServiceIMPL implements IUserService {
 
     @Override
     public User userLogin(String userName, String password) {
-        return null;
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOGIN_USER);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, password);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("userId");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String avatar = resultSet.getString("avatar");
+                Set<Role> roleSet = findRoleByUserId(userId);
+                user = new User(userId, name, userName, email, avatar, roleSet);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
     }
 
     @Override
     public void updateAvatar(String avatar, int id) {
-
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_AVATAR);
+            preparedStatement.setString(1, avatar);
+            preparedStatement.setInt(2, id);
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

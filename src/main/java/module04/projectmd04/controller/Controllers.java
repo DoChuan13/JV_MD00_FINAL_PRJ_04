@@ -21,11 +21,11 @@ public final class Controllers extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String extendPathURL = request.getServletPath();
-        if (extendPathURL.equalsIgnoreCase(PATH_USER)) {
+        if (extendPathURL.startsWith(PATH_USER)) {
             userController.doGet(request, response);
             return;
         }
-        if (extendPathURL.equalsIgnoreCase(PATH_CHAT)) {
+        if (extendPathURL.startsWith(PATH_CHAT)) {
             chatController.doGet(request, response);
         }
     }
@@ -36,11 +36,11 @@ public final class Controllers extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String extendPathURL = request.getServletPath();
-        if (extendPathURL.equalsIgnoreCase(PATH_USER)) {
+        if (extendPathURL.startsWith(PATH_USER)) {
             userController.doPost(request, response);
             return;
         }
-        if (extendPathURL.equalsIgnoreCase(PATH_CHAT)) {
+        if (extendPathURL.startsWith(PATH_CHAT)) {
             chatController.doPost(request, response);
         }
     }
