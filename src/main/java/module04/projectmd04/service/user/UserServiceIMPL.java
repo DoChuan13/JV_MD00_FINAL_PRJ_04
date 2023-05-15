@@ -1,6 +1,7 @@
 package module04.projectmd04.service.user;
 
 import module04.projectmd04.config.Configs;
+import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
@@ -202,7 +203,7 @@ public class UserServiceIMPL implements IUserService {
     @Override
     public User getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (User) session.getAttribute("user");
+        return (User) session.getAttribute(Constant.LOGIN_USER);
     }
 
     @Override

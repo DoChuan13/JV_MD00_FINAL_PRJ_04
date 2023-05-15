@@ -3,7 +3,6 @@ package module04.projectmd04.controller.post;
 import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
-import module04.projectmd04.controller.Controllers;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
@@ -12,23 +11,19 @@ import module04.projectmd04.service.user.IUserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@WebServlet("/post")
 public class PostController extends HttpServlet {
-    private static PostController instance = null;
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IPostService postService = Services.getInstance().getPostService();
     private String alert;
 
     public PostController() {
-    }
-
-    public static synchronized PostController getInstance() {
-        if (instance == null) instance = new PostController();
-        return instance;
     }
 
     @Override

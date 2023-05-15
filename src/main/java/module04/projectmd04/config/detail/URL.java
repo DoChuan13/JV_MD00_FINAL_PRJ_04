@@ -3,7 +3,7 @@ package module04.projectmd04.config.detail;
 public final class URL {
     public static final String PATH_HOME = "/";
     public static final String PATH_ADMIN = "/admin";
-    public static final String PATH_PM = "/pm";
+    public static final String PATH_PM = "/admin?role=pm";
     public static final String PATH_CHAT = "/chat";
     public static final String PATH_CHAT_CREATE = "/chat?action=create";
     public static final String PATH_FRIEND = "/friend";

@@ -24,7 +24,28 @@
 </c:if>
 <c:if test='${sessionScope["loginUser"]!=null}'>
     <%
-        response.sendRedirect("/");
+        User user = (User) request.getSession().getAttribute("loginUser");
+        boolean adminRole = false, pmRole = false;
+        List<Role> roleList = new ArrayList<>(user.getRoleSet());
+        for (Role role : roleList) {
+            if (role.getName() == RoleName.ADMIN) {
+                adminRole = true;
+                continue;
+            }
+            if (role.getName() == RoleName.PM) {
+                pmRole = true;
+                continue;
+            }
+        }
+        if (adminRole) {
+            response.sendRedirect("/admin");
+            return;
+        }
+        if (pmRole) {
+            response.sendRedirect("/admin?role=pm");
+            return;
+        }
+        response.sendRedirect("/post");
     %>
 </c:if>
 </body>

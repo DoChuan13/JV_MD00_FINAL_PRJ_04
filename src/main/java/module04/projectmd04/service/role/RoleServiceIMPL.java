@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class RoleServiceIMPL implements IRoleService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
-    String SELECT_ROLE_NAME = "select * from role where name = ?;";
+    String SELECT_ROLE_NAME = "select * from role where roleName = ?;";
 
     @Override
     public Role findByRoleName(RoleName roleName) {
@@ -19,7 +19,6 @@ public class RoleServiceIMPL implements IRoleService {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ROLE_NAME);
             preparedStatement.setString(1, String.valueOf(roleName));
-            preparedStatement.executeUpdate();
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {

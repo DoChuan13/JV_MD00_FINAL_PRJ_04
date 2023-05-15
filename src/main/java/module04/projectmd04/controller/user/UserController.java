@@ -13,6 +13,7 @@ import module04.projectmd04.service.user.IUserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,18 +24,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@WebServlet("/user")
 public class UserController extends HttpServlet {
-    private static UserController instance = null;
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IRoleService roleService = Services.getInstance().getRoleService();
     private String alert;
 
     public UserController() {
-    }
-
-    public static synchronized UserController getInstance() {
-        if (instance == null) instance = new UserController();
-        return instance;
     }
 
     @Override
@@ -212,15 +208,18 @@ public class UserController extends HttpServlet {
         session.setAttribute(Constant.LOGIN_USER, user);
         RoleName role = userService.redirectAction(user, response);
         try {
-            if (role == RoleName.ADMIN) {
-                response.sendRedirect(URL.PATH_ADMIN);
-                return;
+            switch (role) {
+                case ADMIN:
+                    response.sendRedirect(URL.PATH_ADMIN);
+                    break;
+                case PM:
+                    response.sendRedirect(URL.PATH_PM);
+                    break;
+                case USER:
+                    response.sendRedirect(URL.PATH_POST);
+                    break;
             }
-            if (role == RoleName.PM) {
-                response.sendRedirect(URL.PATH_PM);
-                return;
-            }
-            response.sendRedirect(URL.PATH_HOME);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
