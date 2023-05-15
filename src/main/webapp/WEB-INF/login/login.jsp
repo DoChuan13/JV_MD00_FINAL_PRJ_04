@@ -20,7 +20,7 @@
                 <div class="card" style="border-radius: 1rem;">
                     <div class="row g-0">
                         <div class="col-md-6 col-lg-5 d-none d-md-block">
-                            <img src="https://banner2.cleanpng.com/20190401/hks/kisspng-computer-icons-facebook-logo-portable-network-grap-fb-jeepinjectors-com-5ca1b63af04349.5065179515541018189841.jpg"
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScGlw1Eu6UJgO82m46RE8CMJbOd597wxZEQw&usqp=CAU"
                                  alt="login form" class="img-fluid"
                                  style="border-radius: 1rem 0 0 1rem; height:100% ;"/>
                         </div>
