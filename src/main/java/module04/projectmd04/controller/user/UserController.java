@@ -1,5 +1,7 @@
 package module04.projectmd04.controller.user;
 
+import module04.projectmd04.config.detail.Constant;
+import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.config.detail.Validate;
 import module04.projectmd04.model.Role;
@@ -16,17 +18,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class UserController extends HttpServlet {
     private static UserController instance = null;
-    private static final IUserService userService = Services.getUserService();
-    private static final IRoleService roleService = Services.getRoleService();
-    private static final String PATH_FORM_LOGIN = "WEB-INF/login/login.jsp";
-    private static final String PATH_FORM_REGISTER = "WEB-INF/register/register.jsp";
-    private static final String VALIDATE = "validate", LOGIN_USER = "loginUser", NAME = "name", USER_NAME = "userName",
-            EMAIL = "email", PASSWORD = "password";
+    private static final IUserService userService = Services.getInstance().getUserService();
+    private static final IRoleService roleService = Services.getInstance().getRoleService();
     private String alert;
 
     public UserController() {
@@ -39,7 +39,7 @@ public class UserController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        String action = request.getParameter("action");
+        String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Get in User ==> %s%n", action);
 
         if (action == null) {
@@ -56,13 +56,13 @@ public class UserController extends HttpServlet {
             case "logout":
                 logoutUser(request, response);
             default:
-                System.out.println("Break here");
+                showUserInfo(request, response);
         }
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-        String action = request.getParameter("action");
+        String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Post in User ==> %s%n", action);
 
         if (action == null) {
@@ -76,13 +76,11 @@ public class UserController extends HttpServlet {
             case "login":
                 actionLogin(request, response);
                 break;
-            default:
-                System.out.println("Break here");
         }
     }
 
     private void showFormRegister(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PATH_FORM_REGISTER);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_FORM_REGISTER);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
@@ -91,7 +89,7 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormLogin(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = request.getRequestDispatcher(PATH_FORM_LOGIN);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_FORM_LOGIN);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
@@ -101,8 +99,8 @@ public class UserController extends HttpServlet {
 
     private void logoutUser(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
-        if (session.getAttribute(LOGIN_USER) != null) {
-            session.removeAttribute(LOGIN_USER);
+        if (session.getAttribute(Constant.LOGIN_USER) != null) {
+            session.removeAttribute(Constant.LOGIN_USER);
             session.invalidate();
             try {
                 response.sendRedirect(URL.PATH_HOME);
@@ -112,12 +110,30 @@ public class UserController extends HttpServlet {
         }
     }
 
+    private void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
+        if (userService.getCurrentUser(request) == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_INFO);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     private void actionRegister(HttpServletRequest request, HttpServletResponse response) {
-        String name = request.getParameter("name");
-        String userName = request.getParameter("userName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String rePassword = request.getParameter("rePassword");
+        String name = request.getParameter(Constant.NAME);
+        String userName = request.getParameter(Constant.USER_NAME);
+        String email = request.getParameter(Constant.EMAIL);
+        String password = request.getParameter(Constant.PASSWORD);
+        String rePassword = request.getParameter(Constant.RE_PASSWORD);
         String userRole = String.valueOf(RoleName.USER);
 
         Set<String> stringSet = new HashSet<>();
@@ -182,8 +198,8 @@ public class UserController extends HttpServlet {
     }
 
     private void actionLogin(HttpServletRequest request, HttpServletResponse response) {
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
+        String userName = request.getParameter(Constant.USER_NAME);
+        String password = request.getParameter(Constant.PASSWORD);
 
         User user = userService.userLogin(userName, password);
         if (user == null) {
@@ -193,8 +209,17 @@ public class UserController extends HttpServlet {
             return;
         }
         HttpSession session = request.getSession();
-        session.setAttribute(LOGIN_USER, user);
+        session.setAttribute(Constant.LOGIN_USER, user);
+        RoleName role = userService.redirectAction(user, response);
         try {
+            if (role == RoleName.ADMIN) {
+                response.sendRedirect(URL.PATH_ADMIN);
+                return;
+            }
+            if (role == RoleName.PM) {
+                response.sendRedirect(URL.PATH_PM);
+                return;
+            }
             response.sendRedirect(URL.PATH_HOME);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -223,16 +248,16 @@ public class UserController extends HttpServlet {
 
     private void setAttributeRegisterRequest(HttpServletRequest request, String alert, String name, String userName,
                                              String email, String password) {
-        request.setAttribute(VALIDATE, alert);
-        request.setAttribute(NAME, name);
-        request.setAttribute(USER_NAME, userName);
-        request.setAttribute(EMAIL, email);
-        request.setAttribute(PASSWORD, password);
+        request.setAttribute(Constant.VALIDATE, alert);
+        request.setAttribute(Constant.NAME, name);
+        request.setAttribute(Constant.USER_NAME, userName);
+        request.setAttribute(Constant.EMAIL, email);
+        request.setAttribute(Constant.PASSWORD, password);
     }
 
     private void setAttributeLoginRequest(HttpServletRequest request, String alert, String userName, String password) {
-        request.setAttribute(VALIDATE, alert);
-        request.setAttribute(USER_NAME, userName);
-        request.setAttribute(PASSWORD, password);
+        request.setAttribute(Constant.VALIDATE, alert);
+        request.setAttribute(Constant.USER_NAME, userName);
+        request.setAttribute(Constant.PASSWORD, password);
     }
 }

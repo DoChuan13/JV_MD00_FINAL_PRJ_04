@@ -25,6 +25,7 @@ public class FriendController extends HttpServlet {
         if (action == null) {
             action = "";
         }
+
     }
 
     @Override

@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ChatController extends HttpServlet {
     private static ChatController instance = null;
-    private static final IUserService userService = Services.getUserService();
+    private static final IUserService userService = Services.getInstance().getUserService();
 
     public ChatController() {
     }

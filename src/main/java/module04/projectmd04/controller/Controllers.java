@@ -5,6 +5,9 @@ import module04.projectmd04.controller.chat.ChatController;
 import module04.projectmd04.controller.friend.FriendController;
 import module04.projectmd04.controller.post.PostController;
 import module04.projectmd04.controller.user.UserController;
+import module04.projectmd04.model.RoleName;
+import module04.projectmd04.model.User;
+import module04.projectmd04.service.Services;
 
 import java.io.*;
 import javax.servlet.ServletException;
@@ -19,11 +22,12 @@ public final class Controllers extends HttpServlet {
     private static final UserController userController = UserController.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String extendPathURL = request.getServletPath();
-
+        System.out.println("Do Get in Main");
         if (extendPathURL.startsWith(URL.PATH_CHAT)) {
             chatController.doGet(request, response);
             return;
@@ -39,14 +43,16 @@ public final class Controllers extends HttpServlet {
             userController.doGet(request, response);
             return;
         }
-        response.sendRedirect(URL.PATH_HOME);
+        redirectRolePage(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String extendPathURL = request.getServletPath();
+        System.out.println("Do Post in Main");
         if (extendPathURL.startsWith(URL.PATH_CHAT)) {
             chatController.doPost(request, response);
             return;
@@ -63,6 +69,24 @@ public final class Controllers extends HttpServlet {
             userController.doPost(request, response);
             return;
         }
-        response.sendRedirect(URL.PATH_HOME);
+        redirectRolePage(request, response);
+    }
+
+    private void redirectRolePage(HttpServletRequest request, HttpServletResponse response) {
+        User user = (User) request.getSession().getAttribute("loginUser");
+        RoleName role = Services.getInstance().getUserService().redirectAction(user, response);
+        try {
+            if (role == RoleName.ADMIN) {
+                response.sendRedirect(URL.PATH_ADMIN);
+                return;
+            }
+            if (role == RoleName.PM) {
+                response.sendRedirect(URL.PATH_PM);
+                return;
+            }
+            response.sendRedirect(URL.PATH_HOME);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

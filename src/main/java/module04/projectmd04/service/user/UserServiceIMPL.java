@@ -1,10 +1,15 @@
 package module04.projectmd04.service.user;
 
 import module04.projectmd04.config.Configs;
+import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,12 +22,12 @@ public class UserServiceIMPL implements IUserService {
     String SELECT_EMAIL_FROM_USER = "select email from user;";
     String SELECT_USER_LIST = "select * from user;";
     String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " +
-            "values (?, ?, ?, ?, ?);";
+                              "values (?, ?, ?, ?, ?);";
     String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
     String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
-            "join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
+                                    "join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
     String SELECT_LOGIN_USER = "select * from user " +
-            "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
+                               "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
     String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
     String DELETE_USER_BY_ID = "delete from user where userId = ?;";
 
@@ -52,7 +57,8 @@ public class UserServiceIMPL implements IUserService {
     public void save(User user) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_USER, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_USER,
+                                                                              Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getUserName());
             preparedStatement.setString(3, user.getEmail());
@@ -191,5 +197,33 @@ public class UserServiceIMPL implements IUserService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public User getCurrentUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        return (User) session.getAttribute("user");
+    }
+
+    @Override
+    public RoleName redirectAction(User user, HttpServletResponse response) {
+        List<Role> roleList = new ArrayList<>(user.getRoleSet());
+        boolean adminRole = false, pmRole = false;
+        for (Role role : roleList) {
+            if (role.getName() == RoleName.ADMIN) {
+                adminRole = true;
+                continue;
+            }
+            if (role.getName() == RoleName.PM) {
+                pmRole = true;
+            }
+        }
+        if (adminRole) {
+            return RoleName.ADMIN;
+        }
+        if (pmRole) {
+            return RoleName.PM;
+        }
+        return RoleName.USER;
     }
 }
