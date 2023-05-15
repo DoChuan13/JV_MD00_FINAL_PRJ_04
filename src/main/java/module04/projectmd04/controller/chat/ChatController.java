@@ -1,6 +1,7 @@
 package module04.projectmd04.controller.chat;
 
 import module04.projectmd04.service.Services;
+import module04.projectmd04.service.chat.IChatService;
 import module04.projectmd04.service.user.IUserService;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import java.io.IOException;
 @WebServlet("/chat")
 public class ChatController extends HttpServlet {
     private static final IUserService userService = Services.getInstance().getUserService();
+    private static final IChatService chatService = Services.getInstance().getChatService();
 
     public ChatController() {
     }
