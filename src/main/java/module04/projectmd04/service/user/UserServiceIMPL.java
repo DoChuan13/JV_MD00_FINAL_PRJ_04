@@ -22,8 +22,7 @@ public class UserServiceIMPL implements IUserService {
     String SELECT_USER_FROM_USER = "select userName from user;";
     String SELECT_EMAIL_FROM_USER = "select email from user;";
     String SELECT_USER_LIST = "select * from user;";
-    String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " +
-                              "values (?, ?, ?, ?, ?);";
+    String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " + "values (?, ?, ?, ?, ?);";
     String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
     String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
                                     "join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
