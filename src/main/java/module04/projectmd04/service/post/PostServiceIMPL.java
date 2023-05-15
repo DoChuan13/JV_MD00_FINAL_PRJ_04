@@ -8,13 +8,14 @@ import java.sql.*;
 
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
-    private static final String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
-    private static final String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
-    private static final String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
-    private static final String DELETE_FROM_LIKE_POST = "delete from likePost where postId = ?;";
-    private static final String DELETE_FROM_COMMENT_POST = "delete from commentPost where postId = ?;";
-    private static final String DELETE_FROM_POST = "delete from post where postId = ?;";
-
+    String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
+    String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
+    String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
+    String DELETE_FROM_LIKE_POST = "delete from likePost where postId = ?;";
+    String DELETE_FROM_COMMENT_POST = "delete from commentPost where postId = ?;";
+    String DELETE_FROM_POST = "delete from post where postId = ?;";
+    String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
+    String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
 
     @Override
     public void showAllPostList(User currentUser) {
@@ -77,6 +78,12 @@ public class PostServiceIMPL implements IPostService {
             PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_POST);
             preparedStatement2.setInt(1, postId);
             preparedStatement2.executeUpdate();
+
+            PreparedStatement preparedStatement3 = connection.prepareStatement(DELETE_FROM_LIKE);
+            preparedStatement3.executeUpdate();
+
+            PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_FROM_COMMENT);
+            preparedStatement4.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);

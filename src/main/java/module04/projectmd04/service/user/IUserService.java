@@ -24,4 +24,10 @@ public interface IUserService extends IGenericService<User> {
     User getCurrentUser(HttpServletRequest request);
 
     RoleName redirectAction(User user, HttpServletResponse response);
+
+    User findUserById(int id);
+
+    void blockUnblockAccount(User user);
+
+    void changeAccountRole(User user);
 }

@@ -1,5 +1,10 @@
-
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="module04.projectmd04.model.Role" %>
+<%@ page import="module04.projectmd04.model.User" %>
+<%@ page import="java.io.PrintWriter" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Title</title>
@@ -10,6 +15,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             color: #566787;
@@ -223,96 +229,71 @@
                     <div class="col-sm-5">
                         <h2>User <b>Management</b></h2>
                     </div>
-                    <div class="col-sm-7">
-                        <a href="#" class="btn btn-secondary"><i class="material-icons">&#xE147;</i> <span>Add New
-                                    User</span></a>
-                        <a href="#" class="btn btn-secondary"><i class="material-icons">&#xE24D;</i> <span>Export to
-                                    Excel</span></a>
-                    </div>
                 </div>
+            </div>
+            <div>
+                <c:if test='${requestScope["validate"]!=null}'>
+                    <p style="color: red">${requestScope["validate"]}</p>
+                </c:if>
+                <c:if test='${requestScope["validate"]==null}'>
+                    <br/>
+                </c:if>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>STT</th>
+                    <th>UserId</th>
                     <th>Name</th>
-                    <th>Date Created</th>
+                    <th>Email</th>
                     <th>Role</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th style="min-width: 150px;">Status</th>
+                    <th style="min-width: 150px;">Action</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td><a href="#"><img src="/examples/images/avatar/1.jpg" class="avatar" alt="Avatar">
-                        Michael Holz</a></td>
-                    <td>04/10/2013</td>
-                    <td>Admin</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                                class="material-icons">&#xE8B8;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                                class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td><a href="#"><img src="/examples/images/avatar/2.jpg" class="avatar" alt="Avatar"> Paula
-                        Wilson</a></td>
-                    <td>05/08/2014</td>
-                    <td>Publisher</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                                class="material-icons">&#xE8B8;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                                class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td><a href="#"><img src="/examples/images/avatar/3.jpg" class="avatar" alt="Avatar">
-                        Antonio Moreno</a></td>
-                    <td>11/05/2015</td>
-                    <td>Publisher</td>
-                    <td><span class="status text-danger">&bull;</span> Suspended</td>
-                    <td>
-                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                                class="material-icons">&#xE8B8;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                                class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td><a href="#"><img src="/examples/images/avatar/4.jpg" class="avatar" alt="Avatar"> Mary
-                        Saveley</a></td>
-                    <td>06/09/2016</td>
-                    <td>Reviewer</td>
-                    <td><span class="status text-success">&bull;</span> Active</td>
-                    <td>
-                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                                class="material-icons">&#xE8B8;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                                class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td><a href="#"><img src="/examples/images/avatar/5.jpg" class="avatar" alt="Avatar"> Martin
-                        Sommer</a></td>
-                    <td>12/08/2017</td>
-                    <td>Moderator</td>
-                    <td><span class="status text-warning">&bull;</span> Inactive</td>
-                    <td>
-                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i
-                                class="material-icons">&#xE8B8;</i></a>
-                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i
-                                class="material-icons">&#xE5C9;</i></a>
-                    </td>
-                </tr>
+                <c:if test='${requestScope["userList"]!=null}'>
+                    <c:forEach items='${requestScope["userList"]}' var="user">
+                        <tr>
+                            <td>${user.getUserId()}</td>
+                            <td><a href="#"><img src="${user.getAvatar()}" class="avatar" alt="Avatar"
+                                                 style="width: 20px">
+                                    ${user.getName()}</a></td>
+                            <td>${user.getEmail()}</td>
+                            <td>
+                                    <%--${user.getRoleSet()}--%>
+                                <c:forEach items="${user.getRoleSet()}" var="role">
+                                    ${role.getName()}
+                                </c:forEach>
+                            </td>
+                            <td>
+                                <c:if test="${user.isStatus()==false}">
+                                    <span class="status text-success">&bull;</span> Active
+                                </c:if>
+                                <c:if test="${user.isStatus()==true}">
+                                    <span class="status text-warning">&bull;</span> Blocked
+                                </c:if>
+                            </td>
+                            </td>
+                            <td>
+                                <a href="/admin?action=changeRole&id=${user.getUserId()}" class="settings"
+                                   title="Change Role" data-toggle="tooltip">
+                                    <i class="material-icons">&#xE8B8;</i></a>
+                                <c:if test="${user.isStatus()==false}">
+                                    <a href="/admin?action=blockUser&id=${user.getUserId()}" class="band"
+                                       title="Block" data-toggle="tooltip"><i class="material-icons">&#xe1b6;</i></a>
+                                </c:if>
+                                <c:if test="${user.isStatus()==true}">
+                                    <a href="/admin?action=unblockUser&id=${user.getUserId()}" class="band"
+                                       title="Unblock" data-toggle="tooltip"><i class="material-icons">&#xe1b7;</i></a>
+                                </c:if>
+
+                                <a href="/admin?action=delete&id=${user.getUserId()}" class="delete" title="Delete"
+                                   data-toggle="tooltip">
+                                    <i class="material-icons">&#xE5C9;</i></a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
                 </tbody>
             </table>
             <div class="clearfix">

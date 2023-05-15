@@ -6,6 +6,7 @@ import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
+import org.omg.CORBA.PERSIST_STORE;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,11 +26,26 @@ public class UserServiceIMPL implements IUserService {
     String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " + "values (?, ?, ?, ?, ?);";
     String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
     String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
-                                    "join userRole ur on r.roleId = ur.roleId where r.roleId = ?;";
+                                    "join userRole ur on r.roleId = ur.roleId where ur.userId = ?;";
     String SELECT_LOGIN_USER = "select * from user " +
                                "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
     String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
+    String SELECT_USER_BY_ID = "select * from user where userId = ?;";
+    String UN_BLOCK_USER = "update user set status = ? where userId = ?;";
+    String UPDATE_USER_ROLE = "update userRole set roleId = ? where userId = ?;";
+    String DELETE_USER_POST = "delete from userPost where userId = ?;";
+    String DELETE_USER_CHAT = "delete from userChat where sentUserId =? or receivedUserId = ?;";
+    String DELETE_USER_FRIEND = "delete from userFriend where sentUserId = ? or receivedUserId = ?;";
+    String DELETE_USER_ROLE = "delete from userRole where userId = ?;";
+    String DELETE_COMMENT_POST = "delete from commentPost where userId = ?;";
+    String DELETE_LIKE_POST = "delete from likePost where userId = ?;";
     String DELETE_USER_BY_ID = "delete from user where userId = ?;";
+
+    String DELETE_POST = "delete from post where postId not in (select userPost.postId from userPost);";
+    String DELETE_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
+    String DELETE_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
+    String DELETE_CHAT = "delete from chat where chatId not in (select userChat.chatId from userChat);";
+    String DELETE_FRIEND = "delete from friend where friendId not in (select userFriend.friendId from userFriend);";
 
     @Override
     public List<User> findAll() {
@@ -43,8 +59,9 @@ public class UserServiceIMPL implements IUserService {
                 String userName = resultSet.getString("userName");
                 String email = resultSet.getString("email");
                 String avatar = resultSet.getString("avatar");
+                boolean status = resultSet.getBoolean("status");
                 Set<Role> roleSet = findRoleByUserId(userId);
-                userList.add(new User(userId, name, userName, email, avatar, roleSet));
+                userList.add(new User(userId, name, userName, email, avatar, roleSet, status));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -95,9 +112,51 @@ public class UserServiceIMPL implements IUserService {
     public void delete(int id) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_POST);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_USER_CHAT);
+            preparedStatement1.setInt(1, id);
+            preparedStatement1.setInt(2, id);
+            preparedStatement1.executeUpdate();
+
+            PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_USER_FRIEND);
+            preparedStatement2.setInt(1, id);
+            preparedStatement2.setInt(2, id);
+            preparedStatement2.executeUpdate();
+
+            PreparedStatement preparedStatement3 = connection.prepareStatement(DELETE_USER_ROLE);
+            preparedStatement3.setInt(1, id);
+            preparedStatement3.executeUpdate();
+
+            PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_COMMENT_POST);
+            preparedStatement4.setInt(1, id);
+            preparedStatement4.executeUpdate();
+
+            PreparedStatement preparedStatement5 = connection.prepareStatement(DELETE_LIKE_POST);
+            preparedStatement5.setInt(1, id);
+            preparedStatement5.executeUpdate();
+
+            PreparedStatement preparedStatement6 = connection.prepareStatement(DELETE_USER_BY_ID);
+            preparedStatement6.setInt(1, id);
+            preparedStatement6.executeUpdate();
+
+            //
+            PreparedStatement preparedStatement7 = connection.prepareStatement(DELETE_POST);
+            preparedStatement7.executeUpdate();
+
+            PreparedStatement preparedStatement8 = connection.prepareStatement(DELETE_LIKE);
+            preparedStatement7.executeUpdate();
+
+            PreparedStatement preparedStatement9 = connection.prepareStatement(DELETE_COMMENT);
+            preparedStatement9.executeUpdate();
+
+            PreparedStatement preparedStatement10 = connection.prepareStatement(DELETE_CHAT);
+            preparedStatement10.executeUpdate();
+
+            PreparedStatement preparedStatement11 = connection.prepareStatement(DELETE_FRIEND);
+            preparedStatement11.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -176,6 +235,10 @@ public class UserServiceIMPL implements IUserService {
                 String name = resultSet.getString("name");
                 String email = resultSet.getString("email");
                 String avatar = resultSet.getString("avatar");
+                boolean status = resultSet.getBoolean("status");
+                if (status) {
+                    return null;
+                }
                 Set<Role> roleSet = findRoleByUserId(userId);
                 user = new User(userId, name, userName, email, avatar, roleSet);
             }
@@ -228,5 +291,59 @@ public class UserServiceIMPL implements IUserService {
             return RoleName.PM;
         }
         return RoleName.USER;
+    }
+
+    @Override
+    public User findUserById(int id) {
+        User user = null;
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_ID);
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("userId");
+                String name = resultSet.getString("name");
+                String userName = resultSet.getString("userName");
+                String email = resultSet.getString("email");
+                String avatar = resultSet.getString("avatar");
+                boolean status = resultSet.getBoolean("status");
+                Set<Role> roleSet = findRoleByUserId(userId);
+                user = new User(userId, name, userName, email, avatar, roleSet, status);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    @Override
+    public void blockUnblockAccount(User user) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UN_BLOCK_USER);
+            preparedStatement.setBoolean(1, (!user.isStatus()));
+            preparedStatement.setInt(2, user.getUserId());
+
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void changeAccountRole(User user) {
+        Role role = new ArrayList<>(user.getRoleSet()).get(0);
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_ROLE);
+            preparedStatement.setInt(1, (role.getId() == 3 ? 2 : 3));
+            preparedStatement.setInt(2, user.getUserId());
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
