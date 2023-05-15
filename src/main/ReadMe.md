@@ -1,0 +1,1 @@
+#Database resource: jdbc:mysql://localhost:3306/FacebookDatabase
