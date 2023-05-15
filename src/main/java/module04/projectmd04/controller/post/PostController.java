@@ -64,7 +64,7 @@ public class PostController extends HttpServlet {
     }
 
     private void showFormCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_CREATE);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_POST);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {
