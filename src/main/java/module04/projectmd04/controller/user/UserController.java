@@ -51,6 +51,7 @@ public class UserController extends HttpServlet {
                 break;
             case "logout":
                 logoutUser(request, response);
+                break;
             default:
                 showUserInfo(request, response);
         }

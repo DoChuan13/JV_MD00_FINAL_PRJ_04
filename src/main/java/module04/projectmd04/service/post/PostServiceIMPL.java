@@ -11,6 +11,9 @@ public class PostServiceIMPL implements IPostService {
     private static final String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
     private static final String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
     private static final String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
+    private static final String DELETE_FROM_LIKE_POST = "delete from likePost where postId = ?;";
+    private static final String DELETE_FROM_COMMENT_POST = "delete from commentPost where postId = ?;";
+    private static final String DELETE_FROM_POST = "delete from post where postId = ?;";
 
 
     @Override
@@ -57,5 +60,26 @@ public class PostServiceIMPL implements IPostService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    @Override
+    public void deleteCurrentPost(int postId) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FROM_LIKE_POST);
+            preparedStatement.setInt(1, postId);
+            preparedStatement.executeUpdate();
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_FROM_COMMENT_POST);
+            preparedStatement.setInt(1, postId);
+            preparedStatement.executeUpdate();
+
+            PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_POST);
+            preparedStatement2.setInt(1, postId);
+            preparedStatement2.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

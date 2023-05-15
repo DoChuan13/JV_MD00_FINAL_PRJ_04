@@ -9,4 +9,6 @@ public interface IPostService {
     void createNewPost(Post post);
 
     void updateCurrentPost(Post post);
+
+    void deleteCurrentPost(int postId);
 }

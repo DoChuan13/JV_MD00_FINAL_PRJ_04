@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: chuan
-  Date: 14/05/2023
-  Time: 11:22
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Title</title>
@@ -35,15 +29,40 @@
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <input type="text" id="form2Example17" class="form-control form-control-lg"
-                                               name="userName"/>
+                                        <c:if test='${requestScope["userName"]==null}'>
+                                            <input type="text" id="form2Example17" class="form-control form-control-lg"
+                                                   name="userName"
+                                            />
+                                        </c:if>
+                                        <c:if test='${requestScope["userName"]!=null}'>
+                                            <input type="text" id="form2Example17" class="form-control form-control-lg"
+                                                   name="userName"
+                                                   value="${requestScope["userName"]}"
+                                            />
+                                        </c:if>
                                         <label class="form-label" for="form2Example17">User Name</label>
                                     </div>
 
                                     <div class="form-outline mb-4">
-                                        <input type="password" id="form2Example27"
-                                               class="form-control form-control-lg" name="password"/>
+                                        <c:if test='${requestScope["password"]==null}'>
+                                            <input type="password" id="form2Example27"
+                                                   class="form-control form-control-lg" name="password"
+                                            />
+                                        </c:if>
+                                        <c:if test='${requestScope["password"]!=null}'>
+                                            <input type="password" id="form2Example27"
+                                                   class="form-control form-control-lg" name="password"
+                                                   value="${requestScope["password"]}"
+                                            />
+                                        </c:if>
                                         <label class="form-label" for="form2Example27">Password</label>
+                                    </div>
+
+                                    <div class="pt-1 mb-4">
+                                        <c:if test='${requestScope["validate"]!=null}'>
+                                            <label class="form-label" for="form2Example27"
+                                                   style="color:red;">${requestScope["validate"]}</label>
+                                        </c:if>
                                     </div>
 
                                     <div class="pt-1 mb-4">

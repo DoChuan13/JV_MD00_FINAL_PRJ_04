@@ -1,15 +1,10 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Lenovo
-  Date: 5/15/2023
-  Time: 9:08 AM
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 <section class="vh-100" style="background-color: #eee;">
@@ -27,44 +22,105 @@
 
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <input type="text"  class="form-control" name="name"/>
-                                            <label class="form-label" for="form3Example1c">Your Name</label>
-                                        </div>
+                                        <c:if test='${requestScope["name"]==null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" class="form-control" name="name"/>
+                                                <label class="form-label" for="form3Example1c">Your Name</label>
+                                            </div>
+                                        </c:if>
+                                        <c:if test='${requestScope["name"]!=null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" class="form-control" name="name"
+                                                       value="${requestScope["name"]}"/>
+                                                <label class="form-label" for="form3Example1c">Your Name</label>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" class="form-control" name="userName" />
-                                            <label class="form-label" for="form3Example1c"> UserName</label>
-                                        </div>
+                                        <c:if test='${requestScope["userName"]==null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="form3Example1c1" class="form-control"
+                                                       name="userName"/>
+                                                <label class="form-label" for="form3Example1c1"> UserName</label>
+                                            </div>
+                                        </c:if>
+                                        <c:if test='${requestScope["userName"]!=null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="text" id="form3Example1c" class="form-control"
+                                                       name="userName"
+                                                       value="${requestScope["userName"]}"/>
+                                                <label class="form-label" for="form3Example1c"> UserName</label>
+                                            </div>
+                                        </c:if>
                                     </div>
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <input type="email" id="form3Example3c" class="form-control" name="email" />
-                                            <label class="form-label" for="form3Example3c">Your Email</label>
-                                        </div>
+                                        <c:if test='${requestScope["email"]==null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="email" id="form3Example3c1" class="form-control"
+                                                       name="email"/>
+                                                <label class="form-label" for="form3Example3c1">Your Email</label>
+                                            </div>
+
+                                        </c:if>
+                                        <c:if test='${requestScope["email"]!=null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="email" id="form3Example3c" class="form-control"
+                                                       name="email"
+                                                       value="${requestScope["email"]}"/>
+                                                <label class="form-label" for="form3Example3c">Your Email</label>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <input type="password" id="form3Example4c" class="form-control" name="password" />
-                                            <label class="form-label" for="form3Example4c">Password</label>
-                                        </div>
+                                        <c:if test='${requestScope["password"]==null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="password" id="form3Example4c1" class="form-control"
+                                                       name="password"/>
+                                                <label class="form-label" for="form3Example4c1">Password</label>
+                                            </div>
+                                        </c:if>
+                                        <c:if test='${requestScope["password"]!=null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="password" id="form3Example4c" class="form-control"
+                                                       name="password"
+                                                       value="${requestScope["password"]}"/>
+                                                <label class="form-label" for="form3Example4c">Password</label>
+                                            </div>
+                                        </c:if>
                                     </div>
 
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                                        <div class="form-outline flex-fill mb-0">
-                                            <input type="password" id="form3Example4cd" class="form-control" name="rePassword"/>
-                                            <label class="form-label" for="form3Example4cd">Repeat your password</label>
-                                        </div>
+                                        <c:if test='${requestScope["rePassword"]==null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="password" id="form3Example4cd1" class="form-control"
+                                                       name="rePassword"/>
+                                                <label class="form-label" for="form3Example4cd1">Repeat your
+                                                    password</label>
+                                            </div>
+                                        </c:if>
+                                        <c:if test='${requestScope["rePassword"]!=null}'>
+                                            <div class="form-outline flex-fill mb-0">
+                                                <input type="password" id="form3Example4cd" class="form-control"
+                                                       name="rePassword"
+                                                       value="${requestScope["rePassword"]}"/>
+                                                <label class="form-label" for="form3Example4cd">Repeat your
+                                                    password</label>
+                                            </div>
+                                        </c:if>
+
                                     </div>
-
-
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        <c:if test='${requestScope["validate"]!=null}'>
+                                            <label class="form-label" for="form3Example4cd"
+                                                   style="color: red">${requestScope["validate"]}</label>
+                                        </c:if>
+                                    </div>
 
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" class="btn btn-primary btn-lg">Register</button>

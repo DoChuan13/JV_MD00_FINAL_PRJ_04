@@ -21,7 +21,6 @@ import java.io.IOException;
 public class PostController extends HttpServlet {
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IPostService postService = Services.getInstance().getPostService();
-    private String alert;
 
     public PostController() {
     }
@@ -40,6 +39,10 @@ public class PostController extends HttpServlet {
                 break;
             case "edit":
                 showFormEditCurrentPost(request, response);
+                break;
+            case "delete":
+                deleteCurrentPost(request, response);
+                break;
             default:
                 showPostInfo(request, response);
         }
@@ -60,6 +63,7 @@ public class PostController extends HttpServlet {
                 break;
             case "edit":
                 actionEditCurrentPost(request, response);
+                break;
         }
     }
 
@@ -73,6 +77,16 @@ public class PostController extends HttpServlet {
     }
 
     private void showFormEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+    }
+
+    private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+        int postId = Integer.parseInt(request.getParameter("postID"));
+        postService.deleteCurrentPost(postId);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void showPostInfo(HttpServletRequest request, HttpServletResponse response) {
@@ -98,11 +112,7 @@ public class PostController extends HttpServlet {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         if (content.equals("") || status.equals("")) {
-            alert = "Do not leave Empty Field";
-            request.setAttribute(Constant.VALIDATE, alert);
-            request.setAttribute(Constant.POST_CONTENT, content);
-            request.setAttribute(Constant.POST_STATUS, status);
-            showFormCreateNewPost(request, response);
+            setAttributePostRequest(request, response, content, status);
             return;
         }
         User user = userService.getCurrentUser(request);
@@ -110,6 +120,25 @@ public class PostController extends HttpServlet {
         postService.createNewPost(post);
     }
 
+
     private void actionEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+        String content = request.getParameter(Constant.POST_CONTENT);
+        String status = request.getParameter(Constant.POST_STATUS);
+        if (content.equals("") || status.equals("")) {
+            setAttributePostRequest(request, response, content, status);
+            return;
+        }
+        User user = userService.getCurrentUser(request);
+        Post post = new Post(content, status, user);
+        postService.updateCurrentPost(post);
+    }
+
+    private void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
+                                         String status) {
+        String alert = "Do not leave Empty Field";
+        request.setAttribute(Constant.VALIDATE, alert);
+        request.setAttribute(Constant.POST_CONTENT, content);
+        request.setAttribute(Constant.POST_STATUS, status);
+        showFormCreateNewPost(request, response);
     }
 }

@@ -202,6 +202,9 @@ public class UserServiceIMPL implements IUserService {
     @Override
     public User getCurrentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        if (session == null) {
+            return null;
+        }
         return (User) session.getAttribute(Constant.LOGIN_USER);
     }
 
