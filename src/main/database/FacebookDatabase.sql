@@ -120,13 +120,92 @@ create table if not exists FacebookDatabase.userFriend
 );
 
 # Initial default value
-INSERT INTO FacebookDatabase.user (name, userName, email, password)
-VALUES ('Admin', 'admin', 'admin@admin.com', 'Admin@123');
-
 insert into FacebookDatabase.role (roleId, roleName)
 values (1, 'ADMIN'),
        (2, 'PM'),
        (3, 'USER');
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar)
+VALUES ('Admin', 'admin', 'admin@admin.com', 'Admin@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844');
+
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Van', 'van', 'van@gmail.com', 'Van@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Son', 'son', 'son@gmail.com', 'Son@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Huy', 'huy', 'huy@gmail.com', 'Huy@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Ha', 'ha', 'ha@gmail.com', 'Ha@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Chuan', 'chuan', 'chuan@gmail.com', 'Chuan@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Vuong', 'vuong', 'vuong@gmail.com', 'Vuong@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Dat', 'dat', 'dat@gmail.com', 'Dat@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Thu', 'thu', 'thu@gmail.com', 'Thu@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Minh', 'minh', 'minh@gmail.com', 'Minh@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Yen', 'yen', 'yen@gmail.com', 'Yen@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
+INSERT INTO FacebookDatabase.user (name, userName, email, password, avatar, createdDate, updatedUserName, updatedEmail,
+                                   status)
+VALUES ('Chinh', 'chinh', 'chinh@gmail.com', 'Chinh@123',
+        'https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844',
+        DEFAULT, DEFAULT, DEFAULT, DEFAULT);
+
 
 insert into FacebookDatabase.userRole (userId, roleId)
-values (1, 1);
+values (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 3),
+       (5, 3),
+       (6, 3),
+       (7, 3),
+       (8, 3),
+       (9, 3),
+       (10, 3),
+       (11, 3),
+       (12, 2);

@@ -211,10 +211,8 @@ public class UserController extends HttpServlet {
         try {
             switch (role) {
                 case ADMIN:
-                    response.sendRedirect(URL.PATH_ADMIN);
-                    break;
                 case PM:
-                    response.sendRedirect(URL.PATH_PM);
+                    response.sendRedirect(URL.PATH_ADMIN);
                     break;
                 case USER:
                     response.sendRedirect(URL.PATH_POST);

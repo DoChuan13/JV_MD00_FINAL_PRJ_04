@@ -37,12 +37,8 @@
                 continue;
             }
         }
-        if (adminRole) {
+        if (adminRole || pmRole) {
             response.sendRedirect("/admin");
-            return;
-        }
-        if (pmRole) {
-            response.sendRedirect("/admin?role=pm");
             return;
         }
         response.sendRedirect("/post");

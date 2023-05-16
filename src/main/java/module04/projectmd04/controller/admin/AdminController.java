@@ -55,13 +55,10 @@ public class AdminController extends HttpServlet {
     }
 
     private void blockUnblockAccount(HttpServletRequest request, HttpServletResponse response) {
-        String currentRole = request.getParameter("role");
         int id = Integer.parseInt(request.getParameter("id"));
-        if (currentRole == null) {
-            currentRole = String.valueOf(RoleName.ADMIN);
-        } else {
-            currentRole = String.valueOf(RoleName.PM);
-        }
+        RoleName currentRole = RoleName.USER;
+        currentRole = getCurrentRoleAcc(request, currentRole);
+
         User user = userService.findUserById(id);
         List<Role> roleList = new ArrayList<>(user.getRoleSet());
         RoleName targetRole = RoleName.USER;
@@ -77,7 +74,7 @@ public class AdminController extends HttpServlet {
             alert = "This account cannot be block/unblock";
             request.setAttribute(Constant.VALIDATE, alert);
             showFormAdminManager(request, response);
-        } else if (targetRole == RoleName.PM && currentRole.equalsIgnoreCase(String.valueOf(RoleName.PM))) {
+        } else if (targetRole == RoleName.PM && currentRole == RoleName.PM) {
             alert = "This account has no permission to block/unblock PM User";
             request.setAttribute(Constant.VALIDATE, alert);
             showFormAdminManager(request, response);
@@ -92,13 +89,10 @@ public class AdminController extends HttpServlet {
     }
 
     private void changeAccountRole(HttpServletRequest request, HttpServletResponse response) {
-        String currentRole = request.getParameter("role");
         int id = Integer.parseInt(request.getParameter("id"));
-        if (currentRole == null) {
-            currentRole = String.valueOf(RoleName.ADMIN);
-        } else {
-            currentRole = String.valueOf(RoleName.PM);
-        }
+        RoleName currentRole = RoleName.USER;
+        currentRole = getCurrentRoleAcc(request, currentRole);
+
         User user = userService.findUserById(id);
         List<Role> roleList = new ArrayList<>(user.getRoleSet());
         RoleName targetRole = RoleName.USER;
@@ -110,7 +104,7 @@ public class AdminController extends HttpServlet {
                 targetRole = RoleName.PM;
             }
         }
-        if (currentRole.equalsIgnoreCase(String.valueOf(RoleName.PM))) {
+        if (currentRole == RoleName.PM) {
             alert = "This account has no permission to change role";
             request.setAttribute(Constant.VALIDATE, alert);
             showFormAdminManager(request, response);
@@ -129,13 +123,9 @@ public class AdminController extends HttpServlet {
     }
 
     private void deleteUserAccount(HttpServletRequest request, HttpServletResponse response) {
-        String currentRole = request.getParameter("role");
         int id = Integer.parseInt(request.getParameter("id"));
-        if (currentRole == null) {
-            currentRole = String.valueOf(RoleName.ADMIN);
-        } else {
-            currentRole = String.valueOf(RoleName.PM);
-        }
+        RoleName currentRole = RoleName.USER;
+        currentRole = getCurrentRoleAcc(request, currentRole);
         User user = userService.findUserById(id);
         List<Role> roleList = new ArrayList<>(user.getRoleSet());
         RoleName targetRole = RoleName.USER;
@@ -151,7 +141,7 @@ public class AdminController extends HttpServlet {
             alert = "This account cannot be deleted";
             request.setAttribute(Constant.VALIDATE, alert);
             showFormAdminManager(request, response);
-        } else if (targetRole == RoleName.PM && currentRole.equalsIgnoreCase(String.valueOf(RoleName.PM))) {
+        } else if (targetRole == RoleName.PM && currentRole == RoleName.PM) {
             alert = "This account has no permission to deleted PM User";
             request.setAttribute(Constant.VALIDATE, alert);
             showFormAdminManager(request, response);
@@ -174,5 +164,18 @@ public class AdminController extends HttpServlet {
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static RoleName getCurrentRoleAcc(HttpServletRequest request, RoleName currentRole) {
+        User loginUser = userService.getCurrentUser(request);
+        List<Role> currentRoles = new ArrayList<>(loginUser.getRoleSet());
+        for (Role role : currentRoles) {
+            if (role.getName() == RoleName.ADMIN) {
+                currentRole = RoleName.ADMIN;
+            } else if (role.getName() == RoleName.PM && currentRole == RoleName.USER) {
+                currentRole = RoleName.PM;
+            }
+        }
+        return currentRole;
     }
 }
