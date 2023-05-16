@@ -72,8 +72,8 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement.executeUpdate();
 
             PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_FROM_COMMENT_POST);
-            preparedStatement.setInt(1, postId);
-            preparedStatement.executeUpdate();
+            preparedStatement1.setInt(1, postId);
+            preparedStatement1.executeUpdate();
 
             PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_POST);
             preparedStatement2.setInt(1, postId);

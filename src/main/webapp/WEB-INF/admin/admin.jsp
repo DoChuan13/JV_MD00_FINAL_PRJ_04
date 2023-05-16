@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
             color: #566787;
@@ -229,7 +229,12 @@
                     <div class="col-sm-5">
                         <h2>User <b>Management</b></h2>
                     </div>
+                    <div class="col-sm-7">
+                        <a href="/admin?action=logout" class="btn btn-secondary"><i style="font-size:24px" class="fa">&#xf08b;</i>
+                            <span>Logout</span></a>
+                    </div>
                 </div>
+
             </div>
             <div>
                 <c:if test='${requestScope["validate"]!=null}'>
@@ -296,7 +301,7 @@
                 </c:if>
                 </tbody>
             </table>
-<%--            <div class="clearfix">--%>
+            <%--            <div class="clearfix">--%>
             <%--                <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>--%>
             <%--                <ul class="pagination">--%>
             <%--                    <li class="page-item disabled"><a href="#">Previous</a></li>--%>
