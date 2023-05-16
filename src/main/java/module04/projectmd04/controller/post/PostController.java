@@ -112,4 +112,7 @@ public class PostController extends HttpServlet {
 
     private void actionEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
     }
+    private void actionCreateComment(HttpServletRequest request,HttpServletResponse response){
+
+    }
 }
