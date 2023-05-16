@@ -11,4 +11,6 @@ public interface IPostService {
     void updateCurrentPost(Post post);
 
     void deleteCurrentPost(int postId);
+    void createComment(Comment comment, HttpServletRequest request, int postId);
+
 }

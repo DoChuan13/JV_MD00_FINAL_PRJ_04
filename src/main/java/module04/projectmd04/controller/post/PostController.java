@@ -141,4 +141,7 @@ public class PostController extends HttpServlet {
         request.setAttribute(Constant.POST_STATUS, status);
         showFormCreateNewPost(request, response);
     }
+    private void actionCreateComment(HttpServletRequest request,HttpServletResponse response){
+
+    }
 }

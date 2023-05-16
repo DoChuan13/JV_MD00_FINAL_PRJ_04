@@ -8,14 +8,10 @@ import java.sql.*;
 
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
-    String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
-    String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
-    String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
-    String DELETE_FROM_LIKE_POST = "delete from likePost where postId = ?;";
-    String DELETE_FROM_COMMENT_POST = "delete from commentPost where postId = ?;";
-    String DELETE_FROM_POST = "delete from post where postId = ?;";
-    String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
-    String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
+    private static final String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
+    private static final String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
+    private static final String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
+
 
     @Override
     public void showAllPostList(User currentUser) {
@@ -85,6 +81,25 @@ public class PostServiceIMPL implements IPostService {
             PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_FROM_COMMENT);
             preparedStatement4.executeUpdate();
             connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createComment(Comment comment, HttpServletRequest request,int postId) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement=connection.prepareStatement(INSERT_INTO_CREATE_COMMENT,Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1,comment.getComment());
+            preparedStatement.executeUpdate();
+            int commentId=0;
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_USER_POST);
+            while (resultSet.next()){
+                commentId=resultSet.getInt(1);
+            }
+            int userId =new UserServiceIMPL().getCurrentUser(request).getUserId();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
