@@ -5,8 +5,6 @@
 </jsp:include>
 <html>
 <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Title</title>
 </head>
 <body>
@@ -14,9 +12,9 @@
     <img src="../../images/cover.png" class="coverImage" alt="">
     <div class="dashboard">
         <div class="left-dashboard">
-            <img src="../../images/profile.png" class="dashboard-img" alt="">
+            <img src="${sessionScope["loginUser"].getAvatar()}" class="dashboard-img" alt="">
             <div class="left-dashboard-info">
-                <h3>Jack Nichoson</h3>
+                <h3>${sessionScope["loginUser"].getName()}</h3>
                 <p>120 Friends - 20 mutuals</p>
                 <div class="mutual-friend-images">
                     <img src="../../images/member-1.png" alt="">
@@ -28,9 +26,12 @@
         </div>
         <div class="right-dashboard-info">
             <div class="right-dashboard-info-top">
-
-                <button type="button"><i class="fas fa-user-plus"></i> Friends</button>
-                <button type="button"><i class="far fa-envelope"></i> messages</button>
+                <a href="#">
+                    <button type="button"><i class="fas fa-user-plus"></i> Friends</button>
+                </a>
+                <a href="#">
+                    <button type="button"><i class="far fa-envelope"></i> messages</button>
+                </a>
             </div>
             <div class="right-div-single-logo"><a href="#"> <i class="fas fa-ellipsis-h"></i></a></div>
         </div>
@@ -138,9 +139,9 @@
         <div class="content-area profile-content-area">
             <div class="write-post-container">
                 <div class="user-profile">
-                    <img src="../../images/profile-pic.png" alt="">
+                    <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
                     <div>
-                        <p> Alex Carry</p>
+                        <p> ${sessionScope["loginUser"].getName()}</p>
                         <small>Public <i class="fas fa-caret-down"></i></small>
                     </div>
                 </div>
@@ -158,9 +159,9 @@
             <div class="status-field-container write-post-container">
                 <div class="user-profile-box">
                     <div class="user-profile">
-                        <img src="../../images/profile-pic.png" alt="">
+                        <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
                         <div>
-                            <p> Alex Carry</p>
+                            <p> ${sessionScope["loginUser"].getName()}</p>
                             <small>August 13 1999, 09.18 pm</small>
                         </div>
                     </div>
@@ -182,108 +183,9 @@
                         <div><img src="../../images/comments.png" alt="">52</div>
                         <div><img src="../../images/share.png" alt="">35</div>
                     </div>
-                    <div class="post-profile-picture">
-                        <img src="../../images/profile-pic.png " alt=""> <i class=" fas fa-caret-down"></i>
-                    </div>
                 </div>
             </div>
-            <div class="status-field-container write-post-container">
-                <div class="user-profile-box">
-                    <div class="user-profile">
-                        <img src="../../images/profile-pic.png" alt="">
-                        <div>
-                            <p> Alex Carry</p>
-                            <small>August 13 1999, 09.18 pm</small>
-                        </div>
-                    </div>
-                    <div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                    </div>
-                </div>
-                <div class="status-field">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolores praesentium dicta
-                        laborum nihil accusantium odit laboriosam, sed sit autem! <a
-                                href="#">#This_Post_is_Bigger!!!!</a>
-                    </p>
-                    <img src="../../images/feed-image-2.png" alt="">
-
-                </div>
-                <div class="post-reaction">
-                    <div class="activity-icons">
-                        <div><img src="../../images/like-blue.png" alt="">120</div>
-                        <div><img src="../../images/comments.png" alt="">52</div>
-                        <div><img src="../../images/share.png" alt="">35</div>
-                    </div>
-                    <div class="post-profile-picture">
-                        <img src="../../images/profile-pic.png " alt=""> <i class=" fas fa-caret-down"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="status-field-container write-post-container">
-                <div class="user-profile-box">
-                    <div class="user-profile">
-                        <img src="../../images/profile-pic.png" alt="">
-                        <div>
-                            <p> Alex Carry</p>
-                            <small>August 13 1999, 09.18 pm</small>
-                        </div>
-                    </div>
-                    <div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                    </div>
-                </div>
-                <div class="status-field">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolores praesentium dicta
-                        laborum nihil accusantium odit laboriosam, sed sit autem! <a
-                                href="#">#This_Post_is_faster!!!!</a>
-                    </p>
-                    <img src="../../images/feed-image-3.png" alt="">
-
-                </div>
-                <div class="post-reaction">
-                    <div class="activity-icons">
-                        <div><img src="../../images/like-blue.png" alt="">120</div>
-                        <div><img src="../../images/comments.png" alt="">52</div>
-                        <div><img src="../../images/share.png" alt="">35</div>
-                    </div>
-                    <div class="post-profile-picture">
-                        <img src="../../images/profile-pic.png " alt=""> <i class=" fas fa-caret-down"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="status-field-container write-post-container">
-                <div class="user-profile-box">
-                    <div class="user-profile">
-                        <img src="../../images/profile-pic.png" alt="">
-                        <div>
-                            <p> Alex Carry</p>
-                            <small>August 13 1999, 09.18 pm</small>
-                        </div>
-                    </div>
-                    <div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                    </div>
-                </div>
-                <div class="status-field">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolores praesentium dicta
-                        laborum nihil accusantium odit laboriosam, sed sit autem! <a
-                                href="#">#This_Post_is_perfect!!!!</a>
-                    </p>
-                    <img src="../../images/feed-image-4.png" alt="">
-
-                </div>
-                <div class="post-reaction">
-                    <div class="activity-icons">
-                        <div><img src="../../images/like-blue.png" alt="">120</div>
-                        <div><img src="../../images/comments.png" alt="">52</div>
-                        <div><img src="../../images/share.png" alt="">35</div>
-                    </div>
-                    <div class="post-profile-picture">
-                        <img src="../../images/profile-pic.png " alt=""> <i class=" fas fa-caret-down"></i>
-                    </div>
-                </div>
-            </div>
-            <button type="button" class="btn-LoadMore" onclick="LoadMoreToggle()">Load More</button>
+            <%--            <button type="button" class="btn-LoadMore">Load More</button>--%>
         </div>
     </div>
 </div>
