@@ -12,4 +12,5 @@ public final class Constant {
     public static final String POST_CONTENT = "postContent";
     public static final String POST_STATUS = "postStatus";
     public static final String USER_LIST = "userList";
+    public static final String POST_LIST = "postList";
 }

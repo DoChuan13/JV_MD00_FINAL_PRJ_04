@@ -12,6 +12,13 @@ public class User implements Serializable {
     private Set<Role> roleSet = new HashSet<>();
     private boolean status = false;
 
+    public User(int userId, String name, String userName, String avatar) {
+        this.userId = userId;
+        this.name = name;
+        this.userName = userName;
+        this.avatar = avatar;
+    }
+
     public boolean isStatus() {
         return status;
     }

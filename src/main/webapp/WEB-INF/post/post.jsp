@@ -7,6 +7,7 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <%--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"z--%>
     <title>Title</title>
 </head>
 <body>
@@ -57,57 +58,61 @@
         </div>
 
         <div class="write-post-container">
-            <div class="user-profile">
-                <img src="../../images/profile-pic.png" alt="">
-                <div>
-                    <p> Alex Carry</p>
-                    <small>Public <i class="fas fa-caret-down"></i></small>
-                </div>
-            </div>
-
-            <div class="post-upload-textarea">
-                <textarea name="" placeholder="What's on your mind, Alex?" id="" cols="30" rows="3"></textarea>
-                <div class="add-post-links">
-                    <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
-                    <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
-                    <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="status-field-container write-post-container">
-            <div class="user-profile-box">
+            <form method="post">
                 <div class="user-profile">
-                    <img src="../../images/profile-pic.png" alt="">
+                    <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
                     <div>
-                        <p> Alex Carry</p>
-                        <small>August 13 1999, 09.18 pm</small>
+                        <p> ${sessionScope["loginUser"].getName()}</p>
+                        <small>
+                            <label>
+                                <select name="status">
+                                    <option value="public" name="status">Public</option>
+                                    <option value="friend" name="status">Friend</option>
+                                    <option value="private" name="status">Private</option>
+                                </select>
+                            </label>
+                        </small>
                     </div>
                 </div>
-                <div>
-                    <a href="#"><i class="fas fa-ellipsis-v"></i></a>
+                <div class="post-upload-textarea">
+                    <input name="content" placeholder="What's on your mind, Alex?"
+                           style="width: 100%; height: 80px"></input>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                    <div class="add-post-links">
+                        <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
+                        <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
+                        <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
+                    </div>
                 </div>
-            </div>
-            <div class="status-field">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolores praesentium dicta
-                    laborum nihil accusantium odit laboriosam, sed sit autem! <a
-                            href="#">#This_Post_is_Better!!!!</a></p>
-                <img src="../../images/feed-image-1.png" alt="">
-
-            </div>
-            <div class="post-reaction">
-                <div class="activity-icons">
-                    <div><img src="../../images/like-blue.png" alt="">120</div>
-                    <div><img src="../../images/comments.png" alt="">52</div>
-                    <div><img src="../../images/share.png" alt="">35</div>
-                </div>
-                <div class="post-profile-picture">
-                    <img src="../../images/profile-pic.png " alt=""> <i class=" fas fa-caret-down"></i>
-                </div>
-            </div>
+            </form>
         </div>
 
-        <%--        <button type="button" class="btn-LoadMore">Load More</button>--%>
+        <c:forEach items='${requestScope["postList"]}' var="post">
+            <div class="status-field-container write-post-container">
+                <div class="user-profile-box">
+                    <div class="user-profile">
+                        <img src="${post.getOwnUser().getAvatar()}" alt="">
+                        <div>
+                            <p>${post.getOwnUser().getName()}</p>
+                            <small>August 13 1999, 09.18 pm</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-field">
+                    <p>${post.getPostContent()}</p>
+                    <img src="../../images/feed-image-1.png" alt="">
+                </div>
+                <div class="post-reaction">
+                    <div class="activity-icons">
+                        <div><a href="/post?action=like&id=${post.getPostId()}" style="text-decoration: none"><img
+                                src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
+                        <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
+                    </div>
+                </div>
+            </div>
+
+        </c:forEach>
+
     </div>
 
     <!-- sidebar------------ -->
@@ -128,25 +133,20 @@
                 <a href="#">More Info</a>
             </div>
         </div>
-        <div class="events">
-            <div class="left-event">
-                <h4>18</h4>
-                <span>January</span>
-            </div>
-            <div class="right-event">
-                <h4>Mobile Marketing</h4>
-                <p><i class="fas fa-map-marker-alt"></i> wisdom em Park</p>
-                <a href="#">More Info</a>
-            </div>
-        </div>
+        <%--        <div class="events">--%>
+        <%--            <div class="left-event">--%>
+        <%--                <h4>18</h4>--%>
+        <%--                <span>January</span>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
 
-        <div class="heading-link">
-            <h4>Advertisement</h4>
-            <a href="">Close</a>
-        </div>
-        <div class="advertisement">
-            <img src="../../images/advertisement.png" class="advertisement-image" alt="">
-        </div>
+        <%--        <div class="heading-link">--%>
+        <%--            <h4>Advertisement</h4>--%>
+        <%--            <a href="">Close</a>--%>
+        <%--        </div>--%>
+        <%--<div class="advertisement">--%>
+        <%--<img src="../../images/advertisement.png" class="advertisement-image" alt="">--%>
+        <%--</div>--%>
 
         <div class="heading-link">
             <h4>Conversation</h4>
@@ -158,19 +158,6 @@
                 <img src="../../images/member-1.png" alt="">
             </div>
             <p>Alison Mina</p>
-        </div>
-
-        <div class="online-list">
-            <div class="online">
-                <img src="../../images/member-2.png" alt="">
-            </div>
-            <p>Jackson Aston</p>
-        </div>
-        <div class="online-list">
-            <div class="online">
-                <img src="../../images/member-3.png" alt="">
-            </div>
-            <p>Samona Rose</p>
         </div>
     </div>
 </div>

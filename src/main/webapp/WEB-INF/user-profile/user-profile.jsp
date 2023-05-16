@@ -156,36 +156,31 @@
                 </div>
             </div>
 
-            <div class="status-field-container write-post-container">
-                <div class="user-profile-box">
-                    <div class="user-profile">
-                        <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
-                        <div>
-                            <p> ${sessionScope["loginUser"].getName()}</p>
-                            <small>August 13 1999, 09.18 pm</small>
+            <c:forEach items='${requestScope["postList"]}' var="post">
+                <div class="status-field-container write-post-container">
+                    <div class="user-profile-box">
+                        <div class="user-profile">
+                            <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
+                            <div>
+                                <p> ${sessionScope["loginUser"].getName()}</p>
+                                    <%--<small>August 13 1999, 09.18 pm</small>--%>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <a href="#"><i class="fas fa-ellipsis-v"></i></a>
-                    </div>
-                </div>
-                <div class="status-field">
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolores praesentium dicta
-                        laborum nihil accusantium odit laboriosam, sed sit autem! <a
-                                href="#">#This_Post_is_Better!!!!</a>
-                    </p>
-                    <img src="../../images/feed-image-1.png" alt="">
+                    <div class="status-field">
+                        <p>${post.getPostContent()}</p>
+                        <img src="../../images/feed-image-1.png" alt="">
 
-                </div>
-                <div class="post-reaction">
-                    <div class="activity-icons">
-                        <div><img src="../../images/like-blue.png" alt="">120</div>
-                        <div><img src="../../images/comments.png" alt="">52</div>
-                        <div><img src="../../images/share.png" alt="">35</div>
+                    </div>
+                    <div class="post-reaction">
+                        <div class="activity-icons">
+                            <div><a href="/post?action=like&id=${post.getPostId()}" style="text-decoration: none"><img
+                                    src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
+                            <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <%--            <button type="button" class="btn-LoadMore">Load More</button>--%>
+            </c:forEach>
         </div>
     </div>
 </div>
