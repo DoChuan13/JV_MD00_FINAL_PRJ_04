@@ -16,7 +16,7 @@
     <div class="left-sidebar">
         <div class="important-links">
             <a href="#"><img src="../../images/news.png" alt="">Latest News</a>
-            <a href="#"><img src="../../images/friends.png" alt="">Friends</a>
+            <a href="/friend"><img src="../../images/friends.png" alt="">Friends</a>
             <a href="#"><img src="../../images/group.png" alt="">Groups</a>
             <a href="#"><img src="../../images/marketplace.png" alt="">marketplace</a>
             <a href="#"><img src="../../images/watch.png" alt="">Watch</a>
