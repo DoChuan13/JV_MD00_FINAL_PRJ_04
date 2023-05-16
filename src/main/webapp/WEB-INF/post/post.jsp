@@ -114,7 +114,82 @@
                         <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
                     </div>
                 </div>
+                <div class="container">
+                    <div class="col-md-12" id="fbcomment">
+                        <div class="header_comment">
+                            <div class="row">
+                                <div class="col-md-6 text-left">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <ul id="list_comment" class="col-md-12">
+                                <!-- Start List Comment 1 -->
+                                <li class="box_result row">
+                                    <div class="avatar_comment col-md-1">
+                                        <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
+                                    </div>
+                                    <div class="result_comment col-md-11">
+                                        <h4>Nath Ryuzaki</h4>
+                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
+
+                                        <ul class="child_replay">
+                                            <li class="box_reply row">
+                                                <div class="avatar_comment col-md-1">
+                                                </div>
+                                                <div class="result_comment col-md-11">
+                                                    <div class="tools_comment">
+
+                                                    </div>
+                                                    <ul class="child_replay"></ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+
+                                <!-- Start List Comment 2 -->
+                                <li class="box_result row">
+                                    <div class="avatar_comment col-md-1">
+                                        <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
+                                    </div>
+                                    <div class="result_comment col-md-11">
+                                        <h4>Gung Wah</h4>
+                                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
+
+                                        <ul class="child_replay"></ul>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <button class="show_less" type="button" style="display:none"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>
+                        </div>
+                        <div class="body_comment">
+                            <div class="row">
+                                <div class="avatar_comment col-md-1">
+                                    <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
+                                </div>
+                                <div class="box_comment col-md-11">
+                                    <textarea class="commentar" placeholder="Add a comment..."></textarea>
+                                    <div class="box_post">
+                                        <div class="pull-left">
+
+                                        </div>
+                                        <div class="pull-right">
+                                            <button onclick="submit_comment()" type="button" value="1">Post</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
 
         </c:forEach>
 
