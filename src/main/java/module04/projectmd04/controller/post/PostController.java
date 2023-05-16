@@ -55,6 +55,11 @@ public class PostController extends HttpServlet {
     private void likePost(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter("postId"));
         postService.likePost(request,postId);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
