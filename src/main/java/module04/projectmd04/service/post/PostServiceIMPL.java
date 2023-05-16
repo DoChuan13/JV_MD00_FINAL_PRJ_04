@@ -14,6 +14,7 @@ import java.util.List;
 
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
+
     String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
     String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
     String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
@@ -24,7 +25,10 @@ public class PostServiceIMPL implements IPostService {
     String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
 
     String LIKE_POST = "select lP.userId from user join likePost lP on user.userId = lP.userId where lP.likeId =? and user.userId=?";
+    private static final String DELETE_LIKE_POST = "delete from likePost where postId=?";
+    String INSERT_INTO_LIKE ="insert into `like` (likedDate) values(default)";
     String INSERT_INTO_CREATE_COMMENT = "insert into comment( content) value (?);";
+    private static final String INSERT_INTO_LIKE_POST = "insert into likePost(likeId, postId, userId) values(?,?,?) ";
 
     @Override
     public void showAllPostList(User currentUser) {
@@ -109,13 +113,31 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement.setInt(2, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Like> likeList = new ArrayList<>();
-            PreparedStatement preparedStatement1 = connection.prepareStatement(LIKE_POST);
+
             while (resultSet.next()) {
                 int likeId = resultSet.getInt("likeId");
                 likeList.add(new Like(likeId, currentUser));
             }
             if (likeList.size() == 0) {
-                likeList.add(new Like());
+                connection.setAutoCommit(false);
+                PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_LIKE,Statement.RETURN_GENERATED_KEYS) ;
+                preparedStatement1.executeUpdate();
+                ResultSet resultSet1 = preparedStatement1.getGeneratedKeys();
+                int likeId = resultSet1.getInt("likeId");
+                PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_INTO_LIKE_POST);
+                preparedStatement2.setInt(1,postId);
+                preparedStatement2.setInt(2,userId);
+                preparedStatement2.setInt(3,likeId);
+                preparedStatement.executeUpdate();
+                connection.commit();
+            }else {
+                connection.setAutoCommit(false);
+                PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_LIKE_POST);
+                preparedStatement1.setInt(1,postId);
+                preparedStatement.executeUpdate();
+                PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_LIKE);
+                preparedStatement2.executeUpdate();
+                connection.commit();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

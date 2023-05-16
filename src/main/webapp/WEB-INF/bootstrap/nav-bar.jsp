@@ -724,9 +724,9 @@
     }</style>
 <body>
 <nav class="navbar">
-    <div class="nav-left"><img class="logo" src="../../images/logo.png" alt="">
+    <div class="nav-left"><a href="/"><img class="logo" src="../../images/logo.png" alt=""></a>
         <ul class="navlogo">
-            <li><img src="../../images/notification.png"></li>
+            <li><img src="../../images/notification.png" ></li>
             <li><img src="../../images/inbox.png"></li>
             <li><img src="../../images/video.png"></li>
         </ul>
