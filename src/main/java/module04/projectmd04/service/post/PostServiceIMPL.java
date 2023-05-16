@@ -8,6 +8,7 @@ import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.user.IUserService;
 import module04.projectmd04.service.user.UserServiceIMPL;
+import org.omg.CORBA.PERSIST_STORE;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
@@ -23,9 +24,12 @@ public class PostServiceIMPL implements IPostService {
     String UPDATE_POST_INFO = "update post set content = ?, status = ? where postId = ?;";
     String DELETE_FROM_LIKE_POST = "delete from likePost where postId = ?;";
     String DELETE_FROM_COMMENT_POST = "delete from commentPost where postId = ?;";
+    String DELETE_FROM_USER_POST = "delete from userPost where postId = ?;";
+    String DELETE_FROM_IMAGE_POST = "delete from imagePost where postId = ?;";
     String DELETE_FROM_POST = "delete from post where postId = ?;";
     String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
+    String DELETE_FROM_IMAGE = "delete from image where imageId not in (select imagePost.imageId from imagePost);";
     String SELECT_POST_OWNER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId where up.userId = ?;";
     String SELECT_POST_RE_USER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId " +
             "join user u on u.userId = uP.userId where up.userId =? " +
@@ -62,14 +66,16 @@ public class PostServiceIMPL implements IPostService {
                 User user = userService.findUserById(resultSet.getInt("userId"));
                 List<Comment> commentList = findListCommentByPostId(postId);
                 List<Like> likeList = findListLikeByPostId(postId);
+                List<String> imageList = findListImageByPostId(postId);
 
-                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList));
+                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList,imageList));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return postList;
     }
+
 
     @Override
     public List<Post> showAllPostListRelativeUser(User currentUser) {
@@ -87,8 +93,9 @@ public class PostServiceIMPL implements IPostService {
                 User user = userService.findUserById(resultSet.getInt("userId"));
                 List<Comment> commentList = findListCommentByPostId(postId);
                 List<Like> likeList = findListLikeByPostId(postId);
+                List<String> imageList = findListImageByPostId(postId);
 
-                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList));
+                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList,imageList));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -142,13 +149,21 @@ public class PostServiceIMPL implements IPostService {
     public void deleteCurrentPost(int postId) {
         try {
             connection.setAutoCommit(false);
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FROM_LIKE_POST);
-            preparedStatement.setInt(1, postId);
-            preparedStatement.executeUpdate();
+            PreparedStatement preparedStatement1_0 = connection.prepareStatement(DELETE_FROM_LIKE_POST);
+            preparedStatement1_0.setInt(1, postId);
+            preparedStatement1_0.executeUpdate();
 
-            PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_FROM_COMMENT_POST);
-            preparedStatement1.setInt(1, postId);
-            preparedStatement1.executeUpdate();
+            PreparedStatement preparedStatement1_1 = connection.prepareStatement(DELETE_FROM_COMMENT_POST);
+            preparedStatement1_1.setInt(1, postId);
+            preparedStatement1_1.executeUpdate();
+
+            PreparedStatement preparedStatement1_2 = connection.prepareStatement(DELETE_FROM_USER_POST);
+            preparedStatement1_2.setInt(1, postId);
+            preparedStatement1_2.executeUpdate();
+
+            PreparedStatement preparedStatement1_3 = connection.prepareStatement(DELETE_FROM_IMAGE_POST);
+            preparedStatement1_3.setInt(1, postId);
+            preparedStatement1_3.executeUpdate();
 
             PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_POST);
             preparedStatement2.setInt(1, postId);
@@ -159,6 +174,9 @@ public class PostServiceIMPL implements IPostService {
 
             PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_FROM_COMMENT);
             preparedStatement4.executeUpdate();
+
+            PreparedStatement preparedStatement5 = connection.prepareStatement(DELETE_FROM_IMAGE);
+            preparedStatement5.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -210,11 +228,11 @@ public class PostServiceIMPL implements IPostService {
         }
     }
 
-    public void createComment(Comment comment, HttpServletRequest request, int postId) {
+    public void createComment(String comment, HttpServletRequest request, int postId) {
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_CREATE_COMMENT, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, comment.getComment());
+            preparedStatement.setString(1, comment);
             preparedStatement.executeUpdate();
             int commentId = 0;
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -222,11 +240,10 @@ public class PostServiceIMPL implements IPostService {
                 commentId = resultSet.getInt(1);
             }
             User currentUser = new UserServiceIMPL().getCurrentUser(request);
-            int userId = new UserServiceIMPL().getCurrentUser(request).getUserId();
             PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_COMMENT);
-            preparedStatement1.setInt(1, comment.getCommentId());
-            preparedStatement1.setInt(2, currentUser.getUserId());
-            preparedStatement1.setInt(3, postId);
+            preparedStatement1.setInt(1, commentId);
+            preparedStatement1.setInt(2, postId);
+            preparedStatement1.setInt(3, currentUser.getUserId());
             preparedStatement1.executeUpdate();
             connection.commit();
 
@@ -281,5 +298,22 @@ public class PostServiceIMPL implements IPostService {
             throw new RuntimeException(e);
         }
         return likeList;
+    }
+
+    private List<String> findListImageByPostId(int postId) {
+        List<String> imageList = new ArrayList<>();
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement("select imageSrc from image i join imagePost iP on i.imageId = iP.imageId where iP.postId = ?;");
+            preparedStatement.setInt(1, postId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                imageList.add(resultSet.getString(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return imageList;
     }
 }

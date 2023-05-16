@@ -26,14 +26,19 @@ public class UserServiceIMPL implements IUserService {
     String INSERT_INTO_USER = "insert into user (name, userName, email, password, avatar) " + "values (?, ?, ?, ?, ?);";
     String INSERT_INTO_USER_ROLE = "insert into userRole (userId, roleId) values (?, ?);";
     String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
-                                    "join userRole ur on r.roleId = ur.roleId where ur.userId = ?;";
+            "join userRole ur on r.roleId = ur.roleId where ur.userId = ?;";
     String SELECT_LOGIN_USER = "select * from user " +
-                               "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
+            "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
     String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
     String SELECT_USER_BY_ID = "select * from user where userId = ?;";
     String UN_BLOCK_USER = "update user set status = ? where userId = ?;";
     String UPDATE_USER_ROLE = "update userRole set roleId = ? where userId = ?;";
+    String DELETE_FROM_IMAGE_POST = "delete from imagePost where imageId not in" +
+            " (select imageId from imagePost iP " +
+            "join post p on p.postId = iP.postId " +
+            "join userPost uP on p.postId = uP.postId);";
     String DELETE_USER_POST = "delete from userPost where userId = ?;";
+    String DELETE_FROM_IMAGE = "delete from image where imageId not in (select imageId from imagePost);";
     String DELETE_USER_CHAT = "delete from userChat where sentUserId =? or receivedUserId = ?;";
     String DELETE_USER_FRIEND = "delete from userFriend where sentUserId = ? or receivedUserId = ?;";
     String DELETE_USER_ROLE = "delete from userRole where userId = ?;";
@@ -75,7 +80,7 @@ public class UserServiceIMPL implements IUserService {
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_INTO_USER,
-                                                                              Statement.RETURN_GENERATED_KEYS);
+                    Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getUserName());
             preparedStatement.setString(3, user.getEmail());
@@ -143,11 +148,17 @@ public class UserServiceIMPL implements IUserService {
             preparedStatement6.executeUpdate();
 
             //
+            PreparedStatement preparedStatement6_1 = connection.prepareStatement(DELETE_FROM_IMAGE_POST);
+            preparedStatement6_1.executeUpdate();
+
             PreparedStatement preparedStatement7 = connection.prepareStatement(DELETE_POST);
             preparedStatement7.executeUpdate();
 
+            PreparedStatement preparedStatement7_1 = connection.prepareStatement(DELETE_FROM_IMAGE);
+            preparedStatement7_1.executeUpdate();
+
             PreparedStatement preparedStatement8 = connection.prepareStatement(DELETE_LIKE);
-            preparedStatement7.executeUpdate();
+            preparedStatement8.executeUpdate();
 
             PreparedStatement preparedStatement9 = connection.prepareStatement(DELETE_COMMENT);
             preparedStatement9.executeUpdate();

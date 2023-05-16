@@ -51,7 +51,7 @@ public class Post implements Serializable {
     }
 
     public Post(int postId, User ownUser, String postContent, String postStatus, Date postTime,
-                List<Comment> commentList, List<Like> likeList) {
+                List<Comment> commentList, List<Like> likeList, List<String> imageList) {
         this.postId = postId;
         this.ownUser = ownUser;
         this.postStatus = postStatus;
@@ -59,6 +59,7 @@ public class Post implements Serializable {
         this.postTime = postTime;
         this.commentList = commentList;
         this.likeList = likeList;
+        this.imageList = imageList;
     }
 
     public Date getPostTime() {
@@ -128,14 +129,14 @@ public class Post implements Serializable {
     @Override
     public String toString() {
         return "Post{" +
-               "postId=" + postId +
-               ", ownUser=" + ownUser +
-               ", postContent='" + postContent + '\'' +
-               ", postContent='" + postStatus + '\'' +
-               ", postTime=" + postTime +
-               ", modifiedTime=" + modifiedTime +
-               ", commentList=" + commentList +
-               ", likeList=" + likeList +
-               '}';
+                "postId=" + postId +
+                ", ownUser=" + ownUser +
+                ", postContent='" + postContent + '\'' +
+                ", postContent='" + postStatus + '\'' +
+                ", postTime=" + postTime +
+                ", modifiedTime=" + modifiedTime +
+                ", commentList=" + commentList +
+                ", likeList=" + likeList +
+                '}';
     }
 }

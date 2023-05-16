@@ -80,6 +80,9 @@ public class PostController extends HttpServlet {
             case "edit":
                 actionEditCurrentPost(request, response);
                 break;
+            case "comment":
+                actionCreateComment(request, response);
+                break;
         }
     }
 
@@ -152,7 +155,7 @@ public class PostController extends HttpServlet {
         }
     }
 
-    public  void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
+    public void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
                                         String status) {
         String alert = "Do not leave Empty Field";
         request.setAttribute(Constant.VALIDATE, alert);
@@ -162,6 +165,17 @@ public class PostController extends HttpServlet {
     }
 
     private void actionCreateComment(HttpServletRequest request, HttpServletResponse response) {
-
+        int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
+        String comment = request.getParameter(Constant.COMMENT);
+        if (comment.equals("")) {
+            showPostInfo(request, response);
+            return;
+        }
+        postService.createComment(comment, request, postId);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

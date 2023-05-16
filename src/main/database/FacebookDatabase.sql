@@ -32,11 +32,15 @@ create table if not exists FacebookDatabase.post
 (
     postId     int primary key auto_increment,
     content    varchar(500) not null,
-    image      varchar(500),
     status     varchar(20)  not null,
     postedDate datetime default (now())
 );
 
+create table if not exists FacebookDatabase.image
+(
+    imageId  int primary key auto_increment,
+    imageSrc varchar(500) not null
+);
 
 create table if not exists FacebookDatabase.comment
 (
@@ -89,6 +93,15 @@ create table if not exists likePost
     constraint fk_LikePost_LikeId foreign key (likeId) references `like` (likeId),
     constraint fk_LikePost_PostId foreign key (postId) references post (postId),
     constraint fk_LikePost_UserId foreign key (userId) references user (userId)
+);
+
+create table if not exists FacebookDatabase.imagePost
+(
+    imageId int not null,
+    postId  int not null,
+    primary key (imageId,postId),
+    constraint fk_ImagePost_ImageId foreign key (imageId) references image (imageId),
+    constraint fk_ImagePost_PostId foreign key (postId) references post (postId)
 );
 
 create table if not exists chat

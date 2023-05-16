@@ -56,6 +56,9 @@ public class UserController extends HttpServlet {
             case "login":
                 showFormLogin(request, response);
                 break;
+            case "like":
+                likePostInUser(request, response);
+                break;
             case "logout":
                 logoutUser(request, response);
                 break;
@@ -83,7 +86,7 @@ public class UserController extends HttpServlet {
                 actionLogin(request, response);
                 break;
             case "create":
-                actionCreateNewPost(request,response);
+                actionCreateNewPost(request, response);
                 break;
         }
     }
@@ -222,6 +225,16 @@ public class UserController extends HttpServlet {
         userService.save(user);
         try {
             response.sendRedirect(URL.PATH_USER_LOGIN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void likePostInUser(HttpServletRequest request, HttpServletResponse response) {
+        int postId = Integer.parseInt(request.getParameter("postId"));
+        postService.likePost(request, postId);
+        try {
+            response.sendRedirect(URL.PATH_USER);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

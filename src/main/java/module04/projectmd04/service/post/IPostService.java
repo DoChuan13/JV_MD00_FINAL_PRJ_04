@@ -20,7 +20,7 @@ public interface IPostService {
 
     void likePost(HttpServletRequest request, int id);
 
-    void createComment(Comment comment, HttpServletRequest request, int postId);
+    void createComment(String comment, HttpServletRequest request, int postId);
 
     List<Comment> findListCommentByPostId(int postId);
 

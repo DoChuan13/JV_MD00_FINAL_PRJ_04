@@ -4,7 +4,9 @@
     <jsp:param name="articleId" value=""/>
 </jsp:include>
 <html>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
 <head>
     <title>Title</title>
 </head>
@@ -175,49 +177,41 @@
                 <div class="status-field-container write-post-container">
                     <div class="user-profile-box">
                         <div class="user-profile">
-                            <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
+                            <img src="${post.getOwnUser().getAvatar()}" alt="">
                             <div>
-                                <p> ${sessionScope["loginUser"].getName()}</p>
+                                <p>${post.getOwnUser().getName()}</p>
                                 <small>${post.getPostStatus()}</small>
-                                    <%--<small>August 13 1999, 09.18 pm</small>--%>
                             </div>
                         </div>
                     </div>
                     <div class="status-field">
                         <p>${post.getPostContent()}</p>
-                        <img src="../../images/feed-image-1.png" alt="">
-
+                        <c:if test="${post.getImageList().size()!=0}">
+                            <c:forEach items="${post.getImageList()}" var="image">
+                                <img src="${image}" alt="">
+                            </c:forEach>
+                        </c:if>
                     </div>
                     <div class="post-reaction">
                         <div class="activity-icons">
-                            <div><a href="/post?action=like&postId=${post.getPostId()}"
+                            <div><a href="/user?action=like&postId=${post.getPostId()}"
                                     style="text-decoration: none"><img
                                     src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
                             <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
                         </div>
                     </div>
-                    <div class="container">
-                        <div class="col-md-12" id="fbcomment">
-                            <div class="header_comment">
-                                <div class="row">
-                                    <div class="col-md-6 text-left">
-
-                                    </div>
-
-                                </div>
-                            </div>
-
-
-                            <div class="row">
+                    <c:if test='${post.getCommentList().size()!=0}'>
+                        <c:forEach items="${post.getCommentList()}" var="comment">
+                            <div class="row" style="margin-bottom: 10px;background: #b2b2b2;">
                                 <ul id="list_comment" class="col-md-12">
-                                    <!-- Start List Comment 1 -->
                                     <li class="box_result row">
                                         <div class="avatar_comment col-md-1">
-                                            <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
+                                            <img src="${comment.getCommentUser().getAvatar()}"
+                                                 alt="avatar"/>
                                         </div>
                                         <div class="result_comment col-md-11">
-                                            <h4>Nath Ryuzaki</h4>
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
+                                            <h4>${comment.getCommentUser().getName()}</h4>
+                                            <p>${comment.getComment()}</p>
 
                                             <ul class="child_replay">
                                                 <li class="box_reply row">
@@ -233,41 +227,32 @@
                                             </ul>
                                         </div>
                                     </li>
-
-                                    <!-- Start List Comment 2 -->
-                                    <li class="box_result row">
-                                        <div class="avatar_comment col-md-1">
-                                            <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
-                                        </div>
-                                        <div class="result_comment col-md-11">
-                                            <h4>Gung Wah</h4>
-                                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's.</p>
-
-                                            <ul class="child_replay"></ul>
-                                        </div>
-                                    </li>
                                 </ul>
-
-                                <button class="show_less" type="button" style="display:none"><span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...</button>
                             </div>
-                            <div class="body_comment">
-                                <div class="row">
-                                    <div class="avatar_comment col-md-1">
-                                        <img src="https://static.xx.fbcdn.net/rsrc.php/v1/yi/r/odA9sNLrE86.jpg" alt="avatar"/>
-                                    </div>
-                                    <div class="box_comment col-md-11">
-                                        <textarea class="commentar" placeholder="Add a comment..."></textarea>
-                                        <div class="box_post">
-                                            <div class="pull-left">
-
-                                            </div>
-                                            <div class="pull-right">
-                                                <button onclick="submit_comment()" type="button" value="1">Post</button>
-                                            </div>
+                        </c:forEach>
+                    </c:if>
+                    <div class="body_comment">
+                        <div class="row">
+                            <div class="avatar_comment col-md-1">
+                                <img src="${post.getOwnUser().getAvatar()}" alt="avatar"/>
+                            </div>
+                            <form method="post">
+                                <div class="box_comment col-md-11">
+                                    <input type="text" name="action" value="comment" readonly hidden
+                                           style="position: absolute">
+                                    <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
+                                           style="position: absolute">
+                                    <input name="comment" placeholder="Add a comment..."
+                                           style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                                    <div class="box_post">
+                                        <div class="pull-left">
+                                        </div>
+                                        <div class="pull-right">
+                                            <button type="submit" value="1">Post</button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -275,8 +260,9 @@
         </div>
     </div>
 </div>
+</div>
 </body>
 </html>
-<jsp:include page="../bootstrap/footer.jsp">
-    <jsp:param name="articleId" value=""/>
-</jsp:include>
+<%--<jsp:include page="../bootstrap/footer.jsp">--%>
+<%--    <jsp:param name="articleId" value=""/>--%>
+<%--</jsp:include>--%>
