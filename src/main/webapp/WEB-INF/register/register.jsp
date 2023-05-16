@@ -125,7 +125,10 @@
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" class="btn btn-primary btn-lg">Register</button>
                                     </div>
-
+                                    <p class="mb-5 pb-lg-2" style="color: #393f81;">You have an account? <a
+                                            href="/user?action=register"
+                                            style="color: #393f81;text-decoration: none">Login now
+                                        </a></p>
                                 </form>
 
                             </div>

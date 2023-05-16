@@ -73,7 +73,7 @@
 
                                     <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a
                                             href="/user?action=register"
-                                            style="color: #393f81;">Register
+                                            style="color: #393f81;text-decoration: none">Register
                                         here</a></p>
 
                                 </form>
