@@ -14,6 +14,15 @@ public class Post implements Serializable {
     private Date modifiedTime = new Date();
     private List<Comment> commentList = new ArrayList<>();
     private List<Like> likeList = new ArrayList<>();
+    private List<String> imageList = new ArrayList<>();
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
+    }
 
     public Post(int postId, User ownUser, String postContent, String postStatus) {
         this.postId = postId;
@@ -41,7 +50,8 @@ public class Post implements Serializable {
         this.ownUser = ownUser;
     }
 
-    public Post(int postId, User ownUser, String postContent, String postStatus, Date postTime, List<Comment> commentList, List<Like> likeList) {
+    public Post(int postId, User ownUser, String postContent, String postStatus, Date postTime,
+                List<Comment> commentList, List<Like> likeList) {
         this.postId = postId;
         this.ownUser = ownUser;
         this.postStatus = postStatus;

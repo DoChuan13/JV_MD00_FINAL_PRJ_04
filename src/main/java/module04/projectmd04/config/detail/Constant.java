@@ -9,8 +9,8 @@ public final class Constant {
     public static final String PASSWORD = "password";
     public static final String RE_PASSWORD = "rePassword";
     public static final String ACTION = "action";
-    public static final String POST_CONTENT = "postContent";
-    public static final String POST_STATUS = "postStatus";
+    public static final String POST_CONTENT = "content";
+    public static final String POST_STATUS = "status";
     public static final String USER_LIST = "userList";
     public static final String POST_LIST = "postList";
 }

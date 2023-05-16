@@ -145,7 +145,6 @@
                         <small>Public <i class="fas fa-caret-down"></i></small>
                     </div>
                 </div>
-
                 <div class="post-upload-textarea">
                     <textarea name="" placeholder="What's on your mind, Alex?" id="" cols="30" rows="3"></textarea>
                     <div class="add-post-links">
@@ -163,6 +162,7 @@
                             <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
                             <div>
                                 <p> ${sessionScope["loginUser"].getName()}</p>
+                                <small>${post.getPostStatus()}</small>
                                     <%--<small>August 13 1999, 09.18 pm</small>--%>
                             </div>
                         </div>
@@ -174,7 +174,8 @@
                     </div>
                     <div class="post-reaction">
                         <div class="activity-icons">
-                            <div><a href="/post?action=like&postId=${post.getPostId()}" style="text-decoration: none"><img
+                            <div><a href="/post?action=like&postId=${post.getPostId()}"
+                                    style="text-decoration: none"><img
                                     src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
                             <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
                         </div>

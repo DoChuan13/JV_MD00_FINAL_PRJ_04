@@ -101,13 +101,15 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement.setString(2, post.getPostStatus());
 
             preparedStatement.executeUpdate();
+            int postId = 0;
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_USER_POST);
             while (resultSet.next()) {
-                preparedStatement1.setInt(1, resultSet.getInt("postId"));
-                preparedStatement1.setInt(2, post.getOwnUser().getUserId());
-                preparedStatement1.executeUpdate();
+                postId = resultSet.getInt(1);
             }
+            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_USER_POST);
+            preparedStatement1.setInt(1, postId);
+            preparedStatement1.setInt(2, post.getOwnUser().getUserId());
+            preparedStatement1.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);

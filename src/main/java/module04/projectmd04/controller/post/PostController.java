@@ -35,9 +35,6 @@ public class PostController extends HttpServlet {
             action = "";
         }
         switch (action) {
-            case "create":
-                showFormCreateNewPost(request, response);
-                break;
             case "edit":
                 showFormEditCurrentPost(request, response);
                 break;
@@ -45,7 +42,7 @@ public class PostController extends HttpServlet {
                 deleteCurrentPost(request, response);
                 break;
             case "like":
-                likePost(request,response);
+                likePost(request, response);
                 break;
             default:
                 showPostInfo(request, response);
@@ -54,7 +51,7 @@ public class PostController extends HttpServlet {
 
     private void likePost(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter("postId"));
-        postService.likePost(request,postId);
+        postService.likePost(request, postId);
         try {
             response.sendRedirect(URL.PATH_POST);
         } catch (IOException e) {
@@ -78,15 +75,6 @@ public class PostController extends HttpServlet {
             case "edit":
                 actionEditCurrentPost(request, response);
                 break;
-        }
-    }
-
-    private void showFormCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
-        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_POST);
-        try {
-            dispatcher.forward(request, response);
-        } catch (ServletException | IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -114,7 +102,7 @@ public class PostController extends HttpServlet {
             }
         }
         List<Post> postList = postService.showAllPostList(currentUser);
-        request.setAttribute(Constant.POST_LIST,postList);
+        request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_INFO);
         postService.showAllPostList(currentUser);
         try {
@@ -134,6 +122,11 @@ public class PostController extends HttpServlet {
         User user = userService.getCurrentUser(request);
         Post post = new Post(content, status, user);
         postService.createNewPost(post);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -147,6 +140,11 @@ public class PostController extends HttpServlet {
         User user = userService.getCurrentUser(request);
         Post post = new Post(content, status, user);
         postService.updateCurrentPost(post);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
@@ -155,9 +153,10 @@ public class PostController extends HttpServlet {
         request.setAttribute(Constant.VALIDATE, alert);
         request.setAttribute(Constant.POST_CONTENT, content);
         request.setAttribute(Constant.POST_STATUS, status);
-        showFormCreateNewPost(request, response);
+        showPostInfo(request, response);
     }
-    private void actionCreateComment(HttpServletRequest request,HttpServletResponse response){
+
+    private void actionCreateComment(HttpServletRequest request, HttpServletResponse response) {
 
     }
 }

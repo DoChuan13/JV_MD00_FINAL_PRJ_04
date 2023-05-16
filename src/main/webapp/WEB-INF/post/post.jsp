@@ -65,6 +65,9 @@
                         <p> ${sessionScope["loginUser"].getName()}</p>
                         <small>
                             <label>
+                                <input type="text" name="action" value="create" readonly hidden
+                                       style="position: absolute"
+                                >
                                 <select name="status">
                                     <option value="public" name="status">Public</option>
                                     <option value="friend" name="status">Friend</option>
@@ -94,7 +97,7 @@
                         <img src="${post.getOwnUser().getAvatar()}" alt="">
                         <div>
                             <p>${post.getOwnUser().getName()}</p>
-                            <small>August 13 1999, 09.18 pm</small>
+                            <small>${post.getPostStatus()}</small>
                         </div>
                     </div>
                 </div>
