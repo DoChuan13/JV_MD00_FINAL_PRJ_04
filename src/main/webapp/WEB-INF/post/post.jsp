@@ -7,6 +7,7 @@
 <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <%--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"z--%>
     <title>Title</title>
 </head>
@@ -75,13 +76,14 @@
                     </div>
                 </div>
                 <div class="post-upload-textarea">
-                    <input name="content" placeholder="What's on your mind, Alex?"
-                           style="width: 100%; height: 80px"></input>
-                    <button type="submit" class="btn btn-primary">Post</button>
+                    <input name="content" placeholder="What's on your mind?"
+                           style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);"></input>
+<%--                    <button type="submit" class="btn btn-primary">Post</button>--%>
                     <div class="add-post-links">
                         <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
                         <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
                         <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
+                        <button type="submit" style="font-size: 15px">Post</button>
                     </div>
                 </div>
             </form>
