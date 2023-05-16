@@ -4,6 +4,7 @@ import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.config.detail.Validate;
+import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
@@ -43,6 +44,9 @@ public class AdminController extends HttpServlet {
                 break;
             case "delete":
                 deleteUserAccount(request, response);
+                break;
+            case "logout":
+                UserController.logoutUser(request, response);
                 break;
             default:
                 showFormAdminManager(request, response);

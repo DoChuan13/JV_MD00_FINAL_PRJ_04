@@ -32,6 +32,7 @@ create table if not exists FacebookDatabase.post
 (
     postId     int primary key auto_increment,
     content    varchar(500) not null,
+    image      varchar(500),
     status     varchar(20)  not null,
     postedDate datetime default (now())
 );

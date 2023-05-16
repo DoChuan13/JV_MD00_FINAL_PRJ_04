@@ -1,9 +1,12 @@
 package module04.projectmd04.controller.chat;
 
+import module04.projectmd04.config.detail.JSPLink;
+import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.chat.IChatService;
 import module04.projectmd04.service.user.IUserService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +30,9 @@ public class ChatController extends HttpServlet {
         if (action == null) {
             action = "";
         }
+        showFormChat(request, response);
     }
+
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,6 +41,23 @@ public class ChatController extends HttpServlet {
 
         if (action == null) {
             action = "";
+        }
+    }
+
+    private void showFormChat(HttpServletRequest request, HttpServletResponse response) {
+        if (userService.getCurrentUser(request) == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_CHAT);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

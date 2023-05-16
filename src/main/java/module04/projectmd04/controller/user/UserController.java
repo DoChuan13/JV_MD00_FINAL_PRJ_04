@@ -94,13 +94,13 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+    public static void logoutUser(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession(false);
         if (session.getAttribute(Constant.LOGIN_USER) != null) {
             session.removeAttribute(Constant.LOGIN_USER);
             session.invalidate();
             try {
-                response.sendRedirect(URL.PATH_HOME);
+                response.sendRedirect(URL.PATH_USER_LOGIN);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

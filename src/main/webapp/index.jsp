@@ -7,9 +7,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
-<jsp:include page="./WEB-INF/bootstrap/nav-bar.jsp">
-    <jsp:param name="articleId" value=""/>
-</jsp:include>
 <head>
     <title>JSP - Hello World</title>
 </head>
@@ -45,7 +42,4 @@
     %>
 </c:if>
 </body>
-<jsp:include page="./WEB-INF/bootstrap/footer.jsp">
-    <jsp:param name="articleId" value=""/>
-</jsp:include>
 </html>

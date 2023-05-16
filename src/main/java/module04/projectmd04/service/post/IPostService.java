@@ -1,5 +1,6 @@
 package module04.projectmd04.service.post;
 
+import module04.projectmd04.model.Comment;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
 
@@ -15,6 +16,8 @@ public interface IPostService {
     void deleteCurrentPost(int postId);
 
     void likePost(HttpServletRequest request, int id);
+
+    void createComment(Comment comment, HttpServletRequest request, int postId);
 
 
 }
