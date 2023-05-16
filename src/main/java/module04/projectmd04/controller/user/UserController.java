@@ -4,10 +4,12 @@ import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.config.detail.Validate;
+import module04.projectmd04.model.Post;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
+import module04.projectmd04.service.post.IPostService;
 import module04.projectmd04.service.role.IRoleService;
 import module04.projectmd04.service.user.IUserService;
 
@@ -28,6 +30,7 @@ import java.util.Set;
 public class UserController extends HttpServlet {
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IRoleService roleService = Services.getInstance().getRoleService();
+    private static final IPostService postService = Services.getInstance().getPostService();
     private String alert;
 
     public UserController() {
@@ -108,7 +111,8 @@ public class UserController extends HttpServlet {
     }
 
     private void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        if (userService.getCurrentUser(request) == null) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
             try {
                 response.sendRedirect(URL.PATH_USER_LOGIN);
                 return;
@@ -116,7 +120,10 @@ public class UserController extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
+        List<Post> postList = postService.showAllPostList(currentUser);
+        request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_INFO);
+        postService.showAllPostList(currentUser);
         try {
             dispatcher.forward(request, response);
         } catch (ServletException | IOException e) {

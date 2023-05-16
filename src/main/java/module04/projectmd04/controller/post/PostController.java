@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/post")
 public class PostController extends HttpServlet {
@@ -107,6 +108,8 @@ public class PostController extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
+        List<Post> postList = postService.showAllPostList(currentUser);
+        request.setAttribute(Constant.POST_LIST,postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_INFO);
         postService.showAllPostList(currentUser);
         try {

@@ -72,6 +72,7 @@
 
     .profile-image img {
         width: 40px;
+        height: 40px;
         border-radius: 100%;
     }
 
@@ -351,6 +352,7 @@
 
     .user-profile img {
         width: 45px;
+        height: 45px;
         border-radius: 50%;
         margin-right: 10px;
 

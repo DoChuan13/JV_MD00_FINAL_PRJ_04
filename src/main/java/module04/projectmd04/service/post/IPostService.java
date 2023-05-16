@@ -3,11 +3,14 @@ package module04.projectmd04.service.post;
 import module04.projectmd04.model.Comment;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
-
 import javax.servlet.http.HttpServletRequest;
+import module04.projectmd04.model.Like;
+
+import java.util.List;
 
 public interface IPostService {
-    void showAllPostList(User currentUser);
+    List<Post> showAllPostList(User currentUser);
+    List<Post> showAllPostListRelativeUser(User currentUser);
 
     void createNewPost(Post post);
 
@@ -19,5 +22,7 @@ public interface IPostService {
 
     void createComment(Comment comment, HttpServletRequest request, int postId);
 
+    List<Comment> findListCommentByPostId(int postId);
 
+    List<Like> findListLikeByPostId(int postId);
 }

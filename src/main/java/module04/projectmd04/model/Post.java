@@ -1,6 +1,5 @@
 package module04.projectmd04.model;
 
-import javax.xml.stream.events.Comment;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,6 +39,16 @@ public class Post implements Serializable {
         this.postContent = postContent;
         this.postStatus = postStatus;
         this.ownUser = ownUser;
+    }
+
+    public Post(int postId, User ownUser, String postContent, String postStatus, Date postTime, List<Comment> commentList, List<Like> likeList) {
+        this.postId = postId;
+        this.ownUser = ownUser;
+        this.postStatus = postStatus;
+        this.postContent = postContent;
+        this.postTime = postTime;
+        this.commentList = commentList;
+        this.likeList = likeList;
     }
 
     public Date getPostTime() {
