@@ -10,4 +10,5 @@ public class JSPLink {
     public static final String PATH_USER_PHOTO = "WEB-INF/user-profile/user-photo.jsp";
     public static final String PATH_USER_VIDEO = "WEB-INF/user-profile/user-video.jsp";
     public static final String PATH_USER_POST = "WEB-INF/post/user-post.jsp";
+    public static final String PATH_CHAT = "WEB-INF/chat/chat.jsp";
 }
