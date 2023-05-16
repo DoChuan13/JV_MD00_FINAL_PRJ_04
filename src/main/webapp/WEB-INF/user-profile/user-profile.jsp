@@ -234,7 +234,7 @@
                     <div class="body_comment">
                         <div class="row">
                             <div class="avatar_comment col-md-1">
-                                <img src="${post.getOwnUser().getAvatar()}" alt="avatar"/>
+                                <img src="${sessionScope["loginUser"].getAvatar()}" alt="avatar"/>
                             </div>
                             <form method="post">
                                 <div class="box_comment col-md-11">

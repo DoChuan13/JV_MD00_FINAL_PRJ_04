@@ -90,7 +90,7 @@ public class PostController extends HttpServlet {
     }
 
     private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {
-        int postId = Integer.parseInt(request.getParameter("postID"));
+        int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
         postService.deleteCurrentPost(postId);
         try {
             response.sendRedirect(URL.PATH_POST);

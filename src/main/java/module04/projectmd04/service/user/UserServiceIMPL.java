@@ -33,10 +33,7 @@ public class UserServiceIMPL implements IUserService {
     String SELECT_USER_BY_ID = "select * from user where userId = ?;";
     String UN_BLOCK_USER = "update user set status = ? where userId = ?;";
     String UPDATE_USER_ROLE = "update userRole set roleId = ? where userId = ?;";
-    String DELETE_FROM_IMAGE_POST = "delete from imagePost where imageId not in" +
-            " (select imageId from imagePost iP " +
-            "join post p on p.postId = iP.postId " +
-            "join userPost uP on p.postId = uP.postId);";
+    String DELETE_FROM_IMAGE_POST = "delete from imagePost where postId not in (select p.postId from post p join userPost uP on p.postId = uP.postId where uP.userId not in (select userId from user));;";
     String DELETE_USER_POST = "delete from userPost where userId = ?;";
     String DELETE_FROM_IMAGE = "delete from image where imageId not in (select imageId from imagePost);";
     String DELETE_USER_CHAT = "delete from userChat where sentUserId =? or receivedUserId = ?;";

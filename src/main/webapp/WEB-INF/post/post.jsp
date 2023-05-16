@@ -102,12 +102,15 @@
                             <small>${post.getPostStatus()}</small>
                         </div>
                     </div>
+                    <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                        <div><a href="/post?action=delete&postId=${post.getPostId()}"><button type="button">Delete</button></a></div>
+                    </c:if>
                 </div>
                 <div class="status-field">
                     <p>${post.getPostContent()}</p>
                     <c:if test="${post.getImageList().size()!=0}">
                         <c:forEach items="${post.getImageList()}" var="image">
-                        <img src="${image}" alt="">
+                            <img src="${image}" alt="">
                         </c:forEach>
                     </c:if>
                 </div>
@@ -152,7 +155,7 @@
                 <div class="body_comment">
                     <div class="row">
                         <div class="avatar_comment col-md-1">
-                            <img src="${post.getOwnUser().getAvatar()}" alt="avatar"/>
+                            <img src="${sessionScope["loginUser"].getAvatar()}" alt="avatar"/>
                         </div>
                         <form method="post">
                             <div class="box_comment col-md-11">
