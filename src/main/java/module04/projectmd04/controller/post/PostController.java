@@ -152,8 +152,8 @@ public class PostController extends HttpServlet {
         }
     }
 
-    private void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
-                                         String status) {
+    public  void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
+                                        String status) {
         String alert = "Do not leave Empty Field";
         request.setAttribute(Constant.VALIDATE, alert);
         request.setAttribute(Constant.POST_CONTENT, content);

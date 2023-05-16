@@ -83,8 +83,25 @@ public class UserController extends HttpServlet {
                 actionLogin(request, response);
                 break;
             case "create":
-                new PostController().actionCreateNewPost(request, response);
+                actionCreateNewPost(request,response);
                 break;
+        }
+    }
+
+    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
+        String content = request.getParameter(Constant.POST_CONTENT);
+        String status = request.getParameter(Constant.POST_STATUS);
+        if (content.equals("") || status.equals("")) {
+            new PostController().setAttributePostRequest(request, response, content, status);
+            return;
+        }
+        User user = userService.getCurrentUser(request);
+        Post post = new Post(content, status, user);
+        postService.createNewPost(post);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
