@@ -25,6 +25,7 @@ public class PostServiceIMPL implements IPostService {
 
     String LIKE_POST = "select lP.userId from user join likePost lP on user.userId = lP.userId where lP.likeId =? and user.userId=?";
     String INSERT_INTO_CREATE_COMMENT = "insert into comment( content) value (?);";
+    String INSERT_INTO_COMMENT="insert into commentpost(commentId, postId, userId) value (?,?,?)";
 
     @Override
     public void showAllPostList(User currentUser) {
@@ -131,11 +132,19 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement.executeUpdate();
             int commentId = 0;
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_USER_POST);
             while (resultSet.next()) {
                 commentId = resultSet.getInt(1);
             }
+            User currentUser =new UserServiceIMPL().getCurrentUser(request);
             int userId = new UserServiceIMPL().getCurrentUser(request).getUserId();
+            PreparedStatement preparedStatement1=connection.prepareStatement(INSERT_INTO_COMMENT);
+            preparedStatement1.setInt(1,comment.getCommentId());
+            preparedStatement1.setInt(2,currentUser.getUserId());
+            preparedStatement1.setInt(3,postId);
+            preparedStatement1.executeUpdate();
+            connection.commit();
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

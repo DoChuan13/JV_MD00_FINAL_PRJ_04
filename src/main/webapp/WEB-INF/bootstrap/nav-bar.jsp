@@ -740,6 +740,16 @@
             <a href="/user"><img src="${sessionScope["loginUser"].getAvatar()}" alt=""></a>
             <a href="/user?action=logout" class="btn btn-secondary"><i style="font-size:40px" class="fa">&#xf08b;</i>
                 <span></span></a>
+<%--            <li class="nav-item dropdown">--%>
+<%--                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">--%>
+<%--                    <img src="${sessionScope["loginUser"].getAvatar()}" alt="">--%>
+<%--                </a>--%>
+<%--                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">--%>
+<%--                    <li><a class="dropdown-item" href="/user">My Profile</a></li>--%>
+<%--                    <li><a class="dropdown-item" href="/user?action=logout">Log out</a></li>--%>
+<%--                </ul>--%>
+<%--            </li>--%>
+
         </div>
     </div>
     <div class="user-settings">
