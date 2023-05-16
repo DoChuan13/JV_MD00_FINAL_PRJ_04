@@ -24,8 +24,8 @@ create table if not exists FacebookDatabase.role
 
 create table if not exists FacebookDatabase.friend
 (
-    friendId int primary key auto_increment,
-    status   varchar(10) default ('pending')
+    friendId   int primary key auto_increment,
+    friendDate datetime default (now())
 );
 
 create table if not exists FacebookDatabase.post

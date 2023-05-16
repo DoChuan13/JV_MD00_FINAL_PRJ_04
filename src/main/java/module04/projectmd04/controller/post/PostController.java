@@ -106,7 +106,7 @@ public class PostController extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
-        List<Post> postList = postService.showAllPostList(currentUser);
+        List<Post> postList = postService.showAllPostListRelativeUser(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_INFO);
         postService.showAllPostList(currentUser);
