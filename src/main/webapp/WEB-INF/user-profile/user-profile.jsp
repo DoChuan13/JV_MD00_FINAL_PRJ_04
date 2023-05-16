@@ -287,9 +287,6 @@
         </div>
     </div>
 </div>
-<footer id="footer">
-    <p>&copy; Copyright 2021 - Socialbook All Rights Reserved</p>
-</footer>
 </body>
 </html>
 <jsp:include page="../bootstrap/footer.jsp">
