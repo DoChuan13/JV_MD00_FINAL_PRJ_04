@@ -103,10 +103,12 @@
                         </div>
                     </div>
                     <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
-                        <div><a href="/post?action=delete&postId=${post.getPostId()}"><button type="button">Delete</button></a></div>
+                        <div><a href="/post?action=delete&postId=${post.getPostId()}">
+                            <button type="button">Delete</button>
+                        </a></div>
                     </c:if>
                 </div>
-                <div class="status-field">
+                <div class="status-field" style="padding: 10px;background-color: aliceblue; border-radius: 20px">
                     <p>${post.getPostContent()}</p>
                     <c:if test="${post.getImageList().size()!=0}">
                         <c:forEach items="${post.getImageList()}" var="image">
@@ -123,9 +125,10 @@
                 </div>
                 <c:if test='${post.getCommentList().size()!=0}'>
                     <c:forEach items="${post.getCommentList()}" var="comment">
-                        <div class="row" style="margin-bottom: 10px;background: #b2b2b2;">
+                        <div class="row"
+                             style="margin-bottom: 10px;background: #b2b2b2; border-radius: 20px; padding: 10px;">
                             <ul id="list_comment" class="col-md-12">
-                                <li class="box_result row">
+                                <li class="box_result row" style="list-style: none;">
                                     <div class="avatar_comment col-md-1">
                                         <img src="${comment.getCommentUser().getAvatar()}"
                                              alt="avatar"/>

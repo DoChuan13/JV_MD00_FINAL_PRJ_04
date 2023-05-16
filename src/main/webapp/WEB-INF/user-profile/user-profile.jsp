@@ -18,7 +18,7 @@
             <img src="${sessionScope["loginUser"].getAvatar()}" class="dashboard-img" alt="">
             <div class="left-dashboard-info">
                 <h3>${sessionScope["loginUser"].getName()}</h3>
-                <p>120 Friends - 20 mutuals</p>
+                <p>${requestScope["friendCount"].size()} Friends</p>
                 <div class="mutual-friend-images">
                     <img src="../../images/member-1.png" alt="">
                     <img src="../../images/member-2.png" alt="">
@@ -29,10 +29,10 @@
         </div>
         <div class="right-dashboard-info">
             <div class="right-dashboard-info-top">
-                <a href="#">
+                <a href="/friend">
                     <button type="button"><i class="fas fa-user-plus"></i> Friends</button>
                 </a>
-                <a href="#">
+                <a href="/chat">
                     <button type="button"><i class="far fa-envelope"></i> messages</button>
                 </a>
             </div>
@@ -184,7 +184,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="status-field">
+                    <div class="status-field" style="padding: 10px; background-color: aliceblue; border-radius: 20px;">
                         <p>${post.getPostContent()}</p>
                         <c:if test="${post.getImageList().size()!=0}">
                             <c:forEach items="${post.getImageList()}" var="image">
@@ -202,9 +202,10 @@
                     </div>
                     <c:if test='${post.getCommentList().size()!=0}'>
                         <c:forEach items="${post.getCommentList()}" var="comment">
-                            <div class="row" style="margin-bottom: 10px;background: #b2b2b2;">
+                            <div class="row"
+                                 style="margin-bottom: 10px;background: #b2b2b2; border-radius: 20px; padding: 10px;">
                                 <ul id="list_comment" class="col-md-12">
-                                    <li class="box_result row">
+                                    <li class="box_result row" style="list-style: none;">
                                         <div class="avatar_comment col-md-1">
                                             <img src="${comment.getCommentUser().getAvatar()}"
                                                  alt="avatar"/>

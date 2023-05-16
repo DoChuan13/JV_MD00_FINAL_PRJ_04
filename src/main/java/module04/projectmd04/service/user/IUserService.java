@@ -8,6 +8,7 @@ import module04.projectmd04.service.generic.IGenericService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Set;
 
 public interface IUserService extends IGenericService<User> {
@@ -30,4 +31,6 @@ public interface IUserService extends IGenericService<User> {
     void blockUnblockAccount(User user);
 
     void changeAccountRole(User user);
+
+    List<User> findUserByName(HttpServletRequest request, String name);
 }

@@ -6,6 +6,7 @@ import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
+import module04.projectmd04.service.Services;
 import org.omg.CORBA.PERSIST_STORE;
 
 import javax.servlet.http.HttpServletRequest;
@@ -353,5 +354,40 @@ public class UserServiceIMPL implements IUserService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public List<User> findUserByName(HttpServletRequest request, String findName) {
+        List<User> userList = new ArrayList<>();
+        User currentUser = getCurrentUser(request);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from user where name like ? or ? or ?;");
+            preparedStatement.setString(1, (findName + "%"));
+            preparedStatement.setString(2, ("%" + findName + "%"));
+            preparedStatement.setString(3, ("%" + findName));
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int userId = resultSet.getInt("userId");
+                String name = resultSet.getString("name");
+                String userName = resultSet.getString("userName");
+                String email = resultSet.getString("email");
+                String avatar = resultSet.getString("avatar");
+                boolean status = resultSet.getBoolean("status");
+                Set<Role> roleSet = findRoleByUserId(userId);
+                boolean userRole = true;
+                for (Role role : roleSet) {
+                    if (role.getName() == RoleName.ADMIN || role.getName() == RoleName.PM) {
+                        userRole = false;
+                    }
+                }
+                if (userId != currentUser.getUserId() && userRole && !status) {
+                    User user = new User(userId, name, userName, email, avatar, roleSet);
+                    userList.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userList;
     }
 }

@@ -69,6 +69,7 @@ public class User implements Serializable {
         this.roleSet = roleSet;
     }
 
+
     public int getUserId() {
         return userId;
     }
@@ -128,14 +129,14 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-               "userId=" + userId +
-               ", name='" + name + '\'' +
-               ", userName='" + userName + '\'' +
-               ", email='" + email + '\'' +
-               ", password='" + password + '\'' +
-               ", avatar='" + avatar + '\'' +
-               ", roleSet=" + roleSet +
-               ", status=" + status +
-               '}';
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", roleSet=" + roleSet +
+                ", status=" + status +
+                '}';
     }
 }

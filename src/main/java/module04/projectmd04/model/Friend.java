@@ -18,6 +18,12 @@ public class Friend implements Serializable {
     public Friend() {
     }
 
+    public Friend(User friend1, User friend2, String status) {
+        this.friend1 = friend1;
+        this.friend2 = friend2;
+        this.status = status;
+    }
+
     public int getFriendId() {
         return friendId;
     }

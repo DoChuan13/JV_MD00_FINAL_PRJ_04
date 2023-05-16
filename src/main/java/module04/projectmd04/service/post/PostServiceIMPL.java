@@ -37,7 +37,7 @@ public class PostServiceIMPL implements IPostService {
             "select p.*,uP.userId from post p " +
             "join userPost uP on p.postId = uP.postId join user u on u.userId = uP.userId " +
             "join userFriend uF on u.userId = uF.receivedUserId or u.userId = uF.sentUserId " +
-            "where up.userId != ? and uF.status = 'accepted' and p.status!='private';";
+            "join friend f on f.friendId = uF.friendId where uP.userId != ? and f.status = 'accepted' and p.status!='private';";
     String SELECT_FROM_COMMENT = "select c.*, u.* from comment c " + "join commentPost cP on c.commentId = cP.commentId " + "join user u on u.userId = cP.userId where cp.postId = ?";
 
     String SELECT_FROM_LIKE = "select * from `like` " + "join likePost lP on `like`.likeId = lP.likeId " + "join user u on u.userId = lP.userId where lp.postId = ?;";

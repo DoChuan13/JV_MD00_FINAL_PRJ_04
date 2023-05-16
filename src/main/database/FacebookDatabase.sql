@@ -25,8 +25,8 @@ create table if not exists FacebookDatabase.role
 create table if not exists FacebookDatabase.friend
 (
     friendId   int primary key auto_increment,
-    friendDate datetime default (now())
-);
+    friendDate datetime    default (now()),
+    status     varchar(10) default ('pending'));
 
 create table if not exists FacebookDatabase.post
 (
@@ -99,7 +99,7 @@ create table if not exists FacebookDatabase.imagePost
 (
     imageId int not null,
     postId  int not null,
-    primary key (imageId,postId),
+    primary key (imageId, postId),
     constraint fk_ImagePost_ImageId foreign key (imageId) references image (imageId),
     constraint fk_ImagePost_PostId foreign key (postId) references post (postId)
 );
@@ -127,7 +127,6 @@ create table if not exists FacebookDatabase.userFriend
     sentUserId     int not null,
     receivedUserId int not null,
     unique (friendId, sentUserId, receivedUserId),
-    status         varchar(10) default ('pending'),
     constraint fk_UFriend_FriendId foreign key (friendId) references friend (friendId),
     constraint fk_UFriend_AUserId foreign key (sentUserId) references user (userId),
     constraint fk_UFriend_BUserId foreign key (receivedUserId) references user (userId)
