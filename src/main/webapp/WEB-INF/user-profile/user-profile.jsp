@@ -137,23 +137,38 @@
         <!-- main-content------- -->
 
         <div class="content-area profile-content-area">
-            <div class="write-post-container">
-                <div class="user-profile">
-                    <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
-                    <div>
-                        <p> ${sessionScope["loginUser"].getName()}</p>
-                        <small>Public <i class="fas fa-caret-down"></i></small>
+            <form method="post">
+                <div class="write-post-container">
+                    <div class="user-profile">
+                        <img src="${sessionScope["loginUser"].getAvatar()}" alt="">
+                        <div>
+                            <p> ${sessionScope["loginUser"].getName()}</p>
+                            <small>
+                                <label>
+                                    <input type="text" name="action" value="create" readonly hidden
+                                           style="position: absolute"
+                                    >
+                                    <select name="status">
+                                        <option value="public" name="status">Public</option>
+                                        <option value="friend" name="status">Friend</option>
+                                        <option value="private" name="status">Private</option>
+                                    </select>
+                                </label>
+                            </small>
+                        </div>
+                    </div>
+                    <div class="post-upload-textarea">
+                        <input name="content" placeholder="What's on your mind?"
+                               style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                        <div class="add-post-links">
+                            <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
+                            <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
+                            <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
+                            <button type="submit" style="font-size: 15px">Post</button>
+                        </div>
                     </div>
                 </div>
-                <div class="post-upload-textarea">
-                    <textarea name="" placeholder="What's on your mind, Alex?" id="" cols="30" rows="3"></textarea>
-                    <div class="add-post-links">
-                        <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
-                        <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
-                        <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
-                    </div>
-                </div>
-            </div>
+            </form>
 
             <c:forEach items='${requestScope["postList"]}' var="post">
                 <div class="status-field-container write-post-container">

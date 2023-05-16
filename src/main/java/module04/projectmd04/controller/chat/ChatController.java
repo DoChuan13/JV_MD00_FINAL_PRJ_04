@@ -23,7 +23,9 @@ public class ChatController extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
         System.out.printf("Do Get in Chat ==> %s%n", action);
 
@@ -35,7 +37,9 @@ public class ChatController extends HttpServlet {
 
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
         System.out.printf("Do Post in Chat ==> %s%n", action);
 

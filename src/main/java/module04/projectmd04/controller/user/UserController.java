@@ -4,6 +4,7 @@ import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.config.detail.Validate;
+import module04.projectmd04.controller.post.PostController;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +39,9 @@ public class UserController extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Get in User ==> %s%n", action);
 
@@ -61,7 +65,9 @@ public class UserController extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Post in User ==> %s%n", action);
 
@@ -75,6 +81,9 @@ public class UserController extends HttpServlet {
                 break;
             case "login":
                 actionLogin(request, response);
+                break;
+            case "create":
+                new PostController().actionCreateNewPost(request, response);
                 break;
         }
     }

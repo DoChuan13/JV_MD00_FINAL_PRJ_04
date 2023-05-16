@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @WebServlet("/post")
@@ -27,7 +28,9 @@ public class PostController extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Get in Post ==> %s%n", action);
 
@@ -61,7 +64,9 @@ public class PostController extends HttpServlet {
 
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Post in Post ==> %s%n", action);
 
@@ -112,7 +117,7 @@ public class PostController extends HttpServlet {
         }
     }
 
-    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
+    public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         if (content.equals("") || status.equals("")) {
