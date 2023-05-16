@@ -43,9 +43,17 @@ public class PostController extends HttpServlet {
             case "delete":
                 deleteCurrentPost(request, response);
                 break;
+            case "like":
+                likePost(request,response);
+                break;
             default:
                 showPostInfo(request, response);
         }
+    }
+
+    private void likePost(HttpServletRequest request, HttpServletResponse response) {
+        int postId = Integer.parseInt(request.getParameter("postId"));
+        postService.likePost(request,postId);
     }
 
 

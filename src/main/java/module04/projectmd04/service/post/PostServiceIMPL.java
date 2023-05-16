@@ -1,10 +1,15 @@
 package module04.projectmd04.service.post;
 
 import module04.projectmd04.config.Configs;
+import module04.projectmd04.model.Like;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
+import module04.projectmd04.service.user.UserServiceIMPL;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
@@ -16,7 +21,7 @@ public class PostServiceIMPL implements IPostService {
     String DELETE_FROM_POST = "delete from post where postId = ?;";
     String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
-
+    String LIKE_POST ="select lP.userId from user join likePost lP on user.userId = lP.userId where lP.likeId =? and user.userId=?";
     @Override
     public void showAllPostList(User currentUser) {
 
@@ -85,6 +90,30 @@ public class PostServiceIMPL implements IPostService {
             PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_FROM_COMMENT);
             preparedStatement4.executeUpdate();
             connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void likePost(HttpServletRequest request, int postId) {
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(LIKE_POST);
+            preparedStatement.setInt(1,postId);
+            User currentUser = new UserServiceIMPL().getCurrentUser(request);
+            int userId = currentUser.getUserId();
+            preparedStatement.setInt(2,userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<Like> likeList = new ArrayList<>();
+            PreparedStatement preparedStatement1 = connection.prepareStatement(LIKE_POST);
+            while (resultSet.next()){
+              int likeId = resultSet.getInt("likeId");
+              likeList.add(new Like(likeId,currentUser));
+            }
+            if (likeList.size()==0){
+                likeList.add(new Like());
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
