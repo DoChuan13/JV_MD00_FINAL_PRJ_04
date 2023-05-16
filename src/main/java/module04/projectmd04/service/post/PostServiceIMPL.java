@@ -34,15 +34,15 @@ public class PostServiceIMPL implements IPostService {
                               "join likePost lP on `like`.likeId = lP.likeId " +
                               "join user u on u.userId = lP.userId where lp.postId = ?;";
 
-    String SELECT_LIKE_POST_BY_ID = "select lP.userId from user " +
+    String SELECT_LIKE_POST_BY_ID = "select lP.likeId from user " +
                                     "join likePost lP on user.userId = lP.userId " +
-                                    "where lP.likeId =? and user.userId=?";
+                                    "where lP.postId =? and user.userId=?";
 
     private static final String DELETE_LIKE_POST = "delete from likePost where postId=?";
     String INSERT_INTO_LIKE = "insert into `like` (likedDate) values(default)";
     String INSERT_INTO_CREATE_COMMENT = "insert into comment( content) value (?);";
     private static final String INSERT_INTO_LIKE_POST = "insert into likePost(likeId, postId, userId) values(?,?,?) ";
-    String INSERT_INTO_COMMENT="insert into commentpost(commentId, postId, userId) value (?,?,?)";
+    String INSERT_INTO_COMMENT = "insert into commentpost(commentId, postId, userId) value (?,?,?)";
 
     @Override
     public List<Post> showAllPostList(User currentUser) {
@@ -180,18 +180,22 @@ public class PostServiceIMPL implements IPostService {
                                                                                    Statement.RETURN_GENERATED_KEYS);
                 preparedStatement1.executeUpdate();
                 ResultSet resultSet1 = preparedStatement1.getGeneratedKeys();
-                int likeId = resultSet1.getInt("likeId");
+                int likeId = 0;
+                while (resultSet1.next()) {
+                    likeId = resultSet1.getInt(1);
+                }
                 PreparedStatement preparedStatement2 = connection.prepareStatement(INSERT_INTO_LIKE_POST);
-                preparedStatement2.setInt(1, postId);
-                preparedStatement2.setInt(2, userId);
-                preparedStatement2.setInt(3, likeId);
-                preparedStatement.executeUpdate();
+                preparedStatement2.setInt(1, likeId);
+                preparedStatement2.setInt(2, postId);
+                preparedStatement2.setInt(3, userId);
+                preparedStatement2.executeUpdate();
                 connection.commit();
             } else {
                 connection.setAutoCommit(false);
                 PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_LIKE_POST);
                 preparedStatement1.setInt(1, postId);
-                preparedStatement.executeUpdate();
+                preparedStatement1.executeUpdate();
+
                 PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_FROM_LIKE);
                 preparedStatement2.executeUpdate();
                 connection.commit();
@@ -213,12 +217,12 @@ public class PostServiceIMPL implements IPostService {
             while (resultSet.next()) {
                 commentId = resultSet.getInt(1);
             }
-            User currentUser =new UserServiceIMPL().getCurrentUser(request);
+            User currentUser = new UserServiceIMPL().getCurrentUser(request);
             int userId = new UserServiceIMPL().getCurrentUser(request).getUserId();
-            PreparedStatement preparedStatement1=connection.prepareStatement(INSERT_INTO_COMMENT);
-            preparedStatement1.setInt(1,comment.getCommentId());
-            preparedStatement1.setInt(2,currentUser.getUserId());
-            preparedStatement1.setInt(3,postId);
+            PreparedStatement preparedStatement1 = connection.prepareStatement(INSERT_INTO_COMMENT);
+            preparedStatement1.setInt(1, comment.getCommentId());
+            preparedStatement1.setInt(2, currentUser.getUserId());
+            preparedStatement1.setInt(3, postId);
             preparedStatement1.executeUpdate();
             connection.commit();
 

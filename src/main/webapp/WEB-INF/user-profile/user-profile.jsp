@@ -174,7 +174,7 @@
                     </div>
                     <div class="post-reaction">
                         <div class="activity-icons">
-                            <div><a href="/post?action=like&id=${post.getPostId()}" style="text-decoration: none"><img
+                            <div><a href="/post?action=like&postId=${post.getPostId()}" style="text-decoration: none"><img
                                     src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
                             <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
                         </div>
