@@ -163,6 +163,9 @@
                     <div class="post-upload-textarea">
                         <input name="content" placeholder="What's on your mind?"
                                style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                        <jsp:include page="../upload/upload-avatar.jsp">
+                            <jsp:param name="articleId" value=""/>
+                        </jsp:include>
                         <div class="add-post-links">
                             <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
                             <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>

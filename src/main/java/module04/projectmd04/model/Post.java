@@ -16,6 +16,13 @@ public class Post implements Serializable {
     private List<Like> likeList = new ArrayList<>();
     private List<String> imageList = new ArrayList<>();
 
+    public Post(String postContent, String postStatus, User ownUser, List<String> imageList) {
+        this.postContent = postContent;
+        this.postStatus = postStatus;
+        this.ownUser = ownUser;
+        this.imageList = imageList;
+    }
+
     public List<String> getImageList() {
         return imageList;
     }

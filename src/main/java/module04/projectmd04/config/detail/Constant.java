@@ -23,4 +23,5 @@ public final class Constant {
     public static final String USER_ID = "userId";
     public static final String NONE = "none";
     public static final String REQUESTED = "requested";
+    public static final String AVATAR = "avatar";
 }

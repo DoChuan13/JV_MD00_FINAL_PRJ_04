@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @WebServlet("/post")
@@ -123,12 +125,16 @@ public class PostController extends HttpServlet {
     public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
+        String avatar = request.getParameter(Constant.AVATAR);
         if (content.equals("") || status.equals("")) {
             setAttributePostRequest(request, response, content, status);
             return;
         }
+        String[] imgArr = avatar.split("--%%%%%%%%%%--");
+        List<String> imgList = new ArrayList<>();
+        Collections.addAll(imgList, imgArr);
         User user = userService.getCurrentUser(request);
-        Post post = new Post(content, status, user);
+        Post post = new Post(content, status, user,imgList);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);

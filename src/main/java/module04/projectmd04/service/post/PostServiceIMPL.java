@@ -68,7 +68,7 @@ public class PostServiceIMPL implements IPostService {
                 List<Like> likeList = findListLikeByPostId(postId);
                 List<String> imageList = findListImageByPostId(postId);
 
-                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList,imageList));
+                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList, imageList));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -95,7 +95,7 @@ public class PostServiceIMPL implements IPostService {
                 List<Like> likeList = findListLikeByPostId(postId);
                 List<String> imageList = findListImageByPostId(postId);
 
-                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList,imageList));
+                postList.add(new Post(postId, user, postContent, postStatus, postDate, commentList, likeList, imageList));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -121,6 +121,24 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement1.setInt(1, postId);
             preparedStatement1.setInt(2, post.getOwnUser().getUserId());
             preparedStatement1.executeUpdate();
+
+            if (post.getImageList().size() != 0) {
+                for (String image : post.getImageList()) {
+                    PreparedStatement preparedStatement2 = connection.prepareStatement("insert into image (imageSrc) values (?);", Statement.RETURN_GENERATED_KEYS);
+                    preparedStatement2.setString(1, image);
+                    preparedStatement2.executeUpdate();
+                    ResultSet resultSet1 = preparedStatement2.getGeneratedKeys();
+                    int imageId = 0;
+                    while (resultSet1.next()) {
+                        imageId = resultSet1.getInt(1);
+                    }
+
+                    PreparedStatement preparedStatement3 = connection.prepareStatement("insert into imagePost(imageId, postId) values (?, ?);");
+                    preparedStatement3.setInt(1, imageId);
+                    preparedStatement3.setInt(2, postId);
+                    preparedStatement3.executeUpdate();
+                }
+            }
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
