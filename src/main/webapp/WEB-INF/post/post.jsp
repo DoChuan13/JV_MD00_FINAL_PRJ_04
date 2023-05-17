@@ -170,15 +170,9 @@
                                 <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
                                        style="position: absolute">
                                 <input name="comment" placeholder="Add a comment..."
-                                       style="width: 535px; height: 48px;border-radius:15px;border: none;background-color: rgb(242, 242, 242);;">
-                                <div class="box_post" style="border-radius: 15px;">
-                                    <div class="pull-left">
-                                    </div>
-                                    <div class="pull-right">
-                                        <button type="submit" value="1">Post</button>
-                                    </div>
-                                </div>
-                                    <div class="pull-left">
+                                       style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                                <div class="box_post">
+                                <div class="pull-left">
                                     </div>
                                     <div class="pull-right">
                                         <button type="submit" value="1">Post</button>
