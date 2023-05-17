@@ -3,7 +3,6 @@ package module04.projectmd04.controller.admin;
 import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
-import module04.projectmd04.config.detail.Validate;
 import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @WebServlet("/admin")
 public class AdminController extends HttpServlet {
@@ -63,6 +61,9 @@ public class AdminController extends HttpServlet {
     }
 
     private void blockUnblockAccount(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -97,6 +98,9 @@ public class AdminController extends HttpServlet {
     }
 
     private void changeAccountRole(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -131,6 +135,9 @@ public class AdminController extends HttpServlet {
     }
 
     private void deleteUserAccount(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -164,6 +171,9 @@ public class AdminController extends HttpServlet {
     }
 
     private void showFormAdminManager(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         List<User> userList = userService.findAll();
         request.setAttribute(Constant.USER_LIST, userList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_ADMIN_INFO);
