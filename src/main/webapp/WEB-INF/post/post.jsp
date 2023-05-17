@@ -129,7 +129,7 @@
                 <c:if test='${post.getCommentList().size()!=0}'>
                     <c:forEach items="${post.getCommentList()}" var="comment">
                         <div class="row"
-                             style="margin-bottom: 10px;background: #b2b2b2; border-radius: 20px; padding: 10px;">
+                             style="height:130px;margin-bottom: 10px;background-color: rgb(242, 242, 242);; border-radius: 20px; padding: 10px;">
                             <ul id="list_comment" class="col-md-12">
                                 <li class="box_result row" style="list-style: none;">
                                     <div class="avatar_comment col-md-1">
@@ -164,14 +164,20 @@
                             <img src="${sessionScope["loginUser"].getAvatar()}" alt="avatar"/>
                         </div>
                         <form method="post">
-                            <div class="box_comment col-md-11">
+                            <div class="box_comment col-md-11 ">
                                 <input type="text" name="action" value="comment" readonly hidden
                                        style="position: absolute">
                                 <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
                                        style="position: absolute">
                                 <input name="comment" placeholder="Add a comment..."
-                                       style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
-                                <div class="box_post">
+                                       style="width: 535px; height: 48px;border-radius:15px;border: none;background-color: rgb(242, 242, 242);;">
+                                <div class="box_post" style="border-radius: 15px;">
+                                    <div class="pull-left">
+                                    </div>
+                                    <div class="pull-right">
+                                        <button type="submit" value="1">Post</button>
+                                    </div>
+                                </div>
                                     <div class="pull-left">
                                     </div>
                                     <div class="pull-right">

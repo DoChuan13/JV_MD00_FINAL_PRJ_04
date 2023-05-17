@@ -791,7 +791,7 @@
         position: relative;
         line-height: 1.358;
         word-break: break-word;
-        border: 1px solid #d3d6db;
+        /*border: 1px solid #d3d6db;*/
         word-wrap: break-word;
         background: #fff;
         box-sizing: border-box;
@@ -811,7 +811,7 @@
         outline: none !important;
     }
     .box_comment .box_post{
-        border-top: 1px solid #d3d6db;
+        /*border-top: 1px solid #d3d6db;*/
         background: #f5f6f7;
         padding: 8px;
         display: block;
