@@ -25,4 +25,6 @@ public final class Constant {
     public static final String REQUESTED = "requested";
     public static final String AVATAR = "avatar";
     public static final String NEW_PASSWORD = "newPassword";
+    public static final Object PROFILE_CHANGE = "changeProfile";
+    public static final Object PASS_CHANGE = "changePassword";
 }

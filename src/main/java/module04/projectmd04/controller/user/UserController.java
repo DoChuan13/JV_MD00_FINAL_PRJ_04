@@ -63,6 +63,9 @@ public class UserController extends HttpServlet {
             case "changeProfile":
                 showFormChangeProfile(request, response);
                 break;
+            case "changePassword":
+                showFormPassword(request, response);
+                break;
             case "logout":
                 logoutUser(request, response);
                 break;
@@ -256,7 +259,7 @@ public class UserController extends HttpServlet {
         }
 
         if (!password.equals(rePassword)) {
-            alert = "Password not match!";
+            alert = "Re-Password not match!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormRegister(request, response);
             return;
@@ -314,8 +317,8 @@ public class UserController extends HttpServlet {
             return;
         }
 
-        if (!Validate.validatePassword(password)) {
-            alert = "Password is Invalid!";
+        if (!password.equals(currentUser.getPassword())) {
+            alert = "Password is not Exact!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormChangeProfile(request, response);
             return;
@@ -364,9 +367,35 @@ public class UserController extends HttpServlet {
         String password = request.getParameter(Constant.PASSWORD);
         String newPassword = request.getParameter(Constant.NEW_PASSWORD);
         String rePassword = request.getParameter(Constant.RE_PASSWORD);
-        currentUser.setPassword(password);
 
+        if (!password.equals(currentUser.getPassword())) {
+            alert = "Current password not match!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormPassword(request, response);
+            return;
+        }
+
+        if (!Validate.validatePassword(newPassword)) {
+            alert = "New Password is Invalid!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormPassword(request, response);
+            return;
+        }
+
+        if (!newPassword.equals(rePassword)) {
+            alert = "Re-Password not match!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormPassword(request, response);
+            return;
+        }
+
+        currentUser.setPassword(newPassword);
         userService.updateCurrentUser(currentUser);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void likePostInUser(HttpServletRequest request, HttpServletResponse response) {
@@ -429,8 +458,7 @@ public class UserController extends HttpServlet {
         return roleSet;
     }
 
-    private void setAttributeRegisterRequest(HttpServletRequest request, String alert, String name, String userName,
-                                             String email, String password) {
+    private void setAttributeRegisterRequest(HttpServletRequest request, String alert, String name, String userName, String email, String password) {
         request.setAttribute(Constant.VALIDATE, alert);
         request.setAttribute(Constant.NAME, name);
         request.setAttribute(Constant.USER_NAME, userName);
@@ -454,6 +482,26 @@ public class UserController extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
+        request.setAttribute(Constant.ACTION, Constant.PROFILE_CHANGE);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showFormPassword(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        request.setAttribute(Constant.ACTION, Constant.PASS_CHANGE);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
         try {
             dispatcher.forward(request, response);

@@ -13,9 +13,9 @@
     <title>Title</title>
 </head>
 <style>
-    #password-group, #rePassword-group, #newPassword-group {
-        display: none;
-    }
+    /*#password-group, #rePassword-group, #newPassword-group, #curr-password-group {*/
+    /*    display: none;*/
+    /*}*/
 
     #password-group input, #rePassword-group input, #newPassword-group input {
         text-align: end;
@@ -57,9 +57,13 @@
         <div class="left-sidebar profile-left-sidebar">
             <div class="left-profile-sidebar-top">
                 <div class="intro-bio">
-                    <button onclick="changeProfile()">Change Profile</button>
+                    <a href="/user?action=changeProfile">
+                        <button>Change Profile</button>
+                    </a>
                     <br/>
-                    <button onclick="changePassword()">Change Password</button>
+                    <a href="/user?action=changePassword">
+                        <button>Change Password</button>
+                    </a>
                     <hr>
                 </div>
             </div>
@@ -68,154 +72,189 @@
         <!-- main-content------- -->
 
         <div class="content-area profile-content-area">
-            <form method="post">
-                <c:if test='${requestScope["validate"]!=null}'>
-                    <p style="color: red;">${requestScope["validate"]}</p>
-                </c:if>
-                <input id="action" type='text' name='action' hidden readonly
-                       value="changeProfile"/>
-                <jsp:include page="../upload/upload-image.jsp">
-                    <jsp:param name="articleId" value=""/>
-                </jsp:include>
-                <div class="status-field-container write-post-container">
-                    <div class="user-profile-box">
+            <c:if test='${requestScope["validate"]!=null}'>
+                <p style="color: red;">${requestScope["validate"]}</p>
+            </c:if>
+            <c:if test='${requestScope["action"]=="changeProfile"}'>
+                <form method="post">
+                    <input id="action" type='text' name='action' hidden readonly
+                           value="changeProfile"/>
+                    <jsp:include page="../upload/upload-image.jsp">
+                        <jsp:param name="articleId" value=""/>
+                    </jsp:include>
+                    <div class="status-field-container write-post-container">
                         <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>User Name</h2>
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>User Name</h2>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="userName-field" type='text' name='userName' readonly
-                                       value='${sessionScope['loginUser'].getUserName()}'/></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="status-field-container write-post-container">
-                    <div class="user-profile-box">
-                        <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>Name</h2>
-                            </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="name-field" type='text' name='name' readonly
-                                       value='${sessionScope["loginUser"].getName()}'/>
+                            <div class="status-field">
+                                <div>
+                                    <input id="userName-field" type='text' name='userName'
+                                           value='${sessionScope['loginUser'].getUserName()}'/></div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="status-field-container write-post-container">
-                    <div class="user-profile-box">
+                    <div class="status-field-container write-post-container">
                         <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>Email</h2>
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>Name</h2>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="email-field" type='text' name='email' readonly
-                                       value='${sessionScope["loginUser"].getEmail()}'/>
+                            <div class="status-field">
+                                <div>
+                                    <input id="name-field" type='text' name='name'
+                                           value='${sessionScope["loginUser"].getName()}'/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="status-field-container write-post-container" id="password-group">
-                    <div class="user-profile-box">
+                    <div class="status-field-container write-post-container">
                         <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>Password</h2>
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>Email</h2>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="password-field" type='password' name='password'/>
+                            <div class="status-field">
+                                <div>
+                                    <input id="email-field" type='text' name='email'
+                                           value='${sessionScope["loginUser"].getEmail()}'/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="status-field-container write-post-container " id="newPassword-group">
-                    <div class="user-profile-box">
+                    <div class="status-field-container write-post-container" id="password-group">
                         <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>New-Password</h2>
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>Password</h2>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="new-password-field" type='password' name='newPassword'/>
+                            <div class="status-field">
+                                <div>
+                                    <input id="password-field" type='password' name='password'/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="status-field-container write-post-container " id="rePassword-group">
-                    <div class="user-profile-box">
+                    <button id="submit-field" type="submit">Update Info
+                    </button>
+                </form>
+            </c:if>
+            <c:if test='${requestScope["action"]=="changePassword"}'>
+                <form method="post">
+                    <input id="" type='text' name='action' hidden readonly
+                           value="changePassword"/>
+                    <div class="status-field-container write-post-container" id="curr-password-group">
                         <div class="user-profile-box">
-                            <div class="user-profile">
-                                <h2>Re-Password</h2>
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>Password</h2>
+                                </div>
                             </div>
-                        </div>
-                        <div class="status-field">
-                            <div>
-                                <input id="re-password-field" type='password' name='password'/>
+                            <div class="status-field">
+                                <div>
+                                    <input id="curr-password-field" type='password' name='password'/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <button style="display: none;" id="submit-field" type="submit" onclick="saveInfo()">Update Info</button>
-            </form>
+                    <div class="status-field-container write-post-container " id="newPassword-group">
+                        <div class="user-profile-box">
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>New-Password</h2>
+                                </div>
+                            </div>
+                            <div class="status-field">
+                                <div>
+                                    <input id="new-password-field" type='password' name='newPassword'/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="status-field-container write-post-container " id="rePassword-group">
+                        <div class="user-profile-box">
+                            <div class="user-profile-box">
+                                <div class="user-profile">
+                                    <h2>Re-Password</h2>
+                                </div>
+                            </div>
+                            <div class="status-field">
+                                <div>
+                                    <input id="re-password-field" type='password' name='rePassword'/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="submit-pass-field" type="submit">Update
+                        Password
+                    </button>
+                </form>
+            </c:if>
         </div>
     </div>
 </div>
 </body>
-<script>
-    let action = document.getElementById("action");
-    let avatar = document.getElementById("avatar");
-    let userName = document.getElementById("userName-field");
-    let name = document.getElementById("name-field");
-    let email = document.getElementById("email-field");
-    let password = document.getElementById("password-group");
-    let newPassword = document.getElementById("newPassword-group");
-    let rePassword = document.getElementById("rePassword-group");
-    let submitField = document.getElementById("submit-field");
-    avatar.setAttribute("readonly", "true");
+<%--<script>--%>
+<%--    let avatar = document.getElementById("avatar");--%>
+<%--    let userName = document.getElementById("userName-field");--%>
+<%--    let name = document.getElementById("name-field");--%>
+<%--    let email = document.getElementById("email-field");--%>
+<%--    let password = document.getElementById("password-group");--%>
+<%--    let submitField = document.getElementById("submit-field");--%>
 
-    function changeProfile() {
-        action.setAttribute("value", "changeProfile");
-        avatar.removeAttribute("readonly");
-        userName.removeAttribute("readonly");
-        name.removeAttribute("readonly");
-        email.removeAttribute("readonly");
-        password.style.display = "block";
-        rePassword.style.display = "none";
-        newPassword.style.display = "none";
-        submitField.style.display = "block";
-    }
+<%--    let currPassword = document.getElementById("curr-password-group");--%>
+<%--    let newPassword = document.getElementById("newPassword-group");--%>
+<%--    let rePassword = document.getElementById("rePassword-group");--%>
+<%--    let submitPassField = document.getElementById("submit-pass-field");--%>
+<%--    avatar.setAttribute("readonly", "true");--%>
 
-    function changePassword() {
-        action.setAttribute("value", "changePassword");
-        avatar.setAttribute("readonly", "true");
-        userName.setAttribute("readonly", "true");
-        name.setAttribute("readonly", "true");
-        email.setAttribute("readonly", "true");
-        password.style.display = "block";
-        newPassword.style.display = "block";
-        rePassword.style.display = "block";
-        submitField.style.display = "block";
-    }
+<%--    function changeProfile() {--%>
+<%--        avatar.removeAttribute("readonly");--%>
+<%--        userName.removeAttribute("readonly");--%>
+<%--        name.removeAttribute("readonly");--%>
+<%--        email.removeAttribute("readonly");--%>
+<%--        password.style.display = "block";--%>
+<%--        submitField.style.display = "block";--%>
 
-    function saveInfo() {
-        avatar.setAttribute("readonly", "true");
-        userName.setAttribute("readonly", "true");
-        name.setAttribute("readonly", "true");
-        email.setAttribute("readonly", "true");
-        password.style.display = "none";
-        newPassword.style.display = "none";
-        rePassword.style.display = "none";
-        submitField.style.display = "none";
-    }
-</script>
+<%--        currPassword.style.display = "none";--%>
+<%--        newPassword.style.display = "none";--%>
+<%--        rePassword.style.display = "none";--%>
+<%--        submitPassField.style.display = "none";--%>
+<%--    }--%>
+
+<%--    function changePassword() {--%>
+<%--        avatar.setAttribute("readonly", "true");--%>
+<%--        userName.setAttribute("readonly", "true");--%>
+<%--        name.setAttribute("readonly", "true");--%>
+<%--        email.setAttribute("readonly", "true");--%>
+<%--        password.style.display = "none";--%>
+<%--        submitField.style.display = "none";--%>
+
+<%--        currPassword.style.display = "block";--%>
+<%--        newPassword.style.display = "block";--%>
+<%--        rePassword.style.display = "block";--%>
+<%--        submitPassField.style.display = "block";--%>
+<%--    }--%>
+
+<%--    function saveInfo() {--%>
+<%--        avatar.setAttribute("readonly", "true");--%>
+<%--        userName.setAttribute("readonly", "true");--%>
+<%--        name.setAttribute("readonly", "true");--%>
+<%--        email.setAttribute("readonly", "true");--%>
+<%--        password.style.display = "none";--%>
+
+<%--        currPassword.style.display = "none";--%>
+<%--        newPassword.style.display = "none";--%>
+<%--        rePassword.style.display = "none";--%>
+<%--        submitField.style.display = "none";--%>
+<%--        submitPassField.style.display = "none";--%>
+<%--    }--%>
+<%--</script>--%>
 </html>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>
 <%--    <jsp:param name="articleId" value=""/>--%>
