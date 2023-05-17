@@ -129,12 +129,13 @@
                 <c:if test='${post.getCommentList().size()!=0}'>
                     <c:forEach items="${post.getCommentList()}" var="comment">
                         <div class="row"
-                             style="height:130px;margin-bottom: 10px;background-color: rgb(242, 242, 242);; border-radius: 20px; padding: 10px;">
+                             style="height:90px;margin-bottom: 10px;background-color: rgb(242, 242, 242);; border-radius: 20px; padding: 10px;    width: 80%;
+    margin-left: 59px;">
                             <ul id="list_comment" class="col-md-12">
                                 <li class="box_result row" style="list-style: none;">
                                     <div class="avatar_comment col-md-1">
                                         <img src="${comment.getCommentUser().getAvatar()}"
-                                             alt="avatar"/>
+                                             alt="avatar" style="margin-left: -54px"/>
                                     </div>
                                     <div class="result_comment col-md-11">
                                         <h4>${comment.getCommentUser().getName()}</h4>
@@ -170,7 +171,7 @@
                                 <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
                                        style="position: absolute">
                                 <input name="comment" placeholder="Add a comment..."
-                                       style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                                       style="width: 80%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;">
                                 <div class="box_post">
                                 <div class="pull-left">
                                     </div>
