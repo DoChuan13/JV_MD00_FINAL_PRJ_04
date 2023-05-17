@@ -26,7 +26,8 @@ create table if not exists FacebookDatabase.friend
 (
     friendId   int primary key auto_increment,
     friendDate datetime    default (now()),
-    status     varchar(10) default ('pending'));
+    status     varchar(10) default ('pending')
+);
 
 create table if not exists FacebookDatabase.post
 (
@@ -104,13 +105,13 @@ create table if not exists FacebookDatabase.imagePost
     constraint fk_ImagePost_PostId foreign key (postId) references post (postId)
 );
 
-create table if not exists chat
+create table if not exists FacebookDatabase.chat
 (
     chatId   int primary key auto_increment,
     content  varchar(500) not null,
     sentDate datetime default (now())
 );
-create table if not exists userChat
+create table if not exists FacebookDatabase.userChat
 (
     chatId         int not null,
     sentUserId     int not null,
@@ -120,6 +121,13 @@ create table if not exists userChat
     constraint fk_UserChat_StUserId foreign key (sentUserId) references user (userId),
     constraint fk_UserChat_ReUserId foreign key (receivedUserId) references user (userId)
 );
+
+alter table FacebookDatabase.userChat
+    add column startTime      datetime default (now()),
+    add column latestTime     datetime default (now()),
+    add column sentUserIn     datetime default (now()),
+    add column receivedUserIn datetime default (now());
+
 
 create table if not exists FacebookDatabase.userFriend
 (
