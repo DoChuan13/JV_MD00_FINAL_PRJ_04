@@ -2,6 +2,7 @@ package module04.projectmd04.controller.chat;
 
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.chat.IChatService;
 import module04.projectmd04.service.user.IUserService;
@@ -49,7 +50,8 @@ public class ChatController extends HttpServlet {
     }
 
     private void showFormChat(HttpServletRequest request, HttpServletResponse response) {
-        if (userService.getCurrentUser(request) == null) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
             try {
                 response.sendRedirect(URL.PATH_USER_LOGIN);
                 return;

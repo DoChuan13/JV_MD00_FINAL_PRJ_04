@@ -250,7 +250,7 @@ public class UserServiceIMPL implements IUserService {
                     return null;
                 }
                 Set<Role> roleSet = findRoleByUserId(userId);
-                user = new User(userId, name, userName, email, avatar, roleSet);
+                user = new User(userId, name, userName, email, password, avatar, roleSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

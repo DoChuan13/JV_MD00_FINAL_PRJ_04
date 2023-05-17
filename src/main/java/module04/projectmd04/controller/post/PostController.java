@@ -133,8 +133,8 @@ public class PostController extends HttpServlet {
         String[] imgArr = avatar.split("--%%%%%%%%%%--");
         List<String> imgList = new ArrayList<>();
         Collections.addAll(imgList, imgArr);
-        User user = userService.getCurrentUser(request);
-        Post post = new Post(content, status, user,imgList);
+        User currentUser = userService.getCurrentUser(request);
+        Post post = new Post(content, status, currentUser,imgList);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);
@@ -151,8 +151,8 @@ public class PostController extends HttpServlet {
             setAttributePostRequest(request, response, content, status);
             return;
         }
-        User user = userService.getCurrentUser(request);
-        Post post = new Post(content, status, user);
+        User currentUser = userService.getCurrentUser(request);
+        Post post = new Post(content, status, currentUser);
         postService.updateCurrentPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);

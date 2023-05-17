@@ -175,8 +175,8 @@ public class AdminController extends HttpServlet {
     }
 
     private static RoleName getCurrentRoleAcc(HttpServletRequest request, RoleName currentRole) {
-        User loginUser = userService.getCurrentUser(request);
-        List<Role> currentRoles = new ArrayList<>(loginUser.getRoleSet());
+        User currentUser = userService.getCurrentUser(request);
+        List<Role> currentRoles = new ArrayList<>(currentUser.getRoleSet());
         for (Role role : currentRoles) {
             if (role.getName() == RoleName.ADMIN) {
                 currentRole = RoleName.ADMIN;
