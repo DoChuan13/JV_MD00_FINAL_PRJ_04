@@ -14,4 +14,6 @@ public final class URL {
     public static final String PATH_USER = "/user";
     public static final String PATH_USER_REGISTER = "/user?action=register";
     public static final String PATH_USER_LOGIN = "/user?action=login";
+    public static final String PATH_USER_INFO = "/user?action=changeProfile";
+    public static final String PATH_USER_PASSWORD = "/user?action=changePassword";
 }
