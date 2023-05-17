@@ -364,9 +364,32 @@ public class UserController extends HttpServlet {
         String password = request.getParameter(Constant.PASSWORD);
         String newPassword = request.getParameter(Constant.NEW_PASSWORD);
         String rePassword = request.getParameter(Constant.RE_PASSWORD);
-        currentUser.setPassword(password);
+        if (!Validate.validatePassword(password)) {
+            alert = "Password is Invalid!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormChangeProfile(request, response);
+            return;
+        }
 
+        if (!Validate.validatePassword(newPassword)) {
+            alert = "New Password is Invalid!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormChangeProfile(request, response);
+            return;
+        }
+        if (!newPassword.equals(rePassword)) {
+            alert = "Re-Password not match!";
+            setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
+            showFormRegister(request, response);
+            return;
+        }
+        currentUser.setPassword(password);
         userService.updateCurrentUser(currentUser);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void likePostInUser(HttpServletRequest request, HttpServletResponse response) {
