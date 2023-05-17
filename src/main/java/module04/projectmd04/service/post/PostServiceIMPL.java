@@ -30,14 +30,14 @@ public class PostServiceIMPL implements IPostService {
     String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
     String DELETE_FROM_IMAGE = "delete from image where imageId not in (select imagePost.imageId from imagePost);";
-    String SELECT_POST_OWNER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId where up.userId = ?;";
+    String SELECT_POST_OWNER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId where up.userId = ? order by postedDate DESC;";
     String SELECT_POST_RE_USER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId " +
             "join user u on u.userId = uP.userId where up.userId =? " +
             "union " +
             "select p.*,uP.userId from post p " +
             "join userPost uP on p.postId = uP.postId join user u on u.userId = uP.userId " +
             "join userFriend uF on u.userId = uF.receivedUserId or u.userId = uF.sentUserId " +
-            "join friend f on f.friendId = uF.friendId where uP.userId != ? and f.status = 'accepted' and p.status!='private';";
+            "join friend f on f.friendId = uF.friendId where uP.userId != ? and f.status = 'accepted' and p.status!='private' order by postedDate DESC ;";
     String SELECT_FROM_COMMENT = "select c.*, u.* from comment c " + "join commentPost cP on c.commentId = cP.commentId " + "join user u on u.userId = cP.userId where cp.postId = ?";
 
     String SELECT_FROM_LIKE = "select * from `like` " + "join likePost lP on `like`.likeId = lP.likeId " + "join user u on u.userId = lP.userId where lp.postId = ?;";
@@ -264,8 +264,6 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement1.setInt(3, currentUser.getUserId());
             preparedStatement1.executeUpdate();
             connection.commit();
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

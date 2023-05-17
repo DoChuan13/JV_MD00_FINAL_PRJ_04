@@ -827,19 +827,16 @@
         line-height: 22px;
     }
     .box_comment button{
-        margin-left:-26px;
-        background-color: #4267b2;
-        border: 1px solid #4267b2;
-        color: #fff;
+        margin-left:-90px;
+        background: none;
+        border: none;
         text-decoration: none;
         line-height: 22px;
-        border-radius: 2px;
         font-size: 14px;
         font-weight: bold;
-        text-align: center;
         position: absolute;
         width: 40px;
-        margin-top: -36px;
+        margin-top: -32px;
     }
     .box_comment button:hover{
         background-color: #29487d;
@@ -870,12 +867,12 @@
         margin-top: 24px;
     }
     .box_result .result_comment h4{
-        font-weight: 600;
+        font-weight: 500;
         white-space: nowrap;
-        color: #365899;
+        color: rgb(57, 56, 56);
         cursor: pointer;
         text-decoration: none;
-        font-size: 20px;
+        font-size: 16px;
         line-height: 1.358;
         margin:0;
         position: absolute;
