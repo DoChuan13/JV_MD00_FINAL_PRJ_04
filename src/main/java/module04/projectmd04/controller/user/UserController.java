@@ -95,6 +95,9 @@ public class UserController extends HttpServlet {
             case "changeProfile":
                 actionChangeProfile(request, response);
                 break;
+            case "changePassword":
+                actionChangePassword(request, response);
+                break;
         }
     }
 
@@ -293,28 +296,28 @@ public class UserController extends HttpServlet {
         if (!Validate.validateName(name)) {
             alert = "Name is Invalid!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
-            showFormRegister(request, response);
+            showFormChangeProfile(request, response);
             return;
         }
 
         if (!Validate.validateUserName(userName)) {
             alert = "UserName is Invalid!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
-            showFormRegister(request, response);
+            showFormChangeProfile(request, response);
             return;
         }
 
         if (!Validate.validateEmail(email)) {
             alert = "Email is Invalid!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
-            showFormRegister(request, response);
+            showFormChangeProfile(request, response);
             return;
         }
 
         if (!Validate.validatePassword(password)) {
             alert = "Password is Invalid!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
-            showFormRegister(request, response);
+            showFormChangeProfile(request, response);
             return;
         }
 
@@ -322,7 +325,7 @@ public class UserController extends HttpServlet {
             if (userService.existedByUserName(userName)) {
                 alert = "UserName is existed!";
                 setAttributeRegisterRequest(request, alert, name, userName, email, password);
-                showFormRegister(request, response);
+                showFormChangeProfile(request, response);
                 return;
             }
         }
@@ -330,7 +333,7 @@ public class UserController extends HttpServlet {
             if (userService.existByEmail(email)) {
                 alert = "Email is existed!";
                 setAttributeRegisterRequest(request, alert, name, userName, email, password);
-                showFormRegister(request, response);
+                showFormChangeProfile(request, response);
                 return;
             }
         }
@@ -346,6 +349,24 @@ public class UserController extends HttpServlet {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void actionChangePassword(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        String password = request.getParameter(Constant.PASSWORD);
+        String newPassword = request.getParameter(Constant.NEW_PASSWORD);
+        String rePassword = request.getParameter(Constant.RE_PASSWORD);
+        currentUser.setPassword(password);
+
+        userService.updateCurrentUser(currentUser);
     }
 
     private void likePostInUser(HttpServletRequest request, HttpServletResponse response) {

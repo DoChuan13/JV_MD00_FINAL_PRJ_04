@@ -15,13 +15,14 @@ public final class Constant {
     public static final String POST_LIST = "postList";
     public static final String POST_ID = "postId";
     public static final String COMMENT = "comment";
-    public static final String  FRIEND_LIST = "friendList";
+    public static final String FRIEND_LIST = "friendList";
     public static final String ACCEPTED = "accepted";
     public static final String PENDING = "pending";
-    public static final String REJECTED  = "rejected";
+    public static final String REJECTED = "rejected";
 
     public static final String USER_ID = "userId";
     public static final String NONE = "none";
     public static final String REQUESTED = "requested";
     public static final String AVATAR = "avatar";
+    public static final String NEW_PASSWORD = "newPassword";
 }

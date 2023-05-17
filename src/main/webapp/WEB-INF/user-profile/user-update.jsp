@@ -59,7 +59,7 @@
                 <div class="intro-bio">
                     <button onclick="changeProfile()">Change Profile</button>
                     <br/>
-                    <button onclick="changeProfile()">Change Password</button>
+                    <button onclick="changePassword()">Change Password</button>
                     <hr>
                 </div>
             </div>
@@ -69,7 +69,10 @@
 
         <div class="content-area profile-content-area">
             <form method="post">
-                <input id="" type='text' name='action' hidden readonly
+                <c:if test='${requestScope["validate"]!=null}'>
+                    <p style="color: red;">${requestScope["validate"]}</p>
+                </c:if>
+                <input id="action" type='text' name='action' hidden readonly
                        value="changeProfile"/>
                 <jsp:include page="../upload/upload-image.jsp">
                     <jsp:param name="articleId" value=""/>
@@ -167,6 +170,7 @@
 </div>
 </body>
 <script>
+    let action = document.getElementById("action");
     let avatar = document.getElementById("avatar");
     let userName = document.getElementById("userName-field");
     let name = document.getElementById("name-field");
@@ -178,19 +182,27 @@
     avatar.setAttribute("readonly", "true");
 
     function changeProfile() {
+        action.setAttribute("value", "changeProfile");
         avatar.removeAttribute("readonly");
         userName.removeAttribute("readonly");
         name.removeAttribute("readonly");
         email.removeAttribute("readonly");
         password.style.display = "block";
+        rePassword.style.display = "none";
+        newPassword.style.display = "none";
         submitField.style.display = "block";
     }
 
     function changePassword() {
+        action.setAttribute("value", "changePassword");
+        avatar.setAttribute("readonly", "true");
+        userName.setAttribute("readonly", "true");
+        name.setAttribute("readonly", "true");
+        email.setAttribute("readonly", "true");
         password.style.display = "block";
         newPassword.style.display = "block";
         rePassword.style.display = "block";
-        submitField.style.display = "none";
+        submitField.style.display = "block";
     }
 
     function saveInfo() {
@@ -199,6 +211,8 @@
         name.setAttribute("readonly", "true");
         email.setAttribute("readonly", "true");
         password.style.display = "none";
+        newPassword.style.display = "none";
+        rePassword.style.display = "none";
         submitField.style.display = "none";
     }
 </script>
