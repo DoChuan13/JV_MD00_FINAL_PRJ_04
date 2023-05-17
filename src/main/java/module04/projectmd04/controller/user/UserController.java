@@ -115,8 +115,8 @@ public class UserController extends HttpServlet {
         String[] imgArr = avatar.split("--%%%%%%%%%%--");
         List<String> imgList = new ArrayList<>();
         Collections.addAll(imgList, imgArr);
-        User user = userService.getCurrentUser(request);
-        Post post = new Post(content, status, user, imgList);
+        User currentUser = userService.getCurrentUser(request);
+        Post post = new Post(content, status, currentUser, imgList);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_USER);
@@ -175,15 +175,8 @@ public class UserController extends HttpServlet {
     }
 
     private void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        User currentUser = redirectProtectedAction(request, response);
+        if (currentUser == null) return;
         List<Post> postList = postService.showAllPostList(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_INFO);
@@ -275,15 +268,8 @@ public class UserController extends HttpServlet {
     }
 
     private void actionChangeProfile(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        User currentUser = redirectProtectedAction(request, response);
+        if (currentUser == null) return;
         String name = request.getParameter(Constant.NAME);
         String userName = request.getParameter(Constant.USER_NAME);
         String email = request.getParameter(Constant.EMAIL);
@@ -355,15 +341,8 @@ public class UserController extends HttpServlet {
     }
 
     private void actionChangePassword(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        User currentUser = redirectProtectedAction(request, response);
+        if (currentUser == null) return;
         String password = request.getParameter(Constant.PASSWORD);
         String newPassword = request.getParameter(Constant.NEW_PASSWORD);
         String rePassword = request.getParameter(Constant.RE_PASSWORD);
@@ -473,15 +452,8 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormChangeProfile(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        User currentUser = redirectProtectedAction(request, response);
+        if (currentUser ==null) return;
         request.setAttribute(Constant.ACTION, Constant.PROFILE_CHANGE);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
         try {
@@ -492,15 +464,8 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormPassword(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        User currentUser = redirectProtectedAction(request, response);
+        if (currentUser ==null) return;
         request.setAttribute(Constant.ACTION, Constant.PASS_CHANGE);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
         try {
@@ -508,5 +473,18 @@ public class UserController extends HttpServlet {
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static User redirectProtectedAction(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return null;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return currentUser;
     }
 }
