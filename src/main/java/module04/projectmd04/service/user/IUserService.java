@@ -33,4 +33,6 @@ public interface IUserService extends IGenericService<User> {
     void changeAccountRole(User user);
 
     List<User> findUserByName(HttpServletRequest request, String name);
+
+    void updateCurrentUser(User user);
 }

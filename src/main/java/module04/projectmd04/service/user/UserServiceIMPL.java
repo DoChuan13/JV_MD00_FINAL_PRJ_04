@@ -49,6 +49,7 @@ public class UserServiceIMPL implements IUserService {
     String DELETE_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
     String DELETE_CHAT = "delete from chat where chatId not in (select userChat.chatId from userChat);";
     String DELETE_FRIEND = "delete from friend where friendId not in (select userFriend.friendId from userFriend);";
+    String UPDATE_USER_INFO = "update user set name = ?, userName =?, email=?, password=?, avatar=? where userId =?;";
 
     @Override
     public List<User> findAll() {
@@ -389,5 +390,24 @@ public class UserServiceIMPL implements IUserService {
             throw new RuntimeException(e);
         }
         return userList;
+    }
+
+    @Override
+    public void updateCurrentUser(User user) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_INFO);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getUserName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setString(5, user.getAvatar());
+            preparedStatement.setInt(6, user.getUserId());
+            preparedStatement.executeUpdate();
+
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -12,4 +12,5 @@ public class JSPLink {
     public static final String PATH_USER_POST = "WEB-INF/post/user-post.jsp";
     public static final String PATH_CHAT = "WEB-INF/chat/chat.jsp";
 
+    public static final String CHANGE_PROFILE = "WEB-INF/user-profile/user-update.jsp";
 }

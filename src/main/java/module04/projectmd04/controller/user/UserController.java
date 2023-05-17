@@ -5,11 +5,9 @@ import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.config.detail.Validate;
 import module04.projectmd04.controller.post.PostController;
-import module04.projectmd04.model.Post;
-import module04.projectmd04.model.Role;
-import module04.projectmd04.model.RoleName;
-import module04.projectmd04.model.User;
+import module04.projectmd04.model.*;
 import module04.projectmd04.service.Services;
+import module04.projectmd04.service.friend.IFriendService;
 import module04.projectmd04.service.post.IPostService;
 import module04.projectmd04.service.role.IRoleService;
 import module04.projectmd04.service.user.IUserService;
@@ -23,16 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @WebServlet("/user")
 public class UserController extends HttpServlet {
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IRoleService roleService = Services.getInstance().getRoleService();
     private static final IPostService postService = Services.getInstance().getPostService();
+    private static final IFriendService friendService = Services.getInstance().getFriendService();
     private String alert;
 
     public UserController() {
@@ -44,6 +40,11 @@ public class UserController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Get in User ==> %s%n", action);
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser != null) {
+            List<Friend> acceptedFriend = friendService.getAcceptFriendList(currentUser);
+            request.setAttribute("friendCount", acceptedFriend);
+        }
 
         if (action == null) {
             action = "";
@@ -58,6 +59,9 @@ public class UserController extends HttpServlet {
                 break;
             case "like":
                 likePostInUser(request, response);
+                break;
+            case "changeProfile":
+                showFormChangeProfile(request, response);
                 break;
             case "logout":
                 logoutUser(request, response);
@@ -88,18 +92,25 @@ public class UserController extends HttpServlet {
             case "create":
                 actionCreateNewPost(request, response);
                 break;
+            case "changeProfile":
+                actionChangeProfile(request, response);
+                break;
         }
     }
 
     private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
+        String avatar = request.getParameter(Constant.AVATAR);
         if (content.equals("") || status.equals("")) {
             new PostController().setAttributePostRequest(request, response, content, status);
             return;
         }
+        String[] imgArr = avatar.split("--%%%%%%%%%%--");
+        List<String> imgList = new ArrayList<>();
+        Collections.addAll(imgList, imgArr);
         User user = userService.getCurrentUser(request);
-        Post post = new Post(content, status, user);
+        Post post = new Post(content, status, user, imgList);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_USER);
@@ -109,6 +120,15 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormRegister(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser != null) {
+            try {
+                response.sendRedirect(URL.PATH_HOME);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_FORM_REGISTER);
         try {
             dispatcher.forward(request, response);
@@ -118,6 +138,15 @@ public class UserController extends HttpServlet {
     }
 
     private void showFormLogin(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser != null) {
+            try {
+                response.sendRedirect(URL.PATH_HOME);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_FORM_LOGIN);
         try {
             dispatcher.forward(request, response);
@@ -162,6 +191,15 @@ public class UserController extends HttpServlet {
 
 
     private void actionRegister(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser != null) {
+            try {
+                response.sendRedirect(URL.PATH_HOME);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         String name = request.getParameter(Constant.NAME);
         String userName = request.getParameter(Constant.USER_NAME);
         String email = request.getParameter(Constant.EMAIL);
@@ -225,6 +263,86 @@ public class UserController extends HttpServlet {
         userService.save(user);
         try {
             response.sendRedirect(URL.PATH_USER_LOGIN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void actionChangeProfile(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        String name = request.getParameter(Constant.NAME);
+        String userName = request.getParameter(Constant.USER_NAME);
+        String email = request.getParameter(Constant.EMAIL);
+        String password = request.getParameter(Constant.PASSWORD);
+        String avatar = request.getParameter(Constant.AVATAR);
+        if (avatar.equals("")) {
+            avatar = currentUser.getAvatar();
+        } else {
+            String[] imgArr = avatar.split("--%%%%%%%%%%--");
+            avatar = imgArr[0];
+        }
+
+        if (!Validate.validateName(name)) {
+            alert = "Name is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validateUserName(userName)) {
+            alert = "UserName is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validateEmail(email)) {
+            alert = "Email is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!Validate.validatePassword(password)) {
+            alert = "Password is Invalid!";
+            setAttributeRegisterRequest(request, alert, name, userName, email, password);
+            showFormRegister(request, response);
+            return;
+        }
+
+        if (!userName.equalsIgnoreCase(currentUser.getUserName())) {
+            if (userService.existedByUserName(userName)) {
+                alert = "UserName is existed!";
+                setAttributeRegisterRequest(request, alert, name, userName, email, password);
+                showFormRegister(request, response);
+                return;
+            }
+        }
+        if (!email.equalsIgnoreCase(currentUser.getEmail())) {
+            if (userService.existByEmail(email)) {
+                alert = "Email is existed!";
+                setAttributeRegisterRequest(request, alert, name, userName, email, password);
+                showFormRegister(request, response);
+                return;
+            }
+        }
+
+        currentUser.setName(name);
+        currentUser.setUserName(userName);
+        currentUser.setEmail(email);
+        currentUser.setPassword(password);
+        currentUser.setAvatar(avatar);
+        userService.updateCurrentUser(currentUser);
+        try {
+            response.sendRedirect(URL.PATH_USER);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -303,5 +421,23 @@ public class UserController extends HttpServlet {
         request.setAttribute(Constant.VALIDATE, alert);
         request.setAttribute(Constant.USER_NAME, userName);
         request.setAttribute(Constant.PASSWORD, password);
+    }
+
+    private void showFormChangeProfile(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

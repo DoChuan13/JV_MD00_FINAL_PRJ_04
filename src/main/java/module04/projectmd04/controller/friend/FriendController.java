@@ -33,6 +33,11 @@ public class FriendController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
         System.out.printf("Do Get in Friend ==> %s%n", action);
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser != null) {
+            List<Friend> acceptedFriend = friendService.getAcceptFriendList(currentUser);
+            request.setAttribute("friendCount", acceptedFriend);
+        }
 
         if (action == null) {
             action = "";
@@ -92,7 +97,6 @@ public class FriendController extends HttpServlet {
         String action = request.getParameter("action");
         if (action == null) {
             List<Friend> friendList = friendService.getAcceptFriendList(currentUser);
-            request.setAttribute("friendCount", new ArrayList<>(friendList));
             request.setAttribute(Constant.FRIEND_LIST, friendList);
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_FRIEND);
@@ -226,7 +230,6 @@ public class FriendController extends HttpServlet {
             }
         }
         List<Friend> friendList = friendService.getSentFriendList(currentUser);
-        request.setAttribute("friendCount", new ArrayList<>(friendList));
         request.setAttribute(Constant.FRIEND_LIST, friendList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_FRIEND);
         try {
@@ -247,7 +250,6 @@ public class FriendController extends HttpServlet {
             }
         }
         List<Friend> friendList = friendService.getRequestedFriendList(currentUser);
-        request.setAttribute("friendCount", new ArrayList<>(friendList));
         request.setAttribute(Constant.FRIEND_LIST, friendList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_FRIEND);
         try {

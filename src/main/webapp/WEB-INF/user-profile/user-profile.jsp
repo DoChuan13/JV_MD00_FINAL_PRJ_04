@@ -10,12 +10,20 @@
 <head>
     <title>Title</title>
 </head>
+<style>
+    .avatar-upload {
+        /*position: absolute;*/
+    }
+</style>
 <body>
 <div class="profile-container">
     <img src="../../images/cover.png" class="coverImage" alt="">
     <div class="dashboard">
         <div class="left-dashboard">
-            <img src="${sessionScope["loginUser"].getAvatar()}" class="dashboard-img" alt="">
+            <a href="/user?action=changeProfile"><img src="${sessionScope["loginUser"].getAvatar()}"
+                                                      class="dashboard-img" alt=""></a>
+            <div class="avatar-upload">
+            </div>
             <div class="left-dashboard-info">
                 <h3>${sessionScope["loginUser"].getName()}</h3>
                 <p>${requestScope["friendCount"].size()} Friends</p>
@@ -163,7 +171,7 @@
                     <div class="post-upload-textarea">
                         <input name="content" placeholder="What's on your mind?"
                                style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
-                        <jsp:include page="../upload/upload-avatar.jsp">
+                        <jsp:include page="../upload/upload-image.jsp">
                             <jsp:param name="articleId" value=""/>
                         </jsp:include>
                         <div class="add-post-links">
@@ -186,6 +194,11 @@
                                 <small>${post.getPostStatus()}</small>
                             </div>
                         </div>
+                        <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                            <div><a href="/post?action=delete&postId=${post.getPostId()}">
+                                <button type="button">Delete</button>
+                            </a></div>
+                        </c:if>
                     </div>
                     <div class="status-field" style="padding: 10px; background-color: aliceblue; border-radius: 20px;">
                         <p>${post.getPostContent()}</p>
