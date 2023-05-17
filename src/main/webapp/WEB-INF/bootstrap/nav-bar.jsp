@@ -782,9 +782,12 @@
         display: block;
     }
     .avatar_comment img{
-        height: 48px;
-        width: 48px;
+        height: 45px;
+        width: 45px;
         border-radius:20Px;
+        position: absolute;
+        margin-top: -1px;
+        z-index: 99;
     }
     .box_comment{
         display: block;
@@ -813,7 +816,6 @@
     .box_comment .box_post{
         /*border-top: 1px solid #d3d6db;*/
         background: #f5f6f7;
-        padding: 8px;
         display: block;
         overflow: hidden;
     }
@@ -825,7 +827,7 @@
         line-height: 22px;
     }
     .box_comment button{
-        margin-left:8px;
+        margin-left:-26px;
         background-color: #4267b2;
         border: 1px solid #4267b2;
         color: #fff;
@@ -834,8 +836,10 @@
         border-radius: 2px;
         font-size: 14px;
         font-weight: bold;
-        position: relative;
         text-align: center;
+        position: absolute;
+        width: 40px;
+        margin-top: -36px;
     }
     .box_comment button:hover{
         background-color: #29487d;
@@ -871,9 +875,12 @@
         color: #365899;
         cursor: pointer;
         text-decoration: none;
-        font-size: 14px;
+        font-size: 20px;
         line-height: 1.358;
         margin:0;
+        position: absolute;
+        margin-left: 1px;
+        margin-top: -26px;
     }
     .box_result .result_comment{
         display:block;
@@ -921,6 +928,7 @@
         vertical-align: middle;
         border-radius: 2px;
     }
+
 </style>
 <body>
 <nav class="navbar">
