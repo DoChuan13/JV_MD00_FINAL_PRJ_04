@@ -2,6 +2,7 @@ package module04.projectmd04.controller.chat;
 
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.chat.IChatService;
@@ -25,6 +26,9 @@ public class ChatController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
@@ -39,6 +43,9 @@ public class ChatController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+       User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
@@ -50,15 +57,6 @@ public class ChatController extends HttpServlet {
     }
 
     private void showFormChat(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_CHAT);
         try {
             dispatcher.forward(request, response);

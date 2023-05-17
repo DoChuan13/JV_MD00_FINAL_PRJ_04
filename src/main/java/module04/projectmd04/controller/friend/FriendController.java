@@ -3,6 +3,7 @@ package module04.projectmd04.controller.friend;
 import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.Friend;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
@@ -29,15 +30,15 @@ public class FriendController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
         System.out.printf("Do Get in Friend ==> %s%n", action);
-        User currentUser = userService.getCurrentUser(request);
-        if (currentUser != null) {
-            List<Friend> acceptedFriend = friendService.getAcceptFriendList(currentUser);
-            request.setAttribute("friendCount", acceptedFriend);
-        }
+        List<Friend> acceptedFriend = friendService.getAcceptFriendList(currentUser);
+        request.setAttribute("friendCount", acceptedFriend);
 
         if (action == null) {
             action = "";
@@ -74,6 +75,9 @@ public class FriendController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
@@ -86,14 +90,6 @@ public class FriendController extends HttpServlet {
 
     private void showFriendPage(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         String action = request.getParameter("action");
         if (action == null) {
             List<Friend> friendList = friendService.getAcceptFriendList(currentUser);
@@ -109,14 +105,6 @@ public class FriendController extends HttpServlet {
 
     private void findFriendToAdd(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         String name = request.getParameter("name");
         List<User> userList = userService.findUserByName(request, name);
         List<Friend> friendList = friendService.getFriendStatus(currentUser, userList);
@@ -126,14 +114,6 @@ public class FriendController extends HttpServlet {
 
     private void sendAddFriendRequest(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         friendService.sendAddFriendRequest(currentUser, userId);
         try {
@@ -145,14 +125,6 @@ public class FriendController extends HttpServlet {
 
     private void cancelFriendStatus(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         friendService.cancelFriendStatus(currentUser, userId);
         try {
@@ -164,14 +136,6 @@ public class FriendController extends HttpServlet {
 
     private void confirmFriendRequest(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         friendService.confirmFriendRequest(currentUser, userId);
         try {
@@ -183,14 +147,6 @@ public class FriendController extends HttpServlet {
 
     private void rejectFriendRequest(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         friendService.rejectFriendRequest(currentUser, userId);
         try {
@@ -202,14 +158,6 @@ public class FriendController extends HttpServlet {
 
     private void cancelSentRequest(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         friendService.cancelSentRequest(currentUser, userId);
         try {
@@ -221,14 +169,6 @@ public class FriendController extends HttpServlet {
 
     private void showSentRequest(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         List<Friend> friendList = friendService.getSentFriendList(currentUser);
         request.setAttribute(Constant.FRIEND_LIST, friendList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_FRIEND);
@@ -241,14 +181,6 @@ public class FriendController extends HttpServlet {
 
     private void showRequestFriend(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         List<Friend> friendList = friendService.getRequestedFriendList(currentUser);
         request.setAttribute(Constant.FRIEND_LIST, friendList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_FRIEND);

@@ -2,17 +2,13 @@ package module04.projectmd04.service.user;
 
 import module04.projectmd04.config.Configs;
 import module04.projectmd04.config.detail.Constant;
-import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.model.Role;
 import module04.projectmd04.model.RoleName;
 import module04.projectmd04.model.User;
-import module04.projectmd04.service.Services;
-import org.omg.CORBA.PERSIST_STORE;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,6 +46,7 @@ public class UserServiceIMPL implements IUserService {
     String DELETE_CHAT = "delete from chat where chatId not in (select userChat.chatId from userChat);";
     String DELETE_FRIEND = "delete from friend where friendId not in (select userFriend.friendId from userFriend);";
     String UPDATE_USER_INFO = "update user set name = ?, userName =?, email=?, password=?, avatar=? where userId =?;";
+    String SELECT_USER_BY_NAME = "select * from user where name like ? or name like ? or name like ?;";
 
     @Override
     public List<User> findAll() {
@@ -362,7 +359,7 @@ public class UserServiceIMPL implements IUserService {
         List<User> userList = new ArrayList<>();
         User currentUser = getCurrentUser(request);
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("select * from user where name like ? or ? or ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
             preparedStatement.setString(1, (findName + "%"));
             preparedStatement.setString(2, ("%" + findName + "%"));
             preparedStatement.setString(3, ("%" + findName));
@@ -379,6 +376,7 @@ public class UserServiceIMPL implements IUserService {
                 for (Role role : roleSet) {
                     if (role.getName() == RoleName.ADMIN || role.getName() == RoleName.PM) {
                         userRole = false;
+                        break;
                     }
                 }
                 if (userId != currentUser.getUserId() && userRole && !status) {

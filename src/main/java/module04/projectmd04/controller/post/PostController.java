@@ -3,6 +3,7 @@ package module04.projectmd04.controller.post;
 import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
+import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
@@ -31,6 +32,9 @@ public class PostController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
@@ -67,6 +71,9 @@ public class PostController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
@@ -103,14 +110,6 @@ public class PostController extends HttpServlet {
 
     private void showPostInfo(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
-        if (currentUser == null) {
-            try {
-                response.sendRedirect(URL.PATH_USER_LOGIN);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
         List<Post> postList = postService.showAllPostListRelativeUser(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_INFO);
@@ -134,7 +133,7 @@ public class PostController extends HttpServlet {
         List<String> imgList = new ArrayList<>();
         Collections.addAll(imgList, imgArr);
         User currentUser = userService.getCurrentUser(request);
-        Post post = new Post(content, status, currentUser,imgList);
+        Post post = new Post(content, status, currentUser, imgList);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);

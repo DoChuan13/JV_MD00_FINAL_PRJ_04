@@ -28,6 +28,9 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
@@ -56,14 +59,14 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+        User currentUser = UserController.redirectProtectedAction(request, response);
+        if (currentUser == null) return;
+
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
     }
 
     private void blockUnblockAccount(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
-        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -98,9 +101,6 @@ public class AdminController extends HttpServlet {
     }
 
     private void changeAccountRole(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
-        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -135,9 +135,6 @@ public class AdminController extends HttpServlet {
     }
 
     private void deleteUserAccount(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
-        
         int id = Integer.parseInt(request.getParameter("id"));
         RoleName currentRole = RoleName.USER;
         currentRole = getCurrentRoleAcc(request, currentRole);
@@ -171,9 +168,6 @@ public class AdminController extends HttpServlet {
     }
 
     private void showFormAdminManager(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
-
         List<User> userList = userService.findAll();
         request.setAttribute(Constant.USER_LIST, userList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_ADMIN_INFO);
