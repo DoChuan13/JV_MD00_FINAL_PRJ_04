@@ -31,6 +31,7 @@ public class FriendController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
+        if (UserController.invalidPermissionUser(request,response))return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -76,15 +77,12 @@ public class FriendController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
+        if (UserController.invalidPermissionUser(request,response))return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter("action");
         System.out.printf("Do Post in Friend ==> %s%n", action);
-
-        if (action == null) {
-            action = "";
-        }
     }
 
     private void showFriendPage(HttpServletRequest request, HttpServletResponse response) {
