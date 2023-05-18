@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @WebServlet("/user")
@@ -35,7 +34,7 @@ public class UserController extends HttpServlet {
     }
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
@@ -75,7 +74,7 @@ public class UserController extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
@@ -104,7 +103,8 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
+    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (invalidPermissionUser(request, response)) return;
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         String avatar = request.getParameter(Constant.AVATAR);
@@ -174,9 +174,9 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = redirectProtectedAction(request, response);
-        if (currentUser == null) return;
+    private void showUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
+        if (invalidPermissionUser(request, response)) return;
         List<Post> postList = postService.showAllPostList(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_INFO);
@@ -199,6 +199,7 @@ public class UserController extends HttpServlet {
                 throw new RuntimeException(e);
             }
         }
+
         String name = request.getParameter(Constant.NAME);
         String userName = request.getParameter(Constant.USER_NAME);
         String email = request.getParameter(Constant.EMAIL);
@@ -267,9 +268,10 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void actionChangeProfile(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = redirectProtectedAction(request, response);
+    private void actionChangeProfile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
         if (currentUser == null) return;
+        if (invalidPermissionUser(request, response)) return;
         String name = request.getParameter(Constant.NAME);
         String userName = request.getParameter(Constant.USER_NAME);
         String email = request.getParameter(Constant.EMAIL);
@@ -340,9 +342,10 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void actionChangePassword(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = redirectProtectedAction(request, response);
+    private void actionChangePassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
         if (currentUser == null) return;
+        if (invalidPermissionUser(request, response)) return;
         String password = request.getParameter(Constant.PASSWORD);
         String newPassword = request.getParameter(Constant.NEW_PASSWORD);
         String rePassword = request.getParameter(Constant.RE_PASSWORD);
@@ -377,7 +380,10 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void likePostInUser(HttpServletRequest request, HttpServletResponse response) {
+    private void likePostInUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
+        if (currentUser == null) return;
+        if (invalidPermissionUser(request, response)) return;
         int postId = Integer.parseInt(request.getParameter("postId"));
         postService.likePost(request, postId);
         try {
@@ -451,9 +457,10 @@ public class UserController extends HttpServlet {
         request.setAttribute(Constant.PASSWORD, password);
     }
 
-    private void showFormChangeProfile(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = redirectProtectedAction(request, response);
-        if (currentUser ==null) return;
+    private void showFormChangeProfile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
+        if (currentUser == null) return;
+        if (invalidPermissionUser(request, response)) return;
         request.setAttribute(Constant.ACTION, Constant.PROFILE_CHANGE);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
         try {
@@ -463,9 +470,8 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void showFormPassword(HttpServletRequest request, HttpServletResponse response) {
-        User currentUser = redirectProtectedAction(request, response);
-        if (currentUser ==null) return;
+    private void showFormPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (invalidPermissionUser(request, response)) return;
         request.setAttribute(Constant.ACTION, Constant.PASS_CHANGE);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.CHANGE_PROFILE);
         try {
@@ -475,7 +481,27 @@ public class UserController extends HttpServlet {
         }
     }
 
-    public static User redirectProtectedAction(HttpServletRequest request, HttpServletResponse response) {
+    public static boolean invalidPermissionUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = checkLoginStatus(request, response);
+        if (currentUser == null) return true;
+        else {
+            List<Role> roleList = new ArrayList<>(currentUser.getRoleSet());
+            boolean userRole = true;
+            for (Role role : roleList) {
+                if (role.getName() == RoleName.ADMIN || role.getName() == RoleName.PM) {
+                    userRole = false;
+                    break;
+                }
+            }
+            if (!userRole) {
+                response.sendRedirect(URL.PATH_ADMIN);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static User checkLoginStatus(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
         if (currentUser == null) {
             try {

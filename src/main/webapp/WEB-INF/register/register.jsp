@@ -126,7 +126,7 @@
                                         <button type="submit" class="btn btn-primary btn-lg">Register</button>
                                     </div>
                                     <p class="mb-5 pb-lg-2" style="color: #393f81;">You have an account? <a
-                                            href="/user?action=register"
+                                            href="/user?action=login"
                                             style="color: #393f81;text-decoration: none">Login now
                                         </a></p>
                                 </form>
