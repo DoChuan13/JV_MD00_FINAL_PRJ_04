@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
       integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
       crossorigin="anonymous" referrerpolicy="no-referrer"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <head>
     <title>Title</title>
 </head>
@@ -219,14 +222,16 @@
                     <c:if test='${post.getCommentList().size()!=0}'>
                         <c:forEach items="${post.getCommentList()}" var="comment">
                             <div class="row"
-                                 style="margin-bottom: 10px;background: #b2b2b2; border-radius: 20px; padding: 10px;">
+<%--                                 style="margin-bottom: 10px;background: #b2b2b2; border-radius: 20px; padding: 10px;">--%>
+                                style="position: relative; height:70px;margin-bottom: 10px;background-color: rgb(242, 242, 242); border-radius: 30px; padding: 10px; width: 88%;margin-left: 59px;">
                                 <ul id="list_comment" class="col-md-12">
                                     <li class="box_result row" style="list-style: none;">
                                         <div class="avatar_comment col-md-1">
                                             <img src="${comment.getCommentUser().getAvatar()}"
-                                                 alt="avatar"/>
+                                                 alt="avatar" style="position: absolute;margin-top: -22px;margin-left: -62px"/>
                                         </div>
                                         <div class="result_comment col-md-11">
+                                            <i class="bi bi-reception-0" style="position: absolute; right: 16px; margin-top: -7px; color: rgb(166, 160, 160);"></i>
                                             <h4>${comment.getCommentUser().getName()}</h4>
                                             <p>${comment.getComment()}</p>
 
@@ -260,12 +265,14 @@
                                     <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
                                            style="position: absolute">
                                     <input name="comment" placeholder="Add a comment..."
-                                           style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                                           style="width: 90%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;">
                                     <div class="box_post">
                                         <div class="pull-left">
                                         </div>
                                         <div class="pull-right">
-                                            <button type="submit" value="1">Post</button>
+                                            <button type="submit" value="1" style="background: none">
+                                                <i class="bi bi-send"
+                                                   style="position:absolute;z-index: 10; margin-left: 37px; font-size: 19px; color: rgb(171, 167, 167);"></i></button>
                                         </div>
                                     </div>
                                 </div>

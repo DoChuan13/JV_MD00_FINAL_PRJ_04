@@ -129,7 +129,7 @@
                 <c:if test='${post.getCommentList().size()!=0}'>
                     <c:forEach items="${post.getCommentList()}" var="comment">
                         <div class="row"
-                             style="position: relative; height:70px;margin-bottom: 10px;background-color: rgb(242, 242, 242); border-radius: 30px; padding: 10px; width: 80%;margin-left: 59px;">
+                             style="position: relative; height:70px;margin-bottom: 10px;background-color: rgb(242, 242, 242); border-radius: 30px; padding: 10px; width: 88%;margin-left: 59px;">
                             <ul id="list_comment" class="col-md-12">
                                 <li class="box_result row" style="list-style: none;">
                                     <div class="avatar_comment col-md-1">
@@ -137,9 +137,9 @@
                                              alt="avatar" style="position: absolute;margin-top: -22px;margin-left: -62px"/>
                                     </div>
                                     <div class="result_comment col-md-11">
+                                        <i class="bi bi-reception-0" style="position: absolute; right: 16px; margin-top: -7px; color: rgb(166, 160, 160);"></i>
                                         <h4>${comment.getCommentUser().getName()}</h4>
                                         <p>${comment.getComment()}</p>
-
                                         <ul class="child_replay">
                                             <li class="box_reply row">
                                                 <div class="avatar_comment col-md-1">
@@ -173,14 +173,14 @@
                                 <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
                                        style="position: absolute">
                                 <input name="comment" placeholder="Add a comment..."
-                                       style="width: 80%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;">
+                                       style="width: 90%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;">
                                 <div class="box_post">
                                     <div class="pull-left">
                                     </div>
                                     <div class="pull-right">
                                         <button type="submit" value="1" style="background: none">
                                             <i class="bi bi-send"
-                                               style="font-size: 19px; color: rgb(171, 167, 167);"></i></button>
+                                               style="position:absolute;z-index: 10; margin-left: 37px; font-size: 19px; color: rgb(171, 167, 167);"></i></button>
                                     </div>
                                 </div>
                             </div>
