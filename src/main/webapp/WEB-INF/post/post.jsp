@@ -106,13 +106,30 @@
                         </div>
                     </div>
                     <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
-                        <div><a href="/post?action=delete&postId=${post.getPostId()}">
-                            <button type="button">Delete</button>
-                        </a></div>
+                        <div>
+                            <a href="/post?action=delete&postId=${post.getPostId()}">
+                                <button type="button">Delete</button>
+                            </a>
+                            <button type="button" onclick="activeEditForm(${post.getPostId()})">Edit</button>
+                        </div>
+
+
                     </c:if>
                 </div>
                 <div class="status-field" style="padding: 10px;background-color: aliceblue; border-radius: 20px">
-                    <p>${post.getPostContent()}</p>
+                    <form method="post">
+                        <input name="action" value="edit" type="text" hidden/>
+                        <input name="postId" value="${post.getPostId()}" type="text"hidden/>
+
+                        <input name="content" id="post_content_${post.getPostId()}"
+                                              value="${post.getPostContent()}" readonly style="width: 100%"/>
+                        <select id="option_content_${post.getPostId()}" name="status" style="display: none">
+                            <option value="public" name="status">Public</option>
+                            <option value="friend" name="status">Friend</option>
+                            <option value="private" name="status">Private</option>
+                        </select>
+                    <button id="summit_content_${post.getPostId()}" type="submit" style="display: none">update</button>
+                    </form>
                     <c:if test="${post.getImageList().size()!=0}">
                         <c:forEach items="${post.getImageList()}" var="image">
                             <img src="${image}" alt="">
@@ -240,6 +257,18 @@
 </div>
 </body>
 </html>
+<script>
+    function activeEditForm(postId) {
+        let post = document.getElementById("post_content_" + postId);
+        post.removeAttribute("readonly");
+        let summit=document.getElementById("summit_content_"+postId);
+        summit.style.display="block";
+
+        let options =document.getElementById("option_content_"+postId);
+        console.log(options);
+        options.style.display="block";
+    }
+</script>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>
 <%--    <jsp:param name="articleId" value=""/>--%>
 <%--</jsp:include>--%>
