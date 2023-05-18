@@ -1,40 +1,22 @@
-<%@ page import="module04.projectmd04.config.detail.Constant" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>Firebase Image Upload using HTML and JavaScript</title>
 </head>
 <body>
-
-<%--<form method="post">--%>
-<progress value="0" max="100" id="uploader">0%</progress>
-<input type="file" value="upload" accept=".jpg,.jpeg,.png" id="fileButton"/>
-<input name="avatar" type="text" id="avatar" style="display: none" onclick="validate()"/>
+<%--<progress value="0" max="100" id="uploader">0%</progress>--%>
+<label for="avatar"></label>
+<input name="avatar" type="text" id="avatar" style="display: none"/>
+<br/>
 <div id="imgDiv"></div>
-<%--  <button type="submit">Upload</button>--%>
-<%--</form>--%>
-<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
-<%--<script>--%>
+<input type="file" multiple value="upload" accept=".jpg,.jpeg,.png" id="fileButton"/>
+</body>
 
-<%--    //BE SURE TO PROTECT EVERYTHING IN THE CONFIG--%>
-<%--    //DON'T COMMIT IT!!!--%>
-
-<%--    // Initialize Firebase--%>
-<%--    const firebaseConfig = {--%>
-<%--        apiKey: "AIzaSyAHbXIdiO5i-nOweX-szmiNn4JSyrOjDi4",--%>
-<%--        authDomain: "chinhbeo-18d3b.firebaseapp.com",--%>
-<%--        databaseURL: "https://chinhbeo-18d3b.firebaseio.com",--%>
-<%--        projectId: "chinhbeo-18d3b",--%>
-<%--        storageBucket: "chinhbeo-18d3b.appspot.com",--%>
-<%--        messagingSenderId: "197467443558",--%>
-<%--        appId: "1:197467443558:web:7cccdbe875f827eb84b8a7",--%>
-<%--        measurementId: "G-D375CXH5LG"--%>
-<%--    };--%>
-<%--    firebase.initializeApp(firebaseConfig);--%>
-<%--</script>--%>
-
-<script type="text/javascript">
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+<script>
+    //paste here your copied configuration code
     const firebaseConfig = {
         apiKey: "AIzaSyDmLIWoffmOIMjYbW4iLAaJ3Zfxc3qHbgY",
         authDomain: "java-full-stack-76e1c.firebaseapp.com",
@@ -44,90 +26,51 @@
         appId: "1:831786675648:web:5725a3c4d47951a8aa2c25",
         measurementId: "G-DZ0HGPMKSK"
     };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    console.log(firebase);
+    const fileButton = document.getElementById("fileButton");
+    const uploader = document.getElementById('uploader');
+    let fileUrl = "";
 
-    var image = '';
-    // firebase bucket name
-    // REPLACE WITH THE ONE YOU CREATE
-    // ALSO CHECK STORAGE RULES IN FIREBASE CONSOLE
-    var fbBucketName = 'images';
+    let fileArr = [];
 
-    // get elements
-    var uploader = document.getElementById('uploader01');
-    var fileButton = document.getElementById('fileButton01');
+    function uploadImage() {
+        const ref = firebase.storage().ref();
+        const file = fileButton.files[0];
+        const name = +new Date() + "-" + file.name;
+        const metadata = {
+            contentType: file.type
+        };
+        const task = ref.child(name).put(file, metadata);
 
-    // listen for file selection
-    fileButton.addEventListener('change', function (e) {
 
-        // what happened
-        console.log('file upload event', e);
+        task.then(snapshot => snapshot.ref.getDownloadURL()).then(url => {
+            // console.log(url);
 
-        // get file
-        var file = e.target.files[0];
+            // alert('image uploaded successfully');
+            let divLocation = document.getElementById("imgDiv");
+            let imgElement = document.createElement("img");
+            fileUrl = url;
+            fileArr.push(url);
 
-        // create a storage ref
-        <%--var storageRef = firebase.storage().ref(`${fbBucketName}/${file.name}`);--%>
-        const storageRef = firebase.storage().ref(file.name);
-        // upload file
-        var uploadTask = storageRef.put(file);
-
-        // The part below is largely copy-pasted from the 'Full Example' section from
-        // https://firebase.google.com/docs/storage/web/upload-files
-
-        // update progress bar
-        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-            function (snapshot) {
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                uploader.value = progress;
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case firebase.storage.TaskState.PAUSED: // or 'paused'
-                        console.log('Upload is paused');
-                        break;
-                    case firebase.storage.TaskState.RUNNING: // or 'running'
-                        console.log('Upload is running');
-                        break;
-                }
-            }, function (error) {
-
-                // A full list of error codes is available at
-                // https://firebase.google.com/docs/storage/web/handle-errors
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        // User doesn't have permission to access the object
-                        break;
-
-                    case 'storage/canceled':
-                        // User canceled the upload
-                        break;
-
-                    case 'storage/unknown':
-                        // Unknown error occurred, inspect error.serverResponse
-                        break;
-                }
-            }, function () {
-                // Upload completed successfully, now we can get the download URL
-                // save this link somewhere, e.g. put it in an input field
-                var downloadURL = uploadTask.snapshot.downloadURL;
-                image = downloadURL;
-                console.log('downloadURL ===>', downloadURL);
-                let divLocation = document.getElementById("imgDiv");
-                let imgElement = document.createElement("img");
-                imgElement.src = downloadURL
-                imgElement.width = 100;
-                imgElement.height = 100;
-                console.log('pic ==', downloadURL)
-                divLocation.append(imgElement);
-                document.getElementById('avatar01').value = downloadURL;
-                resultImage();
-            });
-
-    });
+            imgElement.src = url;
+            imgElement.width = 100;
+            imgElement.height = 100;
+            divLocation.innerHTML = "";
+            divLocation.append(imgElement);
+            resultImage();
+            document.getElementById("avatar").value = fileArr.toString();
+        })
+            .catch(console.error);
+    }
 
     function resultImage() {
-        console.log('image resulte -->', image)
-        return image;
+        console.log(fileArr);
+        console.log('image resulte -->', fileUrl);
+        return fileUrl;
     }
+
+    fileButton.addEventListener('change', uploadImage);
 </script>
-</body>
 </html>

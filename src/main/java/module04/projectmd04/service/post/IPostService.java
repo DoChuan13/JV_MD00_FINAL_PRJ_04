@@ -27,4 +27,6 @@ public interface IPostService {
     List<Like> findListLikeByPostId(int postId);
 
     void deleteCurrentComment(int postId, int commentId);
+
+    void updateComment(int commentId, String comment);
 }

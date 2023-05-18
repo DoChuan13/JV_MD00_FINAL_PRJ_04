@@ -104,7 +104,22 @@ public class PostController extends HttpServlet {
             case "comment":
                 actionCreateComment(request, response);
                 break;
+            case "editComment":
+                actionEditComment(request,response);
+                break;
         }
+    }
+
+    private void actionEditComment(HttpServletRequest request, HttpServletResponse response) {
+        int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
+        String comment = request.getParameter(Constant.COMMENT);
+        postService.updateComment(commentId,comment);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {
@@ -140,7 +155,7 @@ public class PostController extends HttpServlet {
         }
         List<String> imgList = new ArrayList<>();
         if (!images.equalsIgnoreCase("")) {
-            String[] imgArr = images.split("--%%%%%%%%%%--");
+            String[] imgArr = images.split(",");
             Collections.addAll(imgList, imgArr);
         }
         User currentUser = userService.getCurrentUser(request);

@@ -21,7 +21,7 @@
         text-align: end;
     }
 </style>
-<body>
+<body onload="insertAvatar()">
 <div class="profile-container">
     <img src="../../images/cover.png" class="coverImage" alt="">
     <div class="dashboard">
@@ -79,7 +79,7 @@
                 <form method="post">
                     <input id="action" type='text' name='action' hidden readonly
                            value="changeProfile"/>
-                    <jsp:include page="../upload/upload-image.jsp">
+                    <jsp:include page="../upload/upload-avatar.jsp">
                         <jsp:param name="articleId" value=""/>
                     </jsp:include>
                     <div class="status-field-container write-post-container">
@@ -199,62 +199,21 @@
     </div>
 </div>
 </body>
-<%--<script>--%>
-<%--    let avatar = document.getElementById("avatar");--%>
-<%--    let userName = document.getElementById("userName-field");--%>
-<%--    let name = document.getElementById("name-field");--%>
-<%--    let email = document.getElementById("email-field");--%>
-<%--    let password = document.getElementById("password-group");--%>
-<%--    let submitField = document.getElementById("submit-field");--%>
+<script>
+    let avatar = '${sessionScope["loginUser"].getAvatar()}';
+    console.log(avatar);
 
-<%--    let currPassword = document.getElementById("curr-password-group");--%>
-<%--    let newPassword = document.getElementById("newPassword-group");--%>
-<%--    let rePassword = document.getElementById("rePassword-group");--%>
-<%--    let submitPassField = document.getElementById("submit-pass-field");--%>
-<%--    avatar.setAttribute("readonly", "true");--%>
-
-<%--    function changeProfile() {--%>
-<%--        avatar.removeAttribute("readonly");--%>
-<%--        userName.removeAttribute("readonly");--%>
-<%--        name.removeAttribute("readonly");--%>
-<%--        email.removeAttribute("readonly");--%>
-<%--        password.style.display = "block";--%>
-<%--        submitField.style.display = "block";--%>
-
-<%--        currPassword.style.display = "none";--%>
-<%--        newPassword.style.display = "none";--%>
-<%--        rePassword.style.display = "none";--%>
-<%--        submitPassField.style.display = "none";--%>
-<%--    }--%>
-
-<%--    function changePassword() {--%>
-<%--        avatar.setAttribute("readonly", "true");--%>
-<%--        userName.setAttribute("readonly", "true");--%>
-<%--        name.setAttribute("readonly", "true");--%>
-<%--        email.setAttribute("readonly", "true");--%>
-<%--        password.style.display = "none";--%>
-<%--        submitField.style.display = "none";--%>
-
-<%--        currPassword.style.display = "block";--%>
-<%--        newPassword.style.display = "block";--%>
-<%--        rePassword.style.display = "block";--%>
-<%--        submitPassField.style.display = "block";--%>
-<%--    }--%>
-
-<%--    function saveInfo() {--%>
-<%--        avatar.setAttribute("readonly", "true");--%>
-<%--        userName.setAttribute("readonly", "true");--%>
-<%--        name.setAttribute("readonly", "true");--%>
-<%--        email.setAttribute("readonly", "true");--%>
-<%--        password.style.display = "none";--%>
-
-<%--        currPassword.style.display = "none";--%>
-<%--        newPassword.style.display = "none";--%>
-<%--        rePassword.style.display = "none";--%>
-<%--        submitField.style.display = "none";--%>
-<%--        submitPassField.style.display = "none";--%>
-<%--    }--%>
-<%--</script>--%>
+    function insertAvatar() {
+        let divLocation = document.getElementById("imgDiv");
+        let imgElement = document.createElement("img");
+        divLocation.innerHTML = "";
+        imgElement.src = avatar;
+        imgElement.width = 100;
+        imgElement.height = 100;
+        divLocation.append(imgElement);
+        document.getElementById("avatar").value = avatar;
+    }
+</script>
 </html>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>
 <%--    <jsp:param name="articleId" value=""/>--%>

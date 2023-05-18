@@ -158,13 +158,30 @@
                                         <c:if test='${sessionScope["loginUser"].getUserId()==comment.getCommentUser().getUserId()}'>
                                             <a href="/post?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}"
                                                type="submit"
-                                               style="position: absolute; right: 19px; margin-top: -2px; background: inherit; border: none">
-                                                <i class="bi bi-reception-0"
-                                                   style="position: relative; right: -1px;color: rgb(166, 160, 160);"></i>
+                                               style="position: absolute; right: 19px; margin-top: 8px; background: inherit; border: none">
+                                                <i  class="bi bi-trash"
+                                                   style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
                                             </a>
+                                            <button type="button" onclick="activeEditComment(${comment.getCommentId()})"
+                                               style="position: absolute; right: 19px; margin-top: -18px; background: inherit; border: none">
+                                                    <i class="bi bi-pencil"
+                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
+                                            </button>
+
                                         </c:if>
                                         <h4>${comment.getCommentUser().getName()}</h4>
-                                        <p>${comment.getComment()}</p>
+<%--                                        <p>${comment.getComment()}</p>--%>
+                                        <form method="post">
+                                            <input name="action" value="editComment" type="text" hidden/>
+                                            <input name="postId" value="${post.getPostId()}" type="text" hidden/>
+                                            <input name="commentId" value="${comment.getCommentId()}" type="text" hidden="">
+
+                                            <input name="comment" id="post_comment_${comment.getCommentId()}"
+                                                   value="${comment.getComment()}" readonly
+                                                   style="width: 100%;border: none;background: none"/>
+                                            <button id="summit_content_${comment.getCommentId()}" type="submit" style="display: none">update
+                                            </button>
+                                        </form>
                                         <ul class="child_replay">
                                             <li class="box_reply row">
                                                 <div class="avatar_comment col-md-1">
@@ -178,9 +195,6 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
-                                <li class="edit_comment_icon">
-                                    <i class="bi bi-eraser"></i>
                                 </li>
                             </ul>
                         </div>
@@ -276,6 +290,14 @@
         let options = document.getElementById("option_content_" + postId);
         console.log(options);
         options.style.display = "block";
+    }
+
+    function activeEditComment(commentId){
+        let comment = document.getElementById("post_comment_" + commentId);
+        comment.removeAttribute("readonly");
+
+        let summit = document.getElementById("summit_content_"+ commentId);
+        summit.style.display ="block";
     }
 </script>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>
