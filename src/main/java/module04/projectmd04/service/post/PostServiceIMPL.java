@@ -154,13 +154,11 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement.setString(1, post.getPostContent());
             preparedStatement.setString(2, post.getPostStatus());
             preparedStatement.setInt(2, post.getPostId());
-
             preparedStatement.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

@@ -145,6 +145,7 @@ public class PostController extends HttpServlet {
 
 
     private void actionEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("action in here");
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         if (content.equals("") || status.equals("")) {
