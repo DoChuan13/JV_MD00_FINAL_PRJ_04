@@ -14,6 +14,7 @@ public final class Constant {
     public static final String USER_LIST = "userList";
     public static final String POST_LIST = "postList";
     public static final String POST_ID = "postId";
+    public static final String COMMENT_ID ="commentId";
     public static final String COMMENT = "comment";
     public static final String FRIEND_LIST = "friendList";
     public static final String ACCEPTED = "accepted";

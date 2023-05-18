@@ -18,6 +18,7 @@ import java.util.List;
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
     private static final IUserService userService = Services.getInstance().getUserService();
+    String DELETE_FROM_COMMENT_POST_BY_ID = "delete from commentPost where postId=? and commentId=?";
 
     String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
     String INSERT_INTO_USER_POST = "insert into userPost(postId, userId) values (?, ?);";
@@ -29,6 +30,7 @@ public class PostServiceIMPL implements IPostService {
     String DELETE_FROM_POST = "delete from post where postId = ?;";
     String DELETE_FROM_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_FROM_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
+    
     String DELETE_FROM_IMAGE = "delete from image where imageId not in (select imagePost.imageId from imagePost);";
     String SELECT_POST_OWNER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId where up.userId = ? order by postedDate DESC;";
     String SELECT_POST_RE_USER = "select p.*,uP.userId from post p join userPost uP on p.postId = uP.postId " +
@@ -200,6 +202,23 @@ public class PostServiceIMPL implements IPostService {
     }
 
     @Override
+    public void deleteCurrentComment(int postId, int commentId) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_FROM_COMMENT_POST_BY_ID);
+            preparedStatement.setInt(1,postId);
+            preparedStatement.setInt(2,commentId);
+            preparedStatement.executeUpdate();
+
+            PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_FROM_COMMENT);
+            preparedStatement1.executeUpdate();
+            connection.commit();
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void likePost(HttpServletRequest request, int postId) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LIKE_POST_BY_ID);
@@ -266,6 +285,8 @@ public class PostServiceIMPL implements IPostService {
             throw new RuntimeException(e);
         }
     }
+
+
 
     public List<Comment> findListCommentByPostId(int postId) {
         List<Comment> commentList = new ArrayList<>();
