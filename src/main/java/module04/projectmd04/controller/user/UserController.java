@@ -39,6 +39,7 @@ public class UserController extends HttpServlet {
         response.setContentType("text/html; charset=UTF-8");
         String action = request.getParameter(Constant.ACTION);
         System.out.printf("Do Get in User ==> %s%n", action);
+
         User currentUser = userService.getCurrentUser(request);
         if (currentUser != null) {
             List<Friend> acceptedFriend = friendService.getAcceptFriendList(currentUser);
@@ -206,7 +207,7 @@ public class UserController extends HttpServlet {
 
     private void showUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = checkLoginStatus(request, response);
-        if (invalidPermissionUser(request, response)) return;
+        if (currentUser == null) return;
         List<Post> postList = postService.showAllPostList(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_USER_INFO);
