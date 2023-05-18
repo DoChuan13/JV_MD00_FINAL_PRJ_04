@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="../bootstrap/nav-bar.jsp">
     <jsp:param name="articleId" value=""/>
@@ -263,11 +263,11 @@
                             <form method="post">
                                 <div class="box_comment col-md-11">
                                     <input type="text" name="action" value="comment" readonly hidden
-                                           style="position: absolute">
+                                           style="position: absolute"/>
                                     <input type="text" name="postId" value="${post.getPostId()}" readonly hidden
-                                           style="position: absolute">
+                                           style="position: absolute"/>
                                     <input name="comment" placeholder="Add a comment..."
-                                           style="width: 90%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;">
+                                           style="width: 90%; height: 50px;border-radius:20px;border: none;background-color: rgb(245, 242, 242);margin-left: 55px;"/>
                                     <div class="box_post">
                                         <div class="pull-left">
                                         </div>
