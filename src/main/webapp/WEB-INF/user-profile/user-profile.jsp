@@ -282,9 +282,15 @@
                                             <c:if test='${sessionScope["loginUser"].getUserId()==comment.getCommentUser().getUserId()}'>
                                                 <a href="/user?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}"
                                                    type="submit"
-                                                   style="position: absolute; right: 19px; margin-top: -2px; background: inherit; border: none">
-                                                    <i class="bi bi-reception-0"
-                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160);"></i>
+                                                   style="position: absolute; right: 19px; margin-top: 8px; background: inherit; border: none">
+                                                    <i  class="bi bi-trash"
+                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160);font-size: 12px"></i>
+                                                </a>
+                                                <a href="#"
+                                                   type="sumit"
+                                                   style="position: absolute; right: 19px; margin-top: -18px; background: inherit; border: none">
+                                                    <i class="bi bi-pencil"
+                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
                                                 </a>
                                             </c:if>
                                             <h4>${comment.getCommentUser().getName()}</h4>

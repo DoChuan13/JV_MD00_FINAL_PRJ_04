@@ -18,6 +18,7 @@ import java.util.List;
 public class PostServiceIMPL implements IPostService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
     private static final IUserService userService = Services.getInstance().getUserService();
+     String UPDATE_COMMENT = "update comment set content=? where commentId=?";
     String DELETE_FROM_COMMENT_POST_BY_ID = "delete from commentPost where postId=? and commentId=?";
 
     String INSERT_INTO_POST = "insert into post (content, status) values (?, ?);";
@@ -163,6 +164,7 @@ public class PostServiceIMPL implements IPostService {
         }
     }
 
+
     @Override
     public void deleteCurrentPost(int postId) {
         try {
@@ -214,6 +216,20 @@ public class PostServiceIMPL implements IPostService {
             preparedStatement1.executeUpdate();
             connection.commit();
         }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateComment(int commentId, String comment) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_COMMENT);
+            preparedStatement.setString(1,comment);
+            preparedStatement.setInt(2,commentId);
+            preparedStatement.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
