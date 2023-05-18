@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
-                        <div><a href="/post?action=delete&postId=${post.getPostId()}">
+                        <div><a href="/post?action=deletePost&postId=${post.getPostId()}">
                             <button type="button">Delete</button>
                         </a></div>
                     </c:if>
@@ -137,7 +137,9 @@
                                              alt="avatar" style="position: absolute;margin-top: -22px;margin-left: -62px"/>
                                     </div>
                                     <div class="result_comment col-md-11">
-                                        <i class="bi bi-reception-0" style="position: absolute; right: 16px; margin-top: -7px; color: rgb(166, 160, 160);"></i>
+                                        <a href="/post?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}" type="submit" style="position: absolute; right: 19px; margin-top: -2px; background: inherit; border: none">
+                                            <i class="bi bi-reception-0" style="position: relative; right: -1px;color: rgb(166, 160, 160);"></i>
+                                        </a>
                                         <h4>${comment.getCommentUser().getName()}</h4>
                                         <p>${comment.getComment()}</p>
                                         <ul class="child_replay">
@@ -179,8 +181,8 @@
                                     </div>
                                     <div class="pull-right">
                                         <button type="submit" value="1" style="background: none">
-                                            <i class="bi bi-send"
-                                               style="position:absolute;z-index: 10; margin-left: 37px; font-size: 19px; color: rgb(171, 167, 167);"></i></button>
+                                            <i class="bi bi-send" style="position:absolute;z-index: 10; margin-left: 37px; font-size: 19px; color: rgb(171, 167, 167);"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
