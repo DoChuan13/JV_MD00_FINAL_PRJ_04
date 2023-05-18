@@ -44,9 +44,6 @@ public class PostController extends HttpServlet {
             action = "";
         }
         switch (action) {
-            case "edit":
-                showFormEditCurrentPost(request, response);
-                break;
             case "deletePost":
                 deleteCurrentPost(request, response);
                 break;
@@ -108,9 +105,6 @@ public class PostController extends HttpServlet {
                 actionCreateComment(request, response);
                 break;
         }
-    }
-
-    private void showFormEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
     }
 
     private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {

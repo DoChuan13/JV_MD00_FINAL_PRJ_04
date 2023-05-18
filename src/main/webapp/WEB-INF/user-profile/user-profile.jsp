@@ -17,6 +17,7 @@
     .avatar-upload {
         /*position: absolute;*/
     }
+
     /*.dropbtn {*/
     /*    background-color: #3498DB;*/
     /*    color: white;*/
@@ -244,26 +245,27 @@
                         </c:if>
                     </div>
                     <div class="status-field" style="padding: 10px; background-color: aliceblue; border-radius: 20px;">
-                        <p>${post.getPostContent()}</p>
+                        <form method="post">
+                            <input name="action" value="edit" type="text" hidden/>
+                            <input name="postId" value="${post.getPostId()}" type="text" hidden/>
+
+                            <input name="content" id="post_content_${post.getPostId()}"
+                                   value="${post.getPostContent()}" readonly
+                                   style="width: 100%;border: none;background: none"/>
+                            <select id="option_content_${post.getPostId()}" name="status" style="display: none">
+                                <option value="public" name="status">Public</option>
+                                <option value="friend" name="status">Friend</option>
+                                <option value="private" name="status">Private</option>
+                            </select>
+                            <button id="summit_content_${post.getPostId()}" type="submit" style="display: none">update
+                            </button>
+                        </form>
                         <c:if test="${post.getImageList().size()!=0}">
                             <c:forEach items="${post.getImageList()}" var="image">
                                 <img src="${image}" alt="">
                             </c:forEach>
                         </c:if>
                     </div>
-                    <form method="post">
-                        <input name="action" value="edit" type="text" hidden />
-                        <input name="postId" value="${post.getPostId()}" type="text"hidden/>
-
-                        <input name="content" id="post_content_${post.getPostId()}"
-                               value="${post.getPostContent()}" readonly style="width: 100%;border: none;background: none"/>
-                        <select id="option_content_${post.getPostId()}" name="status" style="display: none">
-                            <option value="public" name="status">Public</option>
-                            <option value="friend" name="status">Friend</option>
-                            <option value="private" name="status">Private</option>
-                        </select>
-                        <button id="summit_content_${post.getPostId()}" type="submit" style="display: none">update</button>
-                    </form>
                     <c:if test='${post.getCommentList().size()!=0}'>
                         <c:forEach items="${post.getCommentList()}" var="comment">
                             <div class="row"
@@ -277,11 +279,16 @@
                                                  style="position: absolute;margin-top: -22px;margin-left: -62px"/>
                                         </div>
                                         <div class="result_comment col-md-11">
-                                            <a href="/user?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}" type="submit" style="position: absolute; right: 19px; margin-top: -2px; background: inherit; border: none">
-                                                <i class="bi bi-reception-0" style="position: relative; right: -1px;color: rgb(166, 160, 160);"></i>
-                                            </a>                                            <h4>${comment.getCommentUser().getName()}</h4>
+                                            <c:if test='${sessionScope["loginUser"].getUserId()==comment.getCommentUser().getUserId()}'>
+                                                <a href="/user?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}"
+                                                   type="submit"
+                                                   style="position: absolute; right: 19px; margin-top: -2px; background: inherit; border: none">
+                                                    <i class="bi bi-reception-0"
+                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160);"></i>
+                                                </a>
+                                            </c:if>
+                                            <h4>${comment.getCommentUser().getName()}</h4>
                                             <p>${comment.getComment()}</p>
-
                                             <ul class="child_replay">
                                                 <li class="box_reply row">
                                                     <div class="avatar_comment col-md-1">
@@ -339,12 +346,12 @@
     function activeEditForm(postId) {
         let post = document.getElementById("post_content_" + postId);
         post.removeAttribute("readonly");
-        let summit=document.getElementById("summit_content_"+postId);
-        summit.style.display="block";
+        let summit = document.getElementById("summit_content_" + postId);
+        summit.style.display = "block";
 
-        let options =document.getElementById("option_content_"+postId);
+        let options = document.getElementById("option_content_" + postId);
         console.log(options);
-        options.style.display="block";
+        options.style.display = "block";
     }
 </script>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>
