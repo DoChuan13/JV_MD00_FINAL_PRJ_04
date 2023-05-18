@@ -69,8 +69,11 @@ public class UserController extends HttpServlet {
             case "logout":
                 logoutUser(request, response);
                 break;
-            case "delete":
+            case "deletePost":
                 deleteCurrentPost(request, response);
+                break;
+            case "deleteComment":
+                deleteCurrentComment(request,response);
                 break;
             default:
                 showUserInfo(request, response);
@@ -112,6 +115,16 @@ public class UserController extends HttpServlet {
     private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
         postService.deleteCurrentPost(postId);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void deleteCurrentComment(HttpServletRequest request, HttpServletResponse response) {
+        int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
+        int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
+        postService.deleteCurrentComment(postId,commentId);
         try {
             response.sendRedirect(URL.PATH_USER);
         } catch (IOException e) {
