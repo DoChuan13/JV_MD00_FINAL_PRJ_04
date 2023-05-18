@@ -32,7 +32,7 @@ public class PostController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        User currentUser = UserController.redirectProtectedAction(request, response);
+        User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
 
         request.setCharacterEncoding("UTF-8");
@@ -71,7 +71,7 @@ public class PostController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        User currentUser = UserController.redirectProtectedAction(request, response);
+        User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
 
         request.setCharacterEncoding("UTF-8");
@@ -124,14 +124,16 @@ public class PostController extends HttpServlet {
     public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
-        String avatar = request.getParameter(Constant.AVATAR);
+        String images = request.getParameter(Constant.AVATAR);
         if (content.equals("") || status.equals("")) {
             setAttributePostRequest(request, response, content, status);
             return;
         }
-        String[] imgArr = avatar.split("--%%%%%%%%%%--");
         List<String> imgList = new ArrayList<>();
-        Collections.addAll(imgList, imgArr);
+        if (!images.equalsIgnoreCase("")) {
+            String[] imgArr = images.split("--%%%%%%%%%%--");
+            Collections.addAll(imgList, imgArr);
+        }
         User currentUser = userService.getCurrentUser(request);
         Post post = new Post(content, status, currentUser, imgList);
         postService.createNewPost(post);

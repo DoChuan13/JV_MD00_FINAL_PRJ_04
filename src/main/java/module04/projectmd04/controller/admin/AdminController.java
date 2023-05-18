@@ -28,8 +28,7 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
+        if (invalidPermissionAdmin(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -59,8 +58,7 @@ public class AdminController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        User currentUser = UserController.redirectProtectedAction(request, response);
-        if (currentUser == null) return;
+        if (invalidPermissionAdmin(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -189,5 +187,25 @@ public class AdminController extends HttpServlet {
             }
         }
         return currentRole;
+    }
+
+    private static boolean invalidPermissionAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.checkLoginStatus(request, response);
+        if (currentUser == null) return true;
+        else {
+            List<Role> roleList = new ArrayList<>(currentUser.getRoleSet());
+            boolean userRole = true;
+            for (Role role : roleList) {
+                if (role.getName() == RoleName.ADMIN || role.getName() == RoleName.PM) {
+                    userRole = false;
+                    break;
+                }
+            }
+            if (userRole) {
+                response.sendRedirect(URL.PATH_POST);
+                return true;
+            }
+        }
+        return false;
     }
 }

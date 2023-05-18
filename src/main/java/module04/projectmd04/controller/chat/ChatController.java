@@ -1,7 +1,6 @@
 package module04.projectmd04.controller.chat;
 
 import module04.projectmd04.config.detail.JSPLink;
-import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
@@ -26,7 +25,7 @@ public class ChatController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User currentUser = UserController.redirectProtectedAction(request, response);
+        User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
 
         request.setCharacterEncoding("UTF-8");
@@ -43,7 +42,7 @@ public class ChatController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       User currentUser = UserController.redirectProtectedAction(request, response);
+       User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
 
         request.setCharacterEncoding("UTF-8");
