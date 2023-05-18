@@ -68,6 +68,9 @@ public class UserController extends HttpServlet {
             case "logout":
                 logoutUser(request, response);
                 break;
+            case "delete":
+                deleteCurrentPost(request, response);
+                break;
             default:
                 showUserInfo(request, response);
         }
@@ -100,6 +103,33 @@ public class UserController extends HttpServlet {
             case "changePassword":
                 actionChangePassword(request, response);
                 break;
+            case "comment":
+                actionCreateComment(request, response);
+        }
+    }
+
+    private void deleteCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+        int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
+        postService.deleteCurrentPost(postId);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void actionCreateComment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
+        String comment = request.getParameter(Constant.COMMENT);
+        if (comment.equals("")) {
+            showUserInfo(request, response);
+            return;
+        }
+        postService.createComment(comment, request, postId);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
