@@ -119,7 +119,7 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void actionCreateComment(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void actionCreateComment(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
         String comment = request.getParameter(Constant.COMMENT);
         if (comment.equals("")) {
