@@ -205,7 +205,7 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void showUserInfo(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void showUserInfo(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = checkLoginStatus(request, response);
         if (currentUser == null) return;
         List<Post> postList = postService.showAllPostList(currentUser);
