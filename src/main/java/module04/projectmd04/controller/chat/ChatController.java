@@ -1,7 +1,9 @@
 package module04.projectmd04.controller.chat;
 
+import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.controller.user.UserController;
+import module04.projectmd04.model.Chat;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
 import module04.projectmd04.service.chat.IChatService;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 @WebServlet("/chat")
 public class ChatController extends HttpServlet {
@@ -27,7 +30,7 @@ public class ChatController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
-        if (UserController.invalidPermissionUser(request,response))return;
+        if (UserController.invalidPermissionUser(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -43,9 +46,9 @@ public class ChatController extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       User currentUser = UserController.checkLoginStatus(request, response);
+        User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
-        if (UserController.invalidPermissionUser(request,response))return;
+        if (UserController.invalidPermissionUser(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -57,7 +60,12 @@ public class ChatController extends HttpServlet {
         }
     }
 
-    private void showFormChat(HttpServletRequest request, HttpServletResponse response) {
+    private void showFormChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.checkLoginStatus(request, response);
+        if (UserController.invalidPermissionUser(request, response)) return;
+
+        List<Chat> chatList = chatService.getChatListByUser(currentUser);
+        request.setAttribute(Constant.CHAT_LIST, chatList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_CHAT);
         try {
             dispatcher.forward(request, response);

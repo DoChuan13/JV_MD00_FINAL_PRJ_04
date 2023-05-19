@@ -324,7 +324,7 @@ public class UserController extends HttpServlet {
         if (avatar.equals("")) {
             avatar = currentUser.getAvatar();
         } else {
-            String[] imgArr = avatar.split("--%%%%%%%%%%--");
+            String[] imgArr = avatar.split(",");
             avatar = imgArr[0];
         }
 
@@ -349,7 +349,7 @@ public class UserController extends HttpServlet {
             return;
         }
 
-        if (!password.equals(currentUser.getPassword())) {
+        if (!password.equals(userService.findUserById(currentUser.getUserId()).getPassword())) {
             alert = "Password is not Exact!";
             setAttributeRegisterRequest(request, alert, name, userName, email, password);
             showFormChangeProfile(request, response);
@@ -394,7 +394,7 @@ public class UserController extends HttpServlet {
         String newPassword = request.getParameter(Constant.NEW_PASSWORD);
         String rePassword = request.getParameter(Constant.RE_PASSWORD);
 
-        if (!password.equals(currentUser.getPassword())) {
+        if (!password.equals(userService.findUserById(currentUser.getUserId()).getPassword())) {
             alert = "Current password not match!";
             setAttributeRegisterRequest(request, alert, currentUser.getName(), currentUser.getUserName(), currentUser.getEmail(), password);
             showFormPassword(request, response);
