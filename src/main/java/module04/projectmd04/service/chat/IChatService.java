@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IChatService {
     List<Chat> getChatListByUser(User currentUser);
+
+    List<Chat> getChatListByUserName(User currentUser, String name);
 }

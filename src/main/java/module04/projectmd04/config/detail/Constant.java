@@ -39,4 +39,9 @@ public final class Constant {
     public static final String TARGET_IN = "receivedUserIn";
     public static final String START_TIME = "startTime";
     public static final String LATEST_TIME = "latestTime";
+    public static final String CHAT_DETAIL_ID = "chatDetailId";
+    public static final String CHAT_CONTENT = "content";
+    public static final String SENT_DATE = "sentDate";
+    public static final String NEW_CHAT = "newChat";
+    public static final String FIND_NAME = "findName";
 }

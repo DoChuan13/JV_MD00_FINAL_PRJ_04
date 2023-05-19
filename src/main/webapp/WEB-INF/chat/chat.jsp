@@ -6,6 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <jsp:include page="../bootstrap/nav-bar.jsp">
     <jsp:param name="articleId" value=""/>
 </jsp:include>
@@ -288,57 +289,104 @@
             <div class="card chat-app">
                 <%--Chat List Start--%>
                 <div id="plist" class="people-list">
-                    <form method="get">
+                    <form method="get" style="position:relative;">
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
-                            <input name="action" value="findChat"/>
-                            <input name="user" type="text" class="form-control" placeholder="Search..."
-                                   style="width: 90%">
+                            <input name="action" value="findChat" hidden style="position: absolute;"/>
+                            <input name="name" type="text" class="form-control" placeholder="Find chat..."
+                                   style="width: 80%">
                         </div>
                         <div class="input-group">
-                            <button type="submit">Search</button>
+                            <button type="submit" hidden>Search</button>
                         </div>
+                        <a href="/chat?action=newChat" style="position: absolute; right: 8px;top: 5px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-cloud-plus" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                      d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+                                <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                            </svg>
+                        </a>
                     </form>
                     <ul class="list-unstyled chat-list mt-2 mb-0">
-                        <li class="clearfix">
-                            <div class="message-data text-right">
-                                <span>Nothing Chat History</span>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Vincent Porter</div>
-                                <div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago</div>
-                            </div>
-                        </li>
-                        <li class="clearfix active">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Aiden Chavez</div>
-                                <div class="status"><i class="fa fa-circle online"></i> online</div>
-                            </div>
-                        </li>
+                        <c:if test='${requestScope["chatList"].size()==0}'>
+                            <li class="clearfix">
+                                <div class="message-data text-right">
+                                    <span>Nothing Chat History</span>
+                                </div>
+                            </li>
+                        </c:if>
+                        <c:if test='${requestScope["chatList"].size()!=0}'>
+                            <li class="clearfix active">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Vincent Porter</div>
+                                    <div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago</div>
+                                </div>
+                            </li>
+                        </c:if>
                     </ul>
                 </div>
                 <%--Chat List End--%>
 
                 <div class="chat">
-                    <div class="chat-header clearfix">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <a href="#" data-toggle="modal" data-target="#view_info">
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                                </a>
-                                <%--<div class="chat-about">--%>
-                                <%--    <h6 class="m-b-0">Aiden Chavez</h6>--%>
-                                <%--    <small>Last seen: 2 hours ago</small>--%>
-                                <%--</div>--%>
+                    <c:if test='${requestScope["newChat"]==null}'>
+                        <div class="chat-header clearfix">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a href="#" data-toggle="modal" data-target="#view_info">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </c:if>
+                    <c:if test='${requestScope["newChat"]!=null}'>
+                        <form method="get">
+                            <div class="chat-header clearfix">
+                                <c:if test='${requestScope["name"]==null}'>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <input type="text" name="action" value="findName" hidden>
+                                            <input type="text" name="name" placeholder="Find Name to start..."
+                                                   style="width: 100%; padding: 5px;background: lightgoldenrodyellow">
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test='${requestScope["name"]!=null}'>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <input type="text" name="action" value="findName" hidden>
+                                            <input type="text" name="name" placeholder="Find Name to start..."
+                                                   value="${requestScope["name"]}"
+                                                   style="width: 100%; padding: 5px;background: lightgoldenrodyellow">
+                                        </div>
+                                    </div>
+                                </c:if>
+                            </div>
+                            <button type="submit" style="display: none">Search</button>
+                        </form>
+                    </c:if>
 
-                    <div class="chat-history">
+                    <div class="chat-history" style="width: 800px;min-height: 500px">
+                        <c:if test="${requestScope['findName']!=null}">
+                            <c:if test="${requestScope['findName'].size()==0}">
+                                <div class="message-data text-right">
+                                    <span>Not Found Result</span>
+                                </div>
+                            </c:if>
+                            <c:if test="${requestScope['findName'].size()!=0}">
+                                <c:forEach items="${requestScope['findName']}" var="name">
+                                    <div class="message-data text-right"
+                                         style="display: flex;text-align: center;gap: 30px">
+                                        <img src="${name.getAvatar()}" alt="avatar"/>
+                                        <p style="width: 120px;">${name.getName()}</p>
+                                        <a href="/chat?action=newChat&userId=${name.getUserId()}">Start Chat</a>
+                                    </div>
+                                </c:forEach>
+                            </c:if>
+                        </c:if>
+                        <c:if test="${requestScope['findName']==null}">
                         <div class="message-data text-right">
                             <span>Nothing Chat History</span>
                         </div>
@@ -360,14 +408,18 @@
                                 </div>
                                 <div class="message my-message">Are we meeting today?</div>
                             </li>
+                            </c:if>
                         </ul>
                     </div>
-                    <div class="chat-message clearfix">
-                        <div class="input-group mb-0">
-                            <span class="input-group-text"><i class="fa fa-send"></i></span>
-                            <input type="text" class="form-control" placeholder="Enter text here..." style="width: 90%">
+                    <c:if test="${requestScope['findName']==null}">
+                        <div class="chat-message clearfix">
+                            <div class="input-group mb-0">
+                                <span class="input-group-text"><i class="fa fa-send"></i></span>
+                                <input type="text" class="form-control" placeholder="Enter text here..."
+                                       style="width: 90%;padding: 5px;">
+                            </div>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/chat")
@@ -40,9 +41,19 @@ public class ChatController extends HttpServlet {
         if (action == null) {
             action = "";
         }
-        showFormChat(request, response);
+        switch (action) {
+            case "findChat":
+                findCurrentChat(request, response);
+                break;
+            case "newChat":
+                showFormNewChat(request, response);
+                break;
+            case "findName":
+                showFormFindName(request, response);
+            default:
+                showFormChat(request, response);
+        }
     }
-
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -72,5 +83,35 @@ public class ChatController extends HttpServlet {
         } catch (ServletException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private void findCurrentChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.checkLoginStatus(request, response);
+        String name = request.getParameter(Constant.NAME);
+        if (UserController.invalidPermissionUser(request, response)) return;
+
+        List<Chat> chatListResult = chatService.getChatListByUserName(currentUser, name);
+        request.setAttribute(Constant.CHAT_LIST, chatListResult);
+        RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_CHAT);
+        try {
+            dispatcher.forward(request, response);
+        } catch (ServletException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void showFormNewChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<User> userList = new ArrayList<>();
+        request.setAttribute(Constant.FIND_NAME, userList);
+        request.setAttribute(Constant.NEW_CHAT, "newChat");
+        showFormChat(request, response);
+    }
+
+    private void showFormFindName(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String name = request.getParameter(Constant.NAME);
+        List<User> userList = userService.findUserByName(request, name);
+        request.setAttribute(Constant.FIND_NAME, userList);
+        request.setAttribute(Constant.NAME, name);
+        showFormChat(request, response);
     }
 }

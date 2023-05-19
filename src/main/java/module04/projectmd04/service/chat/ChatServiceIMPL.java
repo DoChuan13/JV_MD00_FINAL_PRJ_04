@@ -41,7 +41,7 @@ public class ChatServiceIMPL implements IChatService {
 
                 User startUser = userService.findUserById(startUserId);
                 User targetUser = userService.findUserById(targetUserId);
-                List<ChatDetail> chatContent = new ArrayList<>();
+                List<ChatDetail> chatContent = getChatDetailByChatID(chatId);
                 Chat chat = new Chat(chatId, startUser, targetUser, startIn, targetIn, startTime, latestTime, chatContent);
                 chatList.add(chat);
             }
@@ -51,6 +51,26 @@ public class ChatServiceIMPL implements IChatService {
         return chatList;
     }
 
+    @Override
+    public List<Chat> getChatListByUserName(User currentUser, String name) {
+        List<Chat> chatList = getChatListByUser(currentUser);
+        List<Chat> result = new ArrayList<>();
+        for (Chat chat : chatList) {
+            User startUser = chat.getStartUser();
+            User targetUser = chat.getTargetUser();
+            if (startUser.getUserId() != currentUser.getUserId()
+                    && startUser.getName().toLowerCase().contains(name.toLowerCase())) {
+                result.add(chat);
+                continue;
+            }
+            if (targetUser.getUserId() != currentUser.getUserId() &&
+                    targetUser.getName().toLowerCase().contains(name.toLowerCase())) {
+                result.add(chat);
+            }
+        }
+        return result;
+    }
+
     private List<ChatDetail> getChatDetailByChatID(int chatId) {
         List<ChatDetail> chatDetails = new ArrayList<>();
         try {
@@ -58,7 +78,14 @@ public class ChatServiceIMPL implements IChatService {
             preparedStatement.setInt(1, chatId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
+                int chatDetailId = resultSet.getInt(Constant.CHAT_DETAIL_ID);
+                int userId = resultSet.getInt(Constant.USER_ID);
+                String content = resultSet.getString(Constant.CHAT_CONTENT);
+                Date sentTime = resultSet.getDate(Constant.SENT_DATE);
+                User user = userService.findUserById(userId);
+                ChatDetail chatDetail = new ChatDetail(chatDetailId, content, user, sentTime);
 
+                chatDetails.add(chatDetail);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

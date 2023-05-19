@@ -7,7 +7,7 @@ public class ChatDetail implements Serializable {
     private int chatDetailId;
     private String content;
     private User user;
-    private final Date sentTime = new Date();
+    private Date sentTime = new Date();
 
     public ChatDetail(int chatDetailId, String content, User user) {
         this.chatDetailId = chatDetailId;
@@ -16,6 +16,13 @@ public class ChatDetail implements Serializable {
     }
 
     public ChatDetail() {
+    }
+
+    public ChatDetail(int chatDetailId, String content, User user, Date sentTime) {
+        this.chatDetailId = chatDetailId;
+        this.content = content;
+        this.user = user;
+        this.sentTime = sentTime;
     }
 
     public String getContent() {
