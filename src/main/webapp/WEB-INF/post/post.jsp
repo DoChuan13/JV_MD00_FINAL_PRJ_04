@@ -121,7 +121,7 @@
 
                         <input name="content" id="post_content_${post.getPostId()}"
                                value="${post.getPostContent()}" readonly
-                               style="width: 100%;border: none;background: none"/>
+                               style="width: 100%;border: none;background: none; font-size: 15px"/>
                         <select id="option_content_${post.getPostId()}" name="status" style="display: none">
                             <option value="public" name="status">Public</option>
                             <option value="friend" name="status">Friend</option>
@@ -178,7 +178,7 @@
 
                                             <input name="comment" id="post_comment_${comment.getCommentId()}"
                                                    value="${comment.getComment()}" readonly
-                                                   style="width: 100%;border: none;background: none"/>
+                                                   style="width: 95%;border: none;background: none"/>
                                             <button id="summit_content_${comment.getCommentId()}" type="submit" style="display: none">update
                                             </button>
                                         </form>
@@ -295,6 +295,7 @@
     function activeEditComment(commentId){
         let comment = document.getElementById("post_comment_" + commentId);
         comment.removeAttribute("readonly");
+        comment.style.background="rgb(222, 214, 214)";
 
         let summit = document.getElementById("summit_content_"+ commentId);
         summit.style.display ="block";

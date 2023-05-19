@@ -251,7 +251,7 @@
 
                             <input name="content" id="post_content_${post.getPostId()}"
                                    value="${post.getPostContent()}" readonly
-                                   style="width: 100%;border: none;background: none"/>
+                                   style="width: 100%;border: none;background: none; font-size: 15px"/>
                             <select id="option_content_${post.getPostId()}" name="status" style="display: none">
                                 <option value="public" name="status">Public</option>
                                 <option value="friend" name="status">Friend</option>
