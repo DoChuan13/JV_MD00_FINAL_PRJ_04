@@ -1,5 +1,6 @@
 package module04.projectmd04.controller.chat;
 
+import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.controller.user.UserController;
 import module04.projectmd04.model.Chat;
@@ -64,6 +65,7 @@ public class ChatController extends HttpServlet {
         if (UserController.invalidPermissionUser(request, response)) return;
 
         List<Chat> chatList = chatService.getChatListByUser(currentUser);
+        request.setAttribute(Constant.CHAT_LIST, chatList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_CHAT);
         try {
             dispatcher.forward(request, response);

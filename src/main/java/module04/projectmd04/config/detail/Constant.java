@@ -32,4 +32,11 @@ public final class Constant {
     public static final String STATUS = "status";
     public static final String ROLE_NAME = "roleName";
     public static final String ROLE_ID = "roleId";
+    public static final String CHAT_LIST = "chatList";
+    public static final String SENT_USER_ID = "sentUserId";
+    public static final String RECEIVED_USER_ID = "receivedUserId";
+    public static final String START_IN = "sentUserIn";
+    public static final String TARGET_IN = "receivedUserIn";
+    public static final String START_TIME = "startTime";
+    public static final String LATEST_TIME = "latestTime";
 }
