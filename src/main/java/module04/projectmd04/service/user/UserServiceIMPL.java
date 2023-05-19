@@ -43,7 +43,7 @@ public class UserServiceIMPL implements IUserService {
     String DELETE_POST = "delete from post where postId not in (select userPost.postId from userPost);";
     String DELETE_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
-    String DELETE_CHAT = "delete from chat where chatId not in (select userChat.chatId from userChat);";
+    String DELETE_CHAT = "delete from chat where sentUserId = ?;";
     String DELETE_FRIEND = "delete from friend where friendId not in (select userFriend.friendId from userFriend);";
     String UPDATE_USER_INFO = "update user set name = ?, userName =?, email=?, password=?, avatar=? where userId =?;";
     String SELECT_USER_BY_NAME = "select * from user where name like ? or name like ? or name like ?;";
@@ -110,15 +110,21 @@ public class UserServiceIMPL implements IUserService {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
 
+            PreparedStatement preparedStatement10 = connection.prepareStatement(DELETE_CHAT);
+            preparedStatement10.setInt(1,id);
+            preparedStatement10.executeUpdate();
+
             PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_USER_CHAT);
             preparedStatement1.setInt(1, id);
             preparedStatement1.setInt(2, id);
             preparedStatement1.executeUpdate();
 
+
             PreparedStatement preparedStatement2 = connection.prepareStatement(DELETE_USER_FRIEND);
             preparedStatement2.setInt(1, id);
             preparedStatement2.setInt(2, id);
             preparedStatement2.executeUpdate();
+
 
             PreparedStatement preparedStatement3 = connection.prepareStatement(DELETE_USER_ROLE);
             preparedStatement3.setInt(1, id);
@@ -151,9 +157,6 @@ public class UserServiceIMPL implements IUserService {
 
             PreparedStatement preparedStatement9 = connection.prepareStatement(DELETE_COMMENT);
             preparedStatement9.executeUpdate();
-
-            PreparedStatement preparedStatement10 = connection.prepareStatement(DELETE_CHAT);
-            preparedStatement10.executeUpdate();
 
             PreparedStatement preparedStatement11 = connection.prepareStatement(DELETE_FRIEND);
             preparedStatement11.executeUpdate();
