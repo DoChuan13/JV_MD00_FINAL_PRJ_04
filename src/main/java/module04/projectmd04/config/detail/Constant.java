@@ -14,7 +14,7 @@ public final class Constant {
     public static final String USER_LIST = "userList";
     public static final String POST_LIST = "postList";
     public static final String POST_ID = "postId";
-    public static final String COMMENT_ID ="commentId";
+    public static final String COMMENT_ID = "commentId";
     public static final String COMMENT = "comment";
     public static final String FRIEND_LIST = "friendList";
     public static final String ACCEPTED = "accepted";
@@ -26,6 +26,10 @@ public final class Constant {
     public static final String REQUESTED = "requested";
     public static final String AVATAR = "avatar";
     public static final String NEW_PASSWORD = "newPassword";
-    public static final Object PROFILE_CHANGE = "changeProfile";
-    public static final Object PASS_CHANGE = "changePassword";
+    public static final String PROFILE_CHANGE = "changeProfile";
+    public static final String PASS_CHANGE = "changePassword";
+    public static final String CHAT_ID = "chatId";
+    public static final String STATUS = "status";
+    public static final String ROLE_NAME = "roleName";
+    public static final String ROLE_ID = "roleId";
 }

@@ -55,21 +55,14 @@ public class UserServiceIMPL implements IUserService {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_LIST);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int userId = resultSet.getInt("userId");
-                String name = resultSet.getString("name");
-                String userName = resultSet.getString("userName");
-                String email = resultSet.getString("email");
-                String avatar = resultSet.getString("avatar");
-                boolean status = resultSet.getBoolean("status");
-                Set<Role> roleSet = findRoleByUserId(userId);
-                userList.add(new User(userId, name, userName, email, avatar, roleSet, status));
+                User user = generateUserInfo(resultSet);
+                userList.add(user);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return userList;
     }
-
 
     @Override
     public void save(User user) {
@@ -178,8 +171,8 @@ public class UserServiceIMPL implements IUserService {
             preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("roleId");
-                RoleName name = RoleName.valueOf(resultSet.getString("roleName"));
+                int id = resultSet.getInt(Constant.ROLE_ID);
+                RoleName name = RoleName.valueOf(resultSet.getString(Constant.ROLE_NAME));
                 roleSet.add(new Role(id, name));
             }
         } catch (SQLException e) {
@@ -195,7 +188,7 @@ public class UserServiceIMPL implements IUserService {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_FROM_USER);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                userNameList.add(resultSet.getString("userName"));
+                userNameList.add(resultSet.getString(Constant.USER_NAME));
             }
             for (String existedUserName : userNameList) {
                 if (userName.equalsIgnoreCase(existedUserName)) {
@@ -215,7 +208,7 @@ public class UserServiceIMPL implements IUserService {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_EMAIL_FROM_USER);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                emailList.add(resultSet.getString("email"));
+                emailList.add(resultSet.getString(Constant.EMAIL));
             }
             for (String existedEmail : emailList) {
                 if (email.equalsIgnoreCase(existedEmail)) {
@@ -229,25 +222,20 @@ public class UserServiceIMPL implements IUserService {
     }
 
     @Override
-    public User userLogin(String userName, String password) {
+    public User userLogin(String loginUserName, String password) {
         User user = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_LOGIN_USER);
-            preparedStatement.setString(1, userName);
+            preparedStatement.setString(1, loginUserName);
             preparedStatement.setString(2, password);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int userId = resultSet.getInt("userId");
-                String name = resultSet.getString("name");
-                String email = resultSet.getString("email");
-                String avatar = resultSet.getString("avatar");
-                boolean status = resultSet.getBoolean("status");
+                boolean status = resultSet.getBoolean(Constant.STATUS);
                 if (status) {
                     return null;
                 }
-                Set<Role> roleSet = findRoleByUserId(userId);
-                user = new User(userId, name, userName, email, password, avatar, roleSet);
+                user = generateUserInfo(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -309,14 +297,8 @@ public class UserServiceIMPL implements IUserService {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int userId = resultSet.getInt("userId");
-                String name = resultSet.getString("name");
-                String userName = resultSet.getString("userName");
-                String email = resultSet.getString("email");
-                String avatar = resultSet.getString("avatar");
-                boolean status = resultSet.getBoolean("status");
-                Set<Role> roleSet = findRoleByUserId(userId);
-                user = new User(userId, name, userName, email, avatar, roleSet, status);
+                user = generateUserInfo(resultSet);
+                user.setPassword(resultSet.getString(Constant.PASSWORD));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -365,12 +347,8 @@ public class UserServiceIMPL implements IUserService {
             preparedStatement.setString(3, ("%" + findName));
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int userId = resultSet.getInt("userId");
-                String name = resultSet.getString("name");
-                String userName = resultSet.getString("userName");
-                String email = resultSet.getString("email");
-                String avatar = resultSet.getString("avatar");
-                boolean status = resultSet.getBoolean("status");
+                User user = generateUserInfo(resultSet);
+                int userId = resultSet.getInt(Constant.USER_ID);
                 Set<Role> roleSet = findRoleByUserId(userId);
                 boolean userRole = true;
                 for (Role role : roleSet) {
@@ -379,8 +357,7 @@ public class UserServiceIMPL implements IUserService {
                         break;
                     }
                 }
-                if (userId != currentUser.getUserId() && userRole && !status) {
-                    User user = new User(userId, name, userName, email, avatar, roleSet);
+                if (userId != currentUser.getUserId() && userRole && !user.isStatus()) {
                     userList.add(user);
                 }
             }
@@ -407,5 +384,16 @@ public class UserServiceIMPL implements IUserService {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private User generateUserInfo(ResultSet resultSet) throws SQLException {
+        int userId = resultSet.getInt(Constant.USER_ID);
+        String name = resultSet.getString(Constant.NAME);
+        String userName = resultSet.getString(Constant.USER_NAME);
+        String email = resultSet.getString(Constant.EMAIL);
+        String avatar = resultSet.getString(Constant.AVATAR);
+        boolean status = resultSet.getBoolean(Constant.STATUS);
+        Set<Role> roleSet = findRoleByUserId(userId);
+        return new User(userId, name, userName, email, avatar, roleSet, status);
     }
 }
