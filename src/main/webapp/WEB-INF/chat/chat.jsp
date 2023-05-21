@@ -442,7 +442,8 @@
                                     <c:if test='${chatDetail.getUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <li class="clearfix">
                                             <div class="message-data text-right">
-                                                <span class="message-data-time">${chatDetail.getSentTime()}</span>
+                                                <span style="display: block;text-align: right"
+                                                      class="message-data-time">${chatDetail.getSentTime()}</span>
                                             </div>
                                             <div class="message other-message float-right"> ${chatDetail.getContent()}
                                             </div>

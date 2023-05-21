@@ -36,15 +36,14 @@ public class UserServiceIMPL implements IUserService {
     String DELETE_USER_CHAT = "delete from userChat where sentUserId =? or receivedUserId = ?;";
     String DELETE_USER_FRIEND = "delete from userFriend where sentUserId = ? or receivedUserId = ?;";
     String DELETE_USER_ROLE = "delete from userRole where userId = ?;";
-    String DELETE_COMMENT_POST = "delete from commentPost where userId = ?;";
-    String DELETE_LIKE_POST = "delete from likePost where userId = ?;";
+    String DELETE_COMMENT_POST = "delete from commentPost where userId = ? or postId in (select post.postId from post join userPost uP on post.postId = uP.postId where uP.userId =?);";
+    String DELETE_LIKE_POST = "delete from likePost where postId in (select post.postId from post join userPost uP on post.postId = uP.postId where uP.userId =?);";
     String DELETE_USER_BY_ID = "delete from user where userId = ?;";
-
-    String DELETE_POST = "delete from post where postId not in (select userPost.postId from userPost);";
+    String DELETE_POST = "delete from post where postId not in (select postId from userPost);";
     String DELETE_LIKE = "delete from `like` where likeId not in (select likeId from likePost);";
     String DELETE_COMMENT = "delete from comment where commentId not in (select commentId from commentPost);";
-    String DELETE_CHAT = "delete from chat where sentUserId = ?;";
-    String DELETE_FRIEND = "delete from friend where friendId not in (select userFriend.friendId from userFriend);";
+    String DELETE_CHAT = "delete from chat where chatId in (select chatId from userChat where sentUserId =? or receivedUserId =?);";
+    String DELETE_FRIEND = "delete from friend where friendId not in (select friendId from userFriend);";
     String UPDATE_USER_INFO = "update user set name = ?, userName =?, email=?, password=?, avatar=? where userId =?;";
     String SELECT_USER_BY_NAME = "select * from user where name like ? or name like ? or name like ?;";
 
@@ -106,12 +105,38 @@ public class UserServiceIMPL implements IUserService {
     public void delete(int id) {
         try {
             connection.setAutoCommit(false);
+            PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_COMMENT_POST);
+            preparedStatement4.setInt(1, id);
+            preparedStatement4.setInt(2, id);
+            preparedStatement4.executeUpdate();
+
+
+            PreparedStatement preparedStatement5 = connection.prepareStatement(DELETE_LIKE_POST);
+            preparedStatement5.setInt(1, id);
+            preparedStatement5.executeUpdate();
+
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_POST);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
 
+            PreparedStatement preparedStatement7 = connection.prepareStatement(DELETE_POST);
+            preparedStatement7.executeUpdate();
+
+            PreparedStatement preparedStatement8 = connection.prepareStatement(DELETE_LIKE);
+            preparedStatement8.executeUpdate();
+
+            PreparedStatement preparedStatement9 = connection.prepareStatement(DELETE_COMMENT);
+            preparedStatement9.executeUpdate();
+
+            PreparedStatement preparedStatement6_1 = connection.prepareStatement(DELETE_FROM_IMAGE_POST);
+            preparedStatement6_1.executeUpdate();
+
+            PreparedStatement preparedStatement7_1 = connection.prepareStatement(DELETE_FROM_IMAGE);
+            preparedStatement7_1.executeUpdate();
+
             PreparedStatement preparedStatement10 = connection.prepareStatement(DELETE_CHAT);
-            preparedStatement10.setInt(1,id);
+            preparedStatement10.setInt(1, id);
+            preparedStatement10.setInt(2, id);
             preparedStatement10.executeUpdate();
 
             PreparedStatement preparedStatement1 = connection.prepareStatement(DELETE_USER_CHAT);
@@ -124,42 +149,18 @@ public class UserServiceIMPL implements IUserService {
             preparedStatement2.setInt(1, id);
             preparedStatement2.setInt(2, id);
             preparedStatement2.executeUpdate();
-
+            PreparedStatement preparedStatement11 = connection.prepareStatement(DELETE_FRIEND);
+            preparedStatement11.executeUpdate();
 
             PreparedStatement preparedStatement3 = connection.prepareStatement(DELETE_USER_ROLE);
             preparedStatement3.setInt(1, id);
             preparedStatement3.executeUpdate();
-
-            PreparedStatement preparedStatement4 = connection.prepareStatement(DELETE_COMMENT_POST);
-            preparedStatement4.setInt(1, id);
-            preparedStatement4.executeUpdate();
-
-            PreparedStatement preparedStatement5 = connection.prepareStatement(DELETE_LIKE_POST);
-            preparedStatement5.setInt(1, id);
-            preparedStatement5.executeUpdate();
 
             PreparedStatement preparedStatement6 = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement6.setInt(1, id);
             preparedStatement6.executeUpdate();
 
             //
-            PreparedStatement preparedStatement6_1 = connection.prepareStatement(DELETE_FROM_IMAGE_POST);
-            preparedStatement6_1.executeUpdate();
-
-            PreparedStatement preparedStatement7 = connection.prepareStatement(DELETE_POST);
-            preparedStatement7.executeUpdate();
-
-            PreparedStatement preparedStatement7_1 = connection.prepareStatement(DELETE_FROM_IMAGE);
-            preparedStatement7_1.executeUpdate();
-
-            PreparedStatement preparedStatement8 = connection.prepareStatement(DELETE_LIKE);
-            preparedStatement8.executeUpdate();
-
-            PreparedStatement preparedStatement9 = connection.prepareStatement(DELETE_COMMENT);
-            preparedStatement9.executeUpdate();
-
-            PreparedStatement preparedStatement11 = connection.prepareStatement(DELETE_FRIEND);
-            preparedStatement11.executeUpdate();
             connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);

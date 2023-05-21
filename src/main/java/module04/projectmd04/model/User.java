@@ -7,7 +7,7 @@ import java.util.Set;
 public class User implements Serializable {
     private int userId;
     private String name, userName, email, password, avatar
-            = "https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=1be277f5-54cd-4649-882b-be73e3fec844";
+            = "https://firebasestorage.googleapis.com/v0/b/java-full-stack-76e1c.appspot.com/o/avatar.jpeg?alt=media&token=0dd6e72d-fcaf-4565-beec-76c89347767c";
 
     private Set<Role> roleSet = new HashSet<>();
     private boolean status = false;
