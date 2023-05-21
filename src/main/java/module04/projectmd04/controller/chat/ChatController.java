@@ -55,7 +55,7 @@ public class ChatController extends HttpServlet {
                 showFormFindName(request, response);
                 break;
             case "startChat":
-                startChat(request, response);
+                showStartChat(request, response);
                 break;
             case "chatSession":
                 chatSessionWithFriend(request, response);
@@ -129,7 +129,7 @@ public class ChatController extends HttpServlet {
         showFormChat(request, response);
     }
 
-    private void startChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void showStartChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = userService.getCurrentUser(request);
         int userId = Integer.parseInt(request.getParameter(Constant.USER_ID));
         Chat existChat = chatService.findChatRelUser(currentUser, userId);
@@ -178,5 +178,6 @@ public class ChatController extends HttpServlet {
         int chatId = Integer.parseInt(request.getParameter(Constant.CHAT_ID));
         ChatDetail chatDetail = new ChatDetail(currentUser, chatContent);
         chatService.sentChatContent(chatDetail, chatId);
+        chatSessionWithFriend(request, response);
     }
 }

@@ -425,28 +425,32 @@
                             </c:if>
                         </c:if>
                         <c:if test='${requestScope["chatSession"]!=null}'>
-                            <c:if test="${requestScope['findName']==null}">
-                                <%--<div class="message-data text-right">--%>
-                                <%--<span>Nothing Chat History</span>--%>
-                                <%--</div>--%>
-                                <ul class="m-b-0">
+                            <%--<div class="message-data text-right">--%>
+                            <%--<span>Nothing Chat History</span>--%>
+                            <%--</div>--%>
+                            <ul class="m-b-0">
                                 <li class="clearfix">
                                 </li>
-                                <li class="clearfix">
-                                    <div class="message-data text-right">
-                                            <%--<span class="message-data-time">10:10 AM, Today</span>--%>
-                                    </div>
-                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is the
-                                        project coming along?
-                                    </div>
-                                </li>
-                                <li class="clearfix">
-                                    <div class="message-data">
-                                            <%--<span class="message-data-time">10:12 AM, Today</span>--%>
-                                    </div>
-                                    <div class="message my-message">Are we meeting today?</div>
-                                </li>
-                            </c:if>
+                                <c:forEach items="${requestScope['chatSession'].getChatContent()}"
+                                           var="chatDetail">
+                                    <c:if test='${chatDetail.getUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                                        <li class="clearfix">
+                                            <div class="message-data text-right">
+                                                    <%--<span class="message-data-time">10:10 AM, Today</span>--%>
+                                            </div>
+                                            <div class="message other-message float-right"> ${chatDetail.getContent()}
+                                            </div>
+                                        </li>
+                                    </c:if>
+                                    <c:if test='${chatDetail.getUser().getUserId()!=sessionScope["loginUser"].getUserId()}'>
+                                        <li class="clearfix">
+                                            <div class="message-data">
+                                                    <%--<span class="message-data-time">10:12 AM, Today</span>--%>
+                                            </div>
+                                            <div class="message my-message">${chatDetail.getContent()}</div>
+                                        </li>
+                                    </c:if>
+                                </c:forEach>
                             </ul>
                         </c:if>
                     </div>
