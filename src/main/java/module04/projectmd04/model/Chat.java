@@ -42,6 +42,11 @@ public class Chat implements Serializable {
         this.chatContent = chatContent;
     }
 
+    public Chat(User startUser, User targetUser) {
+        this.startUser = startUser;
+        this.targetUser = targetUser;
+    }
+
     public Date getStartIn() {
         return startIn;
     }

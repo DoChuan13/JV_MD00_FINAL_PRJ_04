@@ -25,6 +25,11 @@ public class ChatDetail implements Serializable {
         this.sentTime = sentTime;
     }
 
+    public ChatDetail(User user, String content) {
+        this.content = content;
+        this.user = user;
+    }
+
     public String getContent() {
         return content;
     }

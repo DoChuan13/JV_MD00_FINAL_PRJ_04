@@ -107,9 +107,9 @@ create table if not exists FacebookDatabase.imagePost
 
 create table if not exists FacebookDatabase.userChat
 (
-    chatId         int not null,
-    sentUserId     int not null,
-    receivedUserId int not null,
+    chatId         int auto_increment,
+    sentUserId     int ,
+    receivedUserId int ,
     startTime      datetime default (now()),
     latestTime     datetime default (now()),
     sentUserIn     datetime default (now()),

@@ -317,32 +317,70 @@
                             </li>
                         </c:if>
                         <c:if test='${requestScope["chatList"].size()!=0}'>
-                            <li class="clearfix active">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                                <div class="about">
-                                    <div class="name">Vincent Porter</div>
-                                    <div class="status"><i class="fa fa-circle offline"></i> left 7 mins ago</div>
-                                </div>
-                            </li>
+                            <c:forEach items='${requestScope["chatList"]}' var="chat">
+                                <li class="clearfix active">
+                                    <c:if test='${chat.getStartUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                                        <img style="height: 40px; width: 40px;"
+                                             src="${chat.getTargetUser().getAvatar()}" alt="avatar">
+                                        <div class="about">
+                                            <div class="name">
+                                                <a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                                        ${chat.getTargetUser().getName()}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                    <c:if test='${chat.getTargetUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                                        <img style="height: 40px; width: 40px;"
+                                             src="${chat.getStartUser().getAvatar()}"
+                                             alt="avatar">
+                                        <div class="about">
+                                            <div class="name">
+                                                <a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                                        ${chat.getStartUser().getName()}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </c:if>
+                                </li>
+                            </c:forEach>
                         </c:if>
                     </ul>
                 </div>
                 <%--Chat List End--%>
 
                 <div class="chat">
-                    <c:if test='${requestScope["newChat"]==null}'>
+                    <%--<c:if test='${requestScope["newChat"]==null&&requestScope["resultFind"]==null}'>--%>
+                    <c:if test='${requestScope["chatSession"]!=null}'>
                         <div class="chat-header clearfix">
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <a href="#" data-toggle="modal" data-target="#view_info">
-                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                                    </a>
+                                    <c:if test='${chatSession.getStartUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                                        <a href="#" data-toggle="modal" data-target="#view_info">
+                                            <img
+                                                    style="height: 40px; width: 40px;"
+                                                    src="${chatSession.getTargetUser().getAvatar()}" alt="avatar">
+                                        </a>
+                                        <a href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
+                                                ${chatSession.getTargetUser().getName()}
+                                        </a>
+                                    </c:if>
+                                    <c:if test='${chatSession.getTargetUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                                        <a href="#" data-toggle="modal" data-target="#view_info">
+                                            <img
+                                                    style="height: 40px; width: 40px;"
+                                                    src="${chatSession.getStartUser().getAvatar()}" alt="avatar">
+                                        </a>
+                                        <a href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
+                                                ${chatSession.getStartUser().getName()}
+                                        </a>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
                     </c:if>
-                    <c:if test='${requestScope["newChat"]!=null}'>
-                        <form method="get">
+                    <form method="get">
+                        <c:if test='${requestScope["newChat"]!=null||requestScope["resultFind"]!=null}'>
                             <div class="chat-header clearfix">
                                 <c:if test='${requestScope["name"]==null}'>
                                     <div class="row">
@@ -353,7 +391,7 @@
                                         </div>
                                     </div>
                                 </c:if>
-                                <c:if test='${requestScope["name"]!=null}'>
+                                <c:if test='${requestScope["resultFind"]!=null}'>
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <input type="text" name="action" value="findName" hidden>
@@ -365,8 +403,8 @@
                                 </c:if>
                             </div>
                             <button type="submit" style="display: none">Search</button>
-                        </form>
-                    </c:if>
+                        </c:if>
+                    </form>
 
                     <div class="chat-history" style="width: 800px;min-height: 500px">
                         <c:if test="${requestScope['findName']!=null}">
@@ -381,44 +419,51 @@
                                          style="display: flex;text-align: center;gap: 30px">
                                         <img src="${name.getAvatar()}" alt="avatar"/>
                                         <p style="width: 120px;">${name.getName()}</p>
-                                        <a href="/chat?action=newChat&userId=${name.getUserId()}">Start Chat</a>
+                                        <a href="/chat?action=startChat&userId=${name.getUserId()}">Start Chat</a>
                                     </div>
                                 </c:forEach>
                             </c:if>
                         </c:if>
-                        <c:if test="${requestScope['findName']==null}">
-                        <div class="message-data text-right">
-                            <span>Nothing Chat History</span>
-                        </div>
-                        <ul class="m-b-0">
-                            <li class="clearfix">
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data text-right">
-                                    <span class="message-data-time">10:10 AM, Today</span>
-                                    <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
-                                </div>
-                                <div class="message other-message float-right"> Hi Aiden, how are you? How is the
-                                    project coming along?
-                                </div>
-                            </li>
-                            <li class="clearfix">
-                                <div class="message-data">
-                                    <span class="message-data-time">10:12 AM, Today</span>
-                                </div>
-                                <div class="message my-message">Are we meeting today?</div>
-                            </li>
+                        <c:if test='${requestScope["chatSession"]!=null}'>
+                            <c:if test="${requestScope['findName']==null}">
+                                <%--<div class="message-data text-right">--%>
+                                <%--<span>Nothing Chat History</span>--%>
+                                <%--</div>--%>
+                                <ul class="m-b-0">
+                                <li class="clearfix">
+                                </li>
+                                <li class="clearfix">
+                                    <div class="message-data text-right">
+                                            <%--<span class="message-data-time">10:10 AM, Today</span>--%>
+                                    </div>
+                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is the
+                                        project coming along?
+                                    </div>
+                                </li>
+                                <li class="clearfix">
+                                    <div class="message-data">
+                                            <%--<span class="message-data-time">10:12 AM, Today</span>--%>
+                                    </div>
+                                    <div class="message my-message">Are we meeting today?</div>
+                                </li>
                             </c:if>
-                        </ul>
+                            </ul>
+                        </c:if>
                     </div>
-                    <c:if test="${requestScope['findName']==null}">
-                        <div class="chat-message clearfix">
-                            <div class="input-group mb-0">
-                                <span class="input-group-text"><i class="fa fa-send"></i></span>
-                                <input type="text" class="form-control" placeholder="Enter text here..."
-                                       style="width: 90%;padding: 5px;">
+                    <c:if test="${requestScope['chatSession']!=null}">
+                        <form method="post" action="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
+                            <div class="chat-message clearfix">
+                                <div class="input-group mb-0">
+                                    <button type="submit" style="display: inline">
+                                        <span class="input-group-text"><i class="fa fa-send"></i></span>
+                                    </button>
+                                    <input type="text"
+                                           name="content"
+                                           class="form-control" placeholder="Enter text here..."
+                                           style="width: 90%;padding: 5px;">
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </c:if>
                 </div>
             </div>

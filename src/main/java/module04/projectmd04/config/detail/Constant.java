@@ -44,4 +44,6 @@ public final class Constant {
     public static final String SENT_DATE = "sentDate";
     public static final String NEW_CHAT = "newChat";
     public static final String FIND_NAME = "findName";
+    public static final String RESULT_FIND = "resultFind";
+    public static final String CHAT_SESSION = "chatSession";
 }
