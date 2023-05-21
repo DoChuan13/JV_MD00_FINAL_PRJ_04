@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @WebServlet("/chat")
@@ -60,10 +59,14 @@ public class ChatController extends HttpServlet {
             case "chatSession":
                 chatSessionWithFriend(request, response);
                 break;
+            case "deleteChat":
+                leaveFromCurrentChat(request, response);
+                break;
             default:
                 showFormChat(request, response);
         }
     }
+
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -138,14 +141,8 @@ public class ChatController extends HttpServlet {
             Chat chat = new Chat(currentUser, targetUser);
             chatService.startNewChat(chat);
         } else if (currentUser.getUserId() == existChat.getStartUser().getUserId() && existChat.getStartIn() == null) {
-            Date newTime = new Date();
-            existChat.setStartIn(newTime);
-            existChat.setLatestTime(newTime);
             chatService.returnCurrentChat(existChat);
         } else if (currentUser.getUserId() == existChat.getTargetUser().getUserId() && existChat.getTargetIn() == null) {
-            Date newTime = new Date();
-            existChat.setTargetIn(newTime);
-            existChat.setLatestTime(newTime);
             chatService.returnCurrentChat(existChat);
         }
         int chatId = chatService.findChatRelUser(currentUser, userId).getChatId();
@@ -157,7 +154,7 @@ public class ChatController extends HttpServlet {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (UserController.invalidPermissionUser(request, response)) return;
         int chatId = Integer.parseInt(request.getParameter(Constant.CHAT_ID));
-        Chat chat = chatService.findChatById(chatId);
+        Chat chat = chatService.findChatById(currentUser, chatId);
 
         List<Chat> chatList = chatService.getChatListByUser(currentUser);
         request.setAttribute(Constant.CHAT_LIST, chatList);
@@ -179,5 +176,14 @@ public class ChatController extends HttpServlet {
         ChatDetail chatDetail = new ChatDetail(currentUser, chatContent);
         chatService.sentChatContent(chatDetail, chatId);
         chatSessionWithFriend(request, response);
+    }
+
+    private void leaveFromCurrentChat(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        User currentUser = UserController.checkLoginStatus(request, response);
+        if (UserController.invalidPermissionUser(request, response)) return;
+        int chatId = Integer.parseInt(request.getParameter(Constant.CHAT_ID));
+        Chat chat = chatService.findChatById(currentUser, chatId);
+        chatService.leaveFromCurrentChat(currentUser, chat);
+        showFormChat(request, response);
     }
 }

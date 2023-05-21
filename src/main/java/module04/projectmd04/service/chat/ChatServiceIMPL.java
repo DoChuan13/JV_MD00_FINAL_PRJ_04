@@ -20,11 +20,17 @@ public class ChatServiceIMPL implements IChatService {
     String SELECT_USER_CHAT_BY_USERS = "select * from userChat where (sentUserId = ? and receivedUserId = ?) or (receivedUserId = ? and  sentUserId = ?);";
 
     String INSERT_INTO_USER_CHAT = "insert into userChat (sentUserId, receivedUserId) values(?, ?);";
-    String UPDATE_USER_CHAT = "update userChat set latestTime = ?,sentUserId =?, receivedUserId =? where chatId = ?;";
+    String UPDATE_USER_CHAT = "update userChat " +
+            "set latestTime = now()," +
+            "sentUserIn =if(sentUserIn is null ,now(),sentUserIn), " +
+            "receivedUserIn=if(receivedUserIn is null ,now(),receivedUserIn) " +
+            "where chatId = ?;";
     String INSERT_INTO_CHAT = "insert into chat(chatId, content, sentUserId) values (?,?,?);";
     String SELECT_USER_CHAT_BY_ID = "select * from userChat where chatId = ?;";
     String UPDATE_USER_CHAT_BY_ID = "update userChat set latestTime = now() where chatId = ?;";
     String SELECT_CHAT_BY_ID = "select * from chat where chatId = ?";
+    String UPDATE_USER_CHAT_SENT_USR = "update userChat set sentUserIn = null where chatId = ?;";
+    String UPDATE_USER_CHAT_REV_USR = "update userChat set receivedUserIn = null where chatId = ?;";
 
     @Override
     public List<Chat> getChatListByUser(User currentUser) {
@@ -36,7 +42,7 @@ public class ChatServiceIMPL implements IChatService {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Chat chat = getChatInfo(resultSet);
+                Chat chat = getChatInfo(currentUser, resultSet);
                 if ((currentUser.getUserId() == chat.getStartUser().getUserId() && chat.getStartIn() != null) ||
                         currentUser.getUserId() == chat.getTargetUser().getUserId() && chat.getTargetIn() != null) {
                     chatList.add(chat);
@@ -83,11 +89,26 @@ public class ChatServiceIMPL implements IChatService {
                 int chatId = resultSet.getInt(Constant.CHAT_ID);
                 User startUser = userService.findUserById(resultSet.getInt(Constant.SENT_USER_ID));
                 User targetUser = userService.findUserById(resultSet.getInt(Constant.RECEIVED_USER_ID));
-                Date startIn = resultSet.getDate(Constant.START_IN);
-                Date targetIn = resultSet.getDate(Constant.TARGET_IN);
-                Date startTime = resultSet.getDate(Constant.START_TIME);
-                Date latestTime = resultSet.getDate(Constant.LATEST_TIME);
+                Date startIn = resultSet.getTimestamp(Constant.START_IN);
+                Date targetIn = resultSet.getTimestamp(Constant.TARGET_IN);
+                Date startTime = resultSet.getTimestamp(Constant.START_TIME);
+                Date latestTime = resultSet.getTimestamp(Constant.LATEST_TIME);
                 List<ChatDetail> chatContent = getChatDetailByChatID(chatId);
+
+                Date timeFilter;
+                if (currentUser.getUserId() == startUser.getUserId()) {
+                    timeFilter = startIn;
+                } else timeFilter = targetIn;
+
+                for (int i = 0; i < chatContent.size(); i++) {
+                    if (timeFilter == null) {
+                        chatContent = new ArrayList<>();
+                        break;
+                    } else if (chatContent.get(i).getSentTime().compareTo(timeFilter) < 0) {
+                        chatContent.remove(chatContent.get(i));
+                        i--;
+                    }
+                }
 
                 chat = new Chat(chatId, startUser, targetUser, startIn, targetIn, startTime, latestTime, chatContent);
             }
@@ -117,10 +138,7 @@ public class ChatServiceIMPL implements IChatService {
         try {
             connection.setAutoCommit(false);
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_CHAT);
-            preparedStatement.setDate(1, (java.sql.Date) currentChat.getLatestTime());
-            preparedStatement.setDate(2, (java.sql.Date) currentChat.getStartIn());
-            preparedStatement.setDate(3, (java.sql.Date) currentChat.getTargetIn());
-            preparedStatement.setInt(4, currentChat.getChatId());
+            preparedStatement.setInt(1, currentChat.getChatId());
             preparedStatement.executeUpdate();
 
             connection.commit();
@@ -130,7 +148,7 @@ public class ChatServiceIMPL implements IChatService {
     }
 
     @Override
-    public Chat findChatById(int currentChatId) {
+    public Chat findChatById(User currentUser, int currentChatId) {
         Chat chat = null;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_CHAT_BY_ID);
@@ -138,7 +156,7 @@ public class ChatServiceIMPL implements IChatService {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                chat = getChatInfo(resultSet);
+                chat = getChatInfo(currentUser, resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -165,6 +183,27 @@ public class ChatServiceIMPL implements IChatService {
         }
     }
 
+    @Override
+    public void leaveFromCurrentChat(User currentUser, Chat chat) {
+        try {
+            connection.setAutoCommit(false);
+            if (chat.getStartUser().getUserId() == currentUser.getUserId()) {
+
+                PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_CHAT_SENT_USR);
+                preparedStatement.setInt(1, chat.getChatId());
+                preparedStatement.executeUpdate();
+            } else {
+                PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_CHAT_REV_USR);
+                preparedStatement.setInt(1, chat.getChatId());
+                preparedStatement.executeUpdate();
+            }
+
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private List<ChatDetail> getChatDetailByChatID(int chatId) {
         List<ChatDetail> chatDetails = new ArrayList<>();
         try {
@@ -175,7 +214,7 @@ public class ChatServiceIMPL implements IChatService {
                 int chatDetailId = resultSet.getInt(Constant.CHAT_DETAIL_ID);
                 int userId = resultSet.getInt(Constant.SENT_USER_ID);
                 String content = resultSet.getString(Constant.CHAT_CONTENT);
-                Date sentTime = resultSet.getDate(Constant.SENT_DATE);
+                Date sentTime = resultSet.getTimestamp(Constant.SENT_DATE);
                 User user = userService.findUserById(userId);
                 ChatDetail chatDetail = new ChatDetail(chatDetailId, content, user, sentTime);
 
@@ -188,19 +227,34 @@ public class ChatServiceIMPL implements IChatService {
         return chatDetails;
     }
 
-    private Chat getChatInfo(ResultSet resultSet) throws SQLException {
+    private Chat getChatInfo(User currentUser, ResultSet resultSet) throws SQLException {
         Chat chat;
         int chatId = resultSet.getInt(Constant.CHAT_ID);
         int startUserId = resultSet.getInt(Constant.SENT_USER_ID);
         int targetUserId = resultSet.getInt(Constant.RECEIVED_USER_ID);
-        Date startIn = resultSet.getDate(Constant.START_IN);
-        Date targetIn = resultSet.getDate(Constant.TARGET_IN);
-        Date startTime = resultSet.getDate(Constant.START_TIME);
-        Date latestTime = resultSet.getDate(Constant.LATEST_TIME);
+        Date startIn = resultSet.getTimestamp(Constant.START_IN);
+        Date targetIn = resultSet.getTimestamp(Constant.TARGET_IN);
+        Date startTime = resultSet.getTimestamp(Constant.START_TIME);
+        Date latestTime = resultSet.getTimestamp(Constant.LATEST_TIME);
 
         User startUser = userService.findUserById(startUserId);
         User targetUser = userService.findUserById(targetUserId);
         List<ChatDetail> chatContent = getChatDetailByChatID(chatId);
+        Date timeFilter;
+        if (currentUser.getUserId() == startUser.getUserId()) {
+            timeFilter = startIn;
+        } else timeFilter = targetIn;
+
+        for (int i = 0; i < chatContent.size(); i++) {
+            if (timeFilter == null) {
+                chatContent = new ArrayList<>();
+                break;
+            } else if (chatContent.get(i).getSentTime().compareTo(timeFilter) < 0) {
+                chatContent.remove(chatContent.get(i));
+                i--;
+            }
+        }
+
         chat = new Chat(chatId, startUser, targetUser, startIn, targetIn, startTime, latestTime, chatContent);
         return chat;
     }

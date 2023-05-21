@@ -17,7 +17,9 @@ public interface IChatService {
 
     void returnCurrentChat(Chat currentChat);
 
-    Chat findChatById(int chatId);
+    Chat findChatById(User currentUser, int chatId);
 
     void sentChatContent(ChatDetail chatDetail, int chatId);
+
+    void leaveFromCurrentChat(User currentUser, Chat chat);
 }

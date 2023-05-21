@@ -122,7 +122,7 @@
         }
 
         .chat .chat-history ul li:last-child {
-            margin-bottom: 0px
+            margin-bottom: 0;
         }
 
         .chat .chat-history .message-data {
@@ -329,7 +329,9 @@
                                                 </a>
                                             </div>
                                         </div>
-                                        <div style="float: right"><a href="">Delete</a></div>
+                                        <div style="float: right"><a
+                                                href="/chat?action=deleteChat&chatId=${chat.getChatId()}">Delete</a>
+                                        </div>
                                     </c:if>
                                     <c:if test='${chat.getTargetUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <img style="height: 40px; width: 40px;"
@@ -341,6 +343,9 @@
                                                         ${chat.getStartUser().getName()}
                                                 </a>
                                             </div>
+                                        </div>
+                                        <div style="float: right"><a
+                                                href="/chat?action=deleteChat&chatId=${chat.getChatId()}">Delete</a>
                                         </div>
                                     </c:if>
                                 </li>
