@@ -16,7 +16,7 @@ import java.util.List;
 public class ChatServiceIMPL implements IChatService {
     private static final Connection connection = Configs.getInstance().getConnectMySQL();
     private static final IUserService userService = Services.getInstance().getUserService();
-    String SELECT_FROM_USER_CHAT = "select * from userChat where receivedUserId = ? or  sentUserId = ?;";
+    String SELECT_FROM_USER_CHAT = "select * from userChat where receivedUserId = ? or  sentUserId = ? order by latestTime desc ;";
     String SELECT_USER_CHAT_BY_USERS = "select * from userChat where (sentUserId = ? and receivedUserId = ?) or (receivedUserId = ? and  sentUserId = ?);";
 
     String INSERT_INTO_USER_CHAT = "insert into userChat (sentUserId, receivedUserId) values(?, ?);";
@@ -37,7 +37,10 @@ public class ChatServiceIMPL implements IChatService {
 
             while (resultSet.next()) {
                 Chat chat = getChatInfo(resultSet);
-                chatList.add(chat);
+                if ((currentUser.getUserId() == chat.getStartUser().getUserId() && chat.getStartIn() != null) ||
+                        currentUser.getUserId() == chat.getTargetUser().getUserId() && chat.getTargetIn() != null) {
+                    chatList.add(chat);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

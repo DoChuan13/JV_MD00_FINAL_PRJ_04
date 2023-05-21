@@ -329,6 +329,7 @@
                                                 </a>
                                             </div>
                                         </div>
+                                        <div style="float: right"><a href="">Delete</a></div>
                                     </c:if>
                                     <c:if test='${chat.getTargetUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <img style="height: 40px; width: 40px;"
@@ -436,7 +437,7 @@
                                     <c:if test='${chatDetail.getUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <li class="clearfix">
                                             <div class="message-data text-right">
-                                                    <%--<span class="message-data-time">10:10 AM, Today</span>--%>
+                                                <span class="message-data-time">${chatDetail.getSentTime()}</span>
                                             </div>
                                             <div class="message other-message float-right"> ${chatDetail.getContent()}
                                             </div>
@@ -445,7 +446,7 @@
                                     <c:if test='${chatDetail.getUser().getUserId()!=sessionScope["loginUser"].getUserId()}'>
                                         <li class="clearfix">
                                             <div class="message-data">
-                                                    <%--<span class="message-data-time">10:12 AM, Today</span>--%>
+                                                <span class="message-data-time">${chatDetail.getSentTime()}</span>
                                             </div>
                                             <div class="message my-message">${chatDetail.getContent()}</div>
                                         </li>
