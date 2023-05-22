@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -68,7 +68,7 @@
 
     function resultImage() {
         console.log(fileArr);
-        console.log('image resulte -->', fileUrl);
+        console.log('image result -->', fileUrl);
         return fileUrl;
     }
 

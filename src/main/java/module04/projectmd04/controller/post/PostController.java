@@ -157,8 +157,13 @@ public class PostController extends HttpServlet {
     }
 
     public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
+        String content = request.getParameter(Constant.POST_CONTENT);
+        String status = request.getParameter(Constant.POST_STATUS);
         Post post = getPostInfo(request, response);
-        if (post == null) return;
+        if (post == null) {
+            setAttributePostRequest(request, response, content, status);
+            return;
+        }
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);
@@ -172,7 +177,6 @@ public class PostController extends HttpServlet {
         String status = request.getParameter(Constant.POST_STATUS);
         String images = request.getParameter(Constant.AVATAR);
         if (content.equals("") || status.equals("")) {
-            setAttributePostRequest(request, response, content, status);
             return null;
         }
         List<String> imgList = new ArrayList<>();
@@ -181,8 +185,7 @@ public class PostController extends HttpServlet {
             Collections.addAll(imgList, imgArr);
         }
         User currentUser = userService.getCurrentUser(request);
-        Post post = new Post(content, status, currentUser, imgList);
-        return post;
+        return new Post(content, status, currentUser, imgList);
     }
 
 

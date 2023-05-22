@@ -156,7 +156,13 @@ public class UserController extends HttpServlet {
     }
 
     private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String content = request.getParameter(Constant.POST_CONTENT);
+        String status = request.getParameter(Constant.POST_STATUS);
         Post post = new PostController().getPostInfo(request, response);
+        if (post == null) {
+            setAttributePostRequest(request, response, content, status);
+            return;
+        }
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_USER);
@@ -533,7 +539,7 @@ public class UserController extends HttpServlet {
         Post post = new Post(postID, content, status, currentUser);
         postService.updateCurrentPost(post);
         try {
-            response.sendRedirect(URL.PATH_POST);
+            response.sendRedirect(URL.PATH_USER);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
