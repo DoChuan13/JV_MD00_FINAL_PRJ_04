@@ -127,7 +127,8 @@
                             <option value="friend" name="status">Friend</option>
                             <option value="private" name="status">Private</option>
                         </select>
-                        <button id="summit_content_${post.getPostId()}" type="submit" style="display: none">update
+                        <button hidden id="summit_content_${post.getPostId()}" type="submit" style="display: none">
+                            update
                         </button>
                     </form>
                     <c:if test="${post.getImageList().size()!=0}">
@@ -170,7 +171,7 @@
 
                                         </c:if>
                                         <h4>${comment.getCommentUser().getName()}</h4>
-                                            <%--                                        <p>${comment.getComment()}</p>--%>
+                                            <%--<p>${comment.getComment()}</p>--%>
                                         <form method="post">
                                             <input name="action" value="editComment" type="text" hidden/>
                                             <input name="postId" value="${post.getPostId()}" type="text" hidden/>
@@ -180,8 +181,8 @@
                                             <input name="comment" id="post_comment_${comment.getCommentId()}"
                                                    value="${comment.getComment()}" readonly
                                                    style="width: 95%;border: none;background: none"/>
-                                            <button id="summit_content_${comment.getCommentId()}" type="submit"
-                                                    style="display: none">update
+                                            <button hidden id="summit_content_${comment.getCommentId()}" type="submit">
+                                                update
                                             </button>
                                         </form>
                                         <ul class="child_replay">
@@ -294,11 +295,12 @@
         let post = document.getElementById("post_content_" + postId);
         post.removeAttribute("readonly");
         let summit = document.getElementById("summit_content_" + postId);
-        summit.style.display = "block";
-
+        post.style.background = "rgb(222, 214, 214)";
         let options = document.getElementById("option_content_" + postId);
+
         console.log(options);
         options.style.display = "block";
+        // summit.style.display = "block";
     }
 
     function activeEditComment(commentId) {
@@ -307,7 +309,7 @@
         comment.style.background = "rgb(222, 214, 214)";
 
         let summit = document.getElementById("summit_content_" + commentId);
-        summit.style.display = "block";
+        // summit.style.display = "block";
     }
 
     let hide_show = document.getElementById("hideAction");
@@ -319,7 +321,7 @@
             chatList[i].style.display = "none";
         }
         hide_show.setAttribute("onclick", "showChatList()")
-        hide_show.innerHTML="Show Chat";
+        hide_show.innerHTML = "Show Chat";
     }
 
     function showChatList() {
@@ -329,7 +331,7 @@
             chatList[i].style.display = "flex";
         }
         hide_show.setAttribute("onclick", "hideChatList()")
-        hide_show.innerHTML="Hide Chat";
+        hide_show.innerHTML = "Hide Chat";
     }
 </script>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>

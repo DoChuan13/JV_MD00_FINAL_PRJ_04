@@ -157,12 +157,23 @@ public class PostController extends HttpServlet {
     }
 
     public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
+        Post post = getPostInfo(request, response);
+        if (post == null) return;
+        postService.createNewPost(post);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Post getPostInfo(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         String images = request.getParameter(Constant.AVATAR);
         if (content.equals("") || status.equals("")) {
             setAttributePostRequest(request, response, content, status);
-            return;
+            return null;
         }
         List<String> imgList = new ArrayList<>();
         if (!images.equalsIgnoreCase("")) {
@@ -171,12 +182,7 @@ public class PostController extends HttpServlet {
         }
         User currentUser = userService.getCurrentUser(request);
         Post post = new Post(content, status, currentUser, imgList);
-        postService.createNewPost(post);
-        try {
-            response.sendRedirect(URL.PATH_POST);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return post;
     }
 
 

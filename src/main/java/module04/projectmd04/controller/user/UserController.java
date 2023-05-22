@@ -73,7 +73,7 @@ public class UserController extends HttpServlet {
                 deleteCurrentPost(request, response);
                 break;
             case "deleteComment":
-                deleteCurrentComment(request,response);
+                deleteCurrentComment(request, response);
                 break;
             default:
                 showUserInfo(request, response);
@@ -101,6 +101,9 @@ public class UserController extends HttpServlet {
             case "create":
                 actionCreateNewPost(request, response);
                 break;
+            case "edit":
+                actionEditCurrentPost(request, response);
+                break;
             case "changeProfile":
                 actionChangeProfile(request, response);
                 break;
@@ -109,6 +112,10 @@ public class UserController extends HttpServlet {
                 break;
             case "comment":
                 actionCreateComment(request, response);
+                break;
+            case "editComment":
+                actionEditComment(request, response);
+                break;
         }
     }
 
@@ -121,10 +128,11 @@ public class UserController extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+
     private void deleteCurrentComment(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
         int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
-        postService.deleteCurrentComment(postId,commentId);
+        postService.deleteCurrentComment(postId, commentId);
         try {
             response.sendRedirect(URL.PATH_USER);
         } catch (IOException e) {
@@ -148,19 +156,7 @@ public class UserController extends HttpServlet {
     }
 
     private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (invalidPermissionUser(request, response)) return;
-        String content = request.getParameter(Constant.POST_CONTENT);
-        String status = request.getParameter(Constant.POST_STATUS);
-        String avatar = request.getParameter(Constant.AVATAR);
-        if (content.equals("") || status.equals("")) {
-            new PostController().setAttributePostRequest(request, response, content, status);
-            return;
-        }
-        String[] imgArr = avatar.split("--%%%%%%%%%%--");
-        List<String> imgList = new ArrayList<>();
-        Collections.addAll(imgList, imgArr);
-        User currentUser = userService.getCurrentUser(request);
-        Post post = new Post(content, status, currentUser, imgList);
+        Post post = new PostController().getPostInfo(request, response);
         postService.createNewPost(post);
         try {
             response.sendRedirect(URL.PATH_USER);
@@ -525,6 +521,36 @@ public class UserController extends HttpServlet {
         }
     }
 
+    private void actionEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
+        int postID = Integer.parseInt(request.getParameter("postId"));
+        String content = request.getParameter(Constant.POST_CONTENT);
+        String status = request.getParameter(Constant.POST_STATUS);
+        if (content.equals("") || status.equals("")) {
+            setAttributePostRequest(request, response, content, status);
+            return;
+        }
+        User currentUser = userService.getCurrentUser(request);
+        Post post = new Post(postID, content, status, currentUser);
+        postService.updateCurrentPost(post);
+        try {
+            response.sendRedirect(URL.PATH_POST);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void actionEditComment(HttpServletRequest request, HttpServletResponse response) {
+        int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
+        String comment = request.getParameter(Constant.COMMENT);
+        postService.updateComment(commentId, comment);
+        try {
+            response.sendRedirect(URL.PATH_USER);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public static boolean invalidPermissionUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = checkLoginStatus(request, response);
         if (currentUser == null) return true;
@@ -556,5 +582,14 @@ public class UserController extends HttpServlet {
             }
         }
         return currentUser;
+    }
+
+    public void setAttributePostRequest(HttpServletRequest request, HttpServletResponse response, String content,
+                                        String status) {
+        String alert = "Do not leave Empty Field";
+        request.setAttribute(Constant.VALIDATE, alert);
+        request.setAttribute(Constant.POST_CONTENT, content);
+        request.setAttribute(Constant.POST_STATUS, status);
+        showUserInfo(request, response);
     }
 }
