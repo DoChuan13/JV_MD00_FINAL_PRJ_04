@@ -40,14 +40,7 @@
             </div>
         </div>
         <div class="right-dashboard-info">
-            <div class="right-dashboard-info-top">
-                <a href="/friend">
-                    <button type="button"><i class="fas fa-user-plus"></i> Friends</button>
-                </a>
-                <a href="/chat">
-                    <button type="button"><i class="far fa-envelope"></i> messages</button>
-                </a>
-            </div>
+
             <div class="right-div-single-logo"><a href="#"> <i class="fas fa-ellipsis-h"></i></a></div>
         </div>
     </div>
@@ -58,11 +51,15 @@
             <div class="left-profile-sidebar-top">
                 <div class="intro-bio">
                     <a href="/user?action=changeProfile">
-                        <button>Change Profile</button>
+                        <button style="    border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; ">
+                            Change Profile
+                        </button>
                     </a>
                     <br/>
                     <a href="/user?action=changePassword">
-                        <button>Change Password</button>
+                        <button style="    border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; ">
+                            Change Password
+                        </button>
                     </a>
                     <hr>
                 </div>
@@ -79,11 +76,12 @@
                 <form method="post">
                     <input id="action" type='text' name='action' hidden readonly
                            value="changeProfile"/>
-                    <jsp:include page="../upload/upload-avatar.jsp">
-                        <jsp:param name="articleId" value=""/>
-                    </jsp:include>
+
                     <div class="status-field-container write-post-container">
-                        <div class="user-profile-box">
+                        <jsp:include page="../upload/upload-avatar.jsp">
+                            <jsp:param name="articleId" value=""/>
+                        </jsp:include>
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>User Name</h2>
@@ -92,12 +90,11 @@
                             <div class="status-field">
                                 <div>
                                     <input id="userName-field" type='text' name='userName'
-                                           value='${sessionScope['loginUser'].getUserName()}'/></div>
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
+                                           value='     ${sessionScope['loginUser'].getUserName()}'/></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="status-field-container write-post-container">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>Name</h2>
@@ -106,13 +103,12 @@
                             <div class="status-field">
                                 <div>
                                     <input id="name-field" type='text' name='name'
-                                           value='${sessionScope["loginUser"].getName()}'/>
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
+                                           value='     ${sessionScope["loginUser"].getName()}'/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="status-field-container write-post-container">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>Email</h2>
@@ -121,13 +117,12 @@
                             <div class="status-field">
                                 <div>
                                     <input id="email-field" type='text' name='email'
-                                           value='${sessionScope["loginUser"].getEmail()}'/>
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
+                                           value='     ${sessionScope["loginUser"].getEmail()}'/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="status-field-container write-post-container" id="password-group">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>Password</h2>
@@ -135,12 +130,15 @@
                             </div>
                             <div class="status-field">
                                 <div>
-                                    <input id="password-field" type='password' name='password'/>
+                                    <input id="password-field" type='password' name='password'
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button id="submit-field" type="submit">Update Info
+                    <button id="submit-field" type="submit"
+                            style="  border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;     color: white;">
+                        Update Info
                     </button>
                 </form>
             </c:if>
@@ -149,7 +147,7 @@
                     <input id="" type='text' name='action' hidden readonly
                            value="changePassword"/>
                     <div class="status-field-container write-post-container" id="curr-password-group">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>Password</h2>
@@ -157,13 +155,12 @@
                             </div>
                             <div class="status-field">
                                 <div>
-                                    <input id="curr-password-field" type='password' name='password'/>
+                                    <input id="curr-password-field" type='password' name='password'
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="status-field-container write-post-container " id="newPassword-group">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box " style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>New-Password</h2>
@@ -171,13 +168,12 @@
                             </div>
                             <div class="status-field">
                                 <div>
-                                    <input id="new-password-field" type='password' name='newPassword'/>
+                                    <input id="new-password-field" type='password' name='newPassword'
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"/>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="status-field-container write-post-container " id="rePassword-group">
-                        <div class="user-profile-box">
+                        <div class="user-profile-box" style="display: block !important;">
                             <div class="user-profile-box">
                                 <div class="user-profile">
                                     <h2>Re-Password</h2>
@@ -185,12 +181,16 @@
                             </div>
                             <div class="status-field">
                                 <div>
-                                    <input id="re-password-field" type='password' name='rePassword'/>
+                                    <input id="re-password-field" type='password' name='rePassword'
+                                           style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <button id="submit-pass-field" type="submit">Update
+                    <button id="submit-pass-field" type="submit"
+                            style="  border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;     color: white;">
+
+                        Update
                         Password
                     </button>
                 </form>

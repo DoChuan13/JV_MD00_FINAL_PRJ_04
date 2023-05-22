@@ -41,15 +41,15 @@
                 <p>Post Story</p>
             </div>
             <div class="story story2">
-                <img src="../../images/member-1.png" alt="">
+                <img src="../../images/1.jpg" alt="">
                 <p>Alison</p>
             </div>
             <div class="story story3">
-                <img src="../../images/member-2.png" alt="">
+                <img src="../../images/2.jpg" alt="">
                 <p>Jackson</p>
             </div>
             <div class="story story4">
-                <img src="../../images/member-3.png" alt="">
+                <img src="../../images/3.jpg" alt="">
                 <p>Samona</p>
             </div>
             <div class="story story5">
@@ -69,7 +69,7 @@
                                 <input type="text" name="action" value="create" readonly hidden
                                        style="position: absolute"
                                 >
-                                <select name="status">
+                                <select name="status" style="border: none">
                                     <option value="public" name="status">Public</option>
                                     <option value="friend" name="status">Friend</option>
                                     <option value="private" name="status">Private</option>
@@ -81,6 +81,7 @@
                 <div class="post-upload-textarea">
                     <input name="content" placeholder="What's on your mind?"
                            style="width: 100%; height: 80px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
+                    <br>
                     <%--                    <button type="submit" class="btn btn-primary">Post</button>--%>
                     <jsp:include page="../upload/upload-image.jsp">
                         <jsp:param name="articleId" value=""/>
@@ -107,10 +108,19 @@
                     </div>
                     <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                         <div>
-                            <a href="/post?action=deletePost&postId=${post.getPostId()}">
-                                <button type="button">Delete</button>
-                            </a>
-                            <button type="button" onclick="activeEditForm(${post.getPostId()})">Edit</button>
+                            <div class="dropdown">
+                                <button class="dropbtn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                    <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                </svg></button>
+                                <div class="dropdown-content">
+                                    <a href="/user?action=deletePost&postId=${post.getPostId()}">
+                                        <button type="button" style="border: none;background: none">Delete</button>
+                                    </a>
+                                    <a>
+                                        <button type="button" style="border: none;background: none" onclick="activeEditForm(${post.getPostId()})">Edit</button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </c:if>
                 </div>
@@ -122,7 +132,7 @@
                         <input name="content" id="post_content_${post.getPostId()}"
                                value="${post.getPostContent()}" readonly
                                style="width: 100%;border: none;background: none; font-size: 15px"/>
-                        <select id="option_content_${post.getPostId()}" name="status" style="display: none">
+                        <select id="option_content_${post.getPostId()}" name="status" style="display: none;border: none">
                             <option value="public" name="status">Public</option>
                             <option value="friend" name="status">Friend</option>
                             <option value="private" name="status">Private</option>
