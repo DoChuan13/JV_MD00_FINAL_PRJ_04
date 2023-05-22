@@ -57,14 +57,14 @@
 
     /*.show {display: block;}*/
 
-     .dropbtn {
-         background:none;
+    .dropbtn {
+        background: none;
 
-         padding: 16px;
-         font-size: 16px;
-         border: none;
-         cursor: pointer;
-     }
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+    }
 
     .dropdown {
         position: relative;
@@ -76,7 +76,7 @@
         position: absolute;
         background-color: #f9f9f9;
         min-width: 160px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
         z-index: 1;
     }
 
@@ -87,7 +87,9 @@
         display: block;
     }
 
-    .dropdown-content a:hover {background-color: #f1f1f1}
+    .dropdown-content a:hover {
+        background-color: #f1f1f1
+    }
 
     .dropdown:hover .dropdown-content {
         display: block;
@@ -277,22 +279,23 @@
                         <c:if test='${post.getOwnUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                             <div>
                                 <div class="dropdown">
-                                    <button class="dropbtn"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                        <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                    </svg></button>
+                                    <button class="dropbtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                                        </svg>
+                                    </button>
                                     <div class="dropdown-content">
                                         <a href="/user?action=deletePost&postId=${post.getPostId()}">
                                             <button type="button" style="border: none;background: none">Delete</button>
                                         </a>
                                         <a>
-                                            <button type="button" style="border: none;background: none" onclick="activeEditForm(${post.getPostId()})">Edit</button>
+                                            <button type="button" style="border: none;background: none"
+                                                    onclick="activeEditForm(${post.getPostId()})">Edit
+                                            </button>
                                         </a>
                                     </div>
                                 </div>
-
-
-
-
                             </div>
                         </c:if>
                     </div>
@@ -318,6 +321,14 @@
                                 <img src="${image}" alt="">
                             </c:forEach>
                         </c:if>
+                    </div>
+                    <div class="post-reaction">
+                        <div class="activity-icons">
+                            <div><a href="/user?action=like&postId=${post.getPostId()}"
+                                    style="text-decoration: none"><img
+                                    src="../../images/like-blue.png" alt="">${post.getLikeList().size()}</a></div>
+                            <div><img src="../../images/comments.png" alt="">${post.getCommentList().size()}</div>
+                        </div>
                     </div>
                     <c:if test='${post.getCommentList().size()!=0}'>
                         <c:forEach items="${post.getCommentList()}" var="comment">

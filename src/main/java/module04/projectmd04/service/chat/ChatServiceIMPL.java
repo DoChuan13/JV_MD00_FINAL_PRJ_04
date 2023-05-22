@@ -27,7 +27,10 @@ public class ChatServiceIMPL implements IChatService {
             "where chatId = ?;";
     String INSERT_INTO_CHAT = "insert into chat(chatId, content, sentUserId) values (?,?,?);";
     String SELECT_USER_CHAT_BY_ID = "select * from userChat where chatId = ?;";
-    String UPDATE_USER_CHAT_BY_ID = "update userChat set latestTime = now() where chatId = ?;";
+    String UPDATE_USER_CHAT_BY_ID = "update userChat set latestTime = now()," +
+            "sentUserIn =if(sentUserIn is null ,now(),sentUserIn), " +
+            "receivedUserIn=if(receivedUserIn is null ,now(),receivedUserIn) " +
+            " where chatId = ?;";
     String SELECT_CHAT_BY_ID = "select * from chat where chatId = ?";
     String UPDATE_USER_CHAT_SENT_USR = "update userChat set sentUserIn = null where chatId = ?;";
     String UPDATE_USER_CHAT_REV_USR = "update userChat set receivedUserIn = null where chatId = ?;";
