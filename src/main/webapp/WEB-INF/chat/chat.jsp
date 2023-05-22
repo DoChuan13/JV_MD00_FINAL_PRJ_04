@@ -318,18 +318,23 @@
                         </c:if>
                         <c:if test='${requestScope["chatList"].size()!=0}'>
                             <c:forEach items='${requestScope["chatList"]}' var="chat">
-                                <li class="clearfix active">
+                                <li
+                                        style="display: flex; align-items: center; justify-content: space-between;"
+                                        class="clearfix active">
                                     <c:if test='${chat.getStartUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <img style="height: 40px; width: 40px;"
                                              src="${chat.getTargetUser().getAvatar()}" alt="avatar">
                                         <div class="about">
                                             <div class="name">
-                                                <a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                                <a
+                                                        style="text-decoration:none;"
+                                                        href="/chat?action=chatSession&chatId=${chat.getChatId()}">
                                                         ${chat.getTargetUser().getName()}
                                                 </a>
                                             </div>
                                         </div>
                                         <div style="float: right"><a
+                                                style="text-decoration:none;"
                                                 href="/chat?action=deleteChat&chatId=${chat.getChatId()}">Delete</a>
                                         </div>
                                     </c:if>
@@ -339,12 +344,15 @@
                                              alt="avatar">
                                         <div class="about">
                                             <div class="name">
-                                                <a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                                <a
+                                                        style="text-decoration:none;"
+                                                        href="/chat?action=chatSession&chatId=${chat.getChatId()}">
                                                         ${chat.getStartUser().getName()}
                                                 </a>
                                             </div>
                                         </div>
                                         <div style="float: right"><a
+                                                style="text-decoration:none;"
                                                 href="/chat?action=deleteChat&chatId=${chat.getChatId()}">Delete</a>
                                         </div>
                                     </c:if>
@@ -360,14 +368,18 @@
                     <c:if test='${requestScope["chatSession"]!=null}'>
                         <div class="chat-header clearfix">
                             <div class="row">
-                                <div class="col-lg-6">
+                                <div
+                                        style="display:flex; align-items: center"
+                                        class="col-lg-6">
                                     <c:if test='${chatSession.getStartUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
                                         <a href="#" data-toggle="modal" data-target="#view_info">
                                             <img
                                                     style="height: 40px; width: 40px;"
                                                     src="${chatSession.getTargetUser().getAvatar()}" alt="avatar">
                                         </a>
-                                        <a href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
+                                        <a
+                                                style="text-decoration:none;"
+                                                href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
                                                 ${chatSession.getTargetUser().getName()}
                                         </a>
                                     </c:if>
@@ -377,7 +389,9 @@
                                                     style="height: 40px; width: 40px;"
                                                     src="${chatSession.getStartUser().getAvatar()}" alt="avatar">
                                         </a>
-                                        <a href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
+                                        <a
+                                                style="text-decoration:none;"
+                                                href="/chat?action=chatSession&chatId=${chatSession.getChatId()}">
                                                 ${chatSession.getStartUser().getName()}
                                         </a>
                                     </c:if>
@@ -422,10 +436,12 @@
                             <c:if test="${requestScope['findName'].size()!=0}">
                                 <c:forEach items="${requestScope['findName']}" var="name">
                                     <div class="message-data text-right"
-                                         style="display: flex;text-align: center;gap: 30px">
+                                         style="display: flex;text-align: center;gap: 30px;align-items: center">
                                         <img src="${name.getAvatar()}" alt="avatar"/>
                                         <p style="width: 120px;">${name.getName()}</p>
-                                        <a href="/chat?action=startChat&userId=${name.getUserId()}">Start Chat</a>
+                                        <a
+                                                style="text-decoration:none;"
+                                                href="/chat?action=startChat&userId=${name.getUserId()}">Start Chat</a>
                                     </div>
                                 </c:forEach>
                             </c:if>

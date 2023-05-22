@@ -268,7 +268,9 @@
                             <img style="height: 40px; width: 40px;"
                                  src="${chat.getTargetUser().getAvatar()}" alt="avatar">
                         </div>
-                        <p><a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                        <p><a
+                                style="text-decoration:none;"
+                                href="/chat?action=chatSession&chatId=${chat.getChatId()}">
                                 ${chat.getTargetUser().getName()}
                         </a></p>
                     </div>
@@ -279,7 +281,9 @@
                             <img style="height: 40px; width: 40px;"
                                  src="${chat.getStartUser().getAvatar()}" alt="avatar">
                         </div>
-                        <p><a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                        <p><a
+                                style="text-decoration:none;"
+                                href="/chat?action=chatSession&chatId=${chat.getChatId()}">
                                 ${chat.getStartUser().getName()}
                         </a></p>
                     </div>
