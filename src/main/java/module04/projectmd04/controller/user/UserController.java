@@ -155,10 +155,10 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
-        Post post = new PostController().getPostInfo(request, response);
+        Post post = new PostController().getPostInfo(request);
         if (post == null) {
             setAttributePostRequest(request, response, content, status);
             return;

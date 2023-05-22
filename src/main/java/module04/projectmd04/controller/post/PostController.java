@@ -159,7 +159,7 @@ public class PostController extends HttpServlet {
     public void actionCreateNewPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
-        Post post = getPostInfo(request, response);
+        Post post = getPostInfo(request);
         if (post == null) {
             setAttributePostRequest(request, response, content, status);
             return;
@@ -172,7 +172,7 @@ public class PostController extends HttpServlet {
         }
     }
 
-    public Post getPostInfo(HttpServletRequest request, HttpServletResponse response) {
+    public Post getPostInfo(HttpServletRequest request) {
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         String images = request.getParameter(Constant.AVATAR);
