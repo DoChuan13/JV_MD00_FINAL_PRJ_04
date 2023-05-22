@@ -46,4 +46,8 @@ public final class Constant {
     public static final String FIND_NAME = "findName";
     public static final String RESULT_FIND = "resultFind";
     public static final String CHAT_SESSION = "chatSession";
+    public static final String PAGE = "page";
+    public static final String MAX_PAGE = "maxPage";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String MAX_ELEMENT = "maxElement";
 }

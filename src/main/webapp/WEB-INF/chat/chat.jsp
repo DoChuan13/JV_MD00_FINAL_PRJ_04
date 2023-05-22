@@ -426,7 +426,7 @@
                         </c:if>
                     </form>
 
-                    <div class="chat-history" style="width: 800px;min-height: 500px">
+                    <div class="chat-history" style="width: 800px;min-height: 200px">
                         <c:if test="${requestScope['findName']!=null}">
                             <c:if test="${requestScope['findName'].size()==0}">
                                 <div class="message-data text-right">

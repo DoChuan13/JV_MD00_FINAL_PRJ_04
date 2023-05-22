@@ -238,15 +238,15 @@
             </div>
             <div>
                 <c:if test='${requestScope["validate"]!=null}'>
-                    <p style="color: red">${requestScope["validate"]}</p>
+                    <p style="color: red; height: 22px">${requestScope["validate"]}</p>
                 </c:if>
                 <c:if test='${requestScope["validate"]==null}'>
-                    <br/>
+                    <p style="color: red; height: 22px"></p>
                 </c:if>
             </div>
             <table class="table table-striped table-hover">
                 <thead>
-                <tr>
+                <tr style="height: 80px;">
                     <th>UserId</th>
                     <th>Name</th>
                     <th>Email</th>
@@ -258,7 +258,7 @@
                 <tbody>
                 <c:if test='${requestScope["userList"]!=null}'>
                     <c:forEach items='${requestScope["userList"]}' var="user">
-                        <tr>
+                        <tr style="height: 80px;">
                             <td>${user.getUserId()}</td>
                             <td><a href="#"><img src="${user.getAvatar()}" class="avatar" alt="Avatar"
                                                  style="width: 20px">
@@ -280,19 +280,22 @@
                             </td>
                             </td>
                             <td>
-                                <a href="/admin?action=changeRole&id=${user.getUserId()}" class="settings"
+                                <a href="/admin?page=${requestScope['currentPage']}&action=changeRole&id=${user.getUserId()}"
+                                   class="settings"
                                    title="Change Role" data-toggle="tooltip">
                                     <i class="material-icons">&#xE8B8;</i></a>
                                 <c:if test="${user.isStatus()==false}">
-                                    <a href="/admin?action=blockUser&id=${user.getUserId()}" class="band"
+                                    <a href="/admin?page=${requestScope['currentPage']}&action=blockUser&id=${user.getUserId()}"
+                                       class="band"
                                        title="Block" data-toggle="tooltip"><i class="material-icons">&#xe1b6;</i></a>
                                 </c:if>
                                 <c:if test="${user.isStatus()==true}">
-                                    <a href="/admin?action=unblockUser&id=${user.getUserId()}" class="band"
+                                    <a href="/admin?page=${requestScope['currentPage']}&action=unblockUser&id=${user.getUserId()}"
+                                       class="band"
                                        title="Unblock" data-toggle="tooltip"><i class="material-icons">&#xe1b7;</i></a>
                                 </c:if>
 
-                                <a href="/admin?action=delete&id=${user.getUserId()}" class="delete" title="Delete"
+                                <a href="/admin?page=${requestScope['currentPage']}&action=delete&id=${user.getUserId()}" class="delete" title="Delete"
                                    data-toggle="tooltip">
                                     <i class="material-icons">&#xE5C9;</i></a>
                             </td>
@@ -301,18 +304,29 @@
                 </c:if>
                 </tbody>
             </table>
-            <%--            <div class="clearfix">--%>
-            <%--                <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>--%>
-            <%--                <ul class="pagination">--%>
-            <%--                    <li class="page-item disabled"><a href="#">Previous</a></li>--%>
-            <%--                    <li class="page-item"><a href="#" class="page-link">1</a></li>--%>
-            <%--                    <li class="page-item"><a href="#" class="page-link">2</a></li>--%>
-            <%--                    <li class="page-item active"><a href="#" class="page-link">3</a></li>--%>
-            <%--                    <li class="page-item"><a href="#" class="page-link">4</a></li>--%>
-            <%--                    <li class="page-item"><a href="#" class="page-link">5</a></li>--%>
-            <%--                    <li class="page-item"><a href="#" class="page-link">Next</a></li>--%>
-            <%--                </ul>--%>
-            <%--            </div>--%>
+            <div class="clearfix">
+                <div class="hint-text">Showing <b>${requestScope["currentPage"]*5}</b> out of
+                    <b>${requestScope["maxElement"]}</b> entries
+                </div>
+                <ul class="pagination">
+                    <c:if test='${requestScope["currentPage"]!=1}'>
+                        <li class="page-item disabled"><a
+                                href="/admin?page=${requestScope['currentPage']-1}">Previous</a></li>
+                    </c:if>
+                    <c:forEach begin="1" end="${requestScope['maxPage']}" var="i">
+                        <c:if test='${i!=requestScope["currentPage"]}'>
+                            <li class="page-item"><a href="/admin?page=${i}" class="page-link">${i}</a></li>
+                        </c:if>
+                        <c:if test='${i==requestScope["currentPage"]}'>
+                            <li class="page-item active"><a href="/admin?page=${i}" class="page-link">${i}</a></li>
+                        </c:if>
+                    </c:forEach>
+                    <c:if test='${requestScope["currentPage"]<requestScope["maxPage"]}'>
+                        <li class="page-item"><a href="/admin?page=${requestScope["currentPage"]+1}" class="page-link">Next</a>
+                        </li>
+                    </c:if>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

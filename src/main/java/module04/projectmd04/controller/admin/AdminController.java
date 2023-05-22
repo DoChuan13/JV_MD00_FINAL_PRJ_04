@@ -82,7 +82,8 @@ public class AdminController extends HttpServlet {
         } else {
             userService.blockUnblockAccount(user);
             try {
-                response.sendRedirect(URL.PATH_ADMIN);
+                int currentPage = getNewCurrentPage(request);
+                response.sendRedirect(URL.PATH_ADMIN_PAGE + currentPage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -107,7 +108,8 @@ public class AdminController extends HttpServlet {
         } else {
             userService.changeAccountRole(user);
             try {
-                response.sendRedirect(URL.PATH_ADMIN);
+                int currentPage = getNewCurrentPage(request);
+                response.sendRedirect(URL.PATH_ADMIN_PAGE + currentPage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -116,6 +118,7 @@ public class AdminController extends HttpServlet {
 
     private void deleteUserAccount(HttpServletRequest request, HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
+
         User currentUser = userService.getCurrentUser(request);
         RoleName currentRole = getRoleNameByUser(currentUser);
         User targetUser = userService.findUserById(id);
@@ -132,15 +135,48 @@ public class AdminController extends HttpServlet {
         } else {
             userService.delete(targetUser.getUserId());
             try {
-                response.sendRedirect(URL.PATH_ADMIN);
+                int currentPage = getNewCurrentPage(request);
+                response.sendRedirect(URL.PATH_ADMIN_PAGE + currentPage);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    private static int getNewCurrentPage(HttpServletRequest request) {
+        String page = request.getParameter(Constant.PAGE);
+        List<User> allList = userService.findAll();
+
+        int currentPage = Integer.parseInt(page);
+        int maxElement = allList.size();
+        int maxPage = (int) ((float) maxElement % 5 == 0 ? (float) maxElement / 5 : ((float) maxElement / 5 + 1));
+        if (currentPage > maxPage) {
+            currentPage = maxPage;
+        }
+        return currentPage;
+    }
+
     private void showFormAdminManager(HttpServletRequest request, HttpServletResponse response) {
-        List<User> userList = userService.findAll();
+        String page = request.getParameter(Constant.PAGE);
+        if (page == null) {
+            try {
+                page = "1";
+                response.sendRedirect(URL.PATH_ADMIN_PAGE + page);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        List<User> allList = userService.findAll();
+        List<User> userList = userService.getUserListByPage(page);
+
+        int currentPage = Integer.parseInt(page);
+        int maxElement = allList.size();
+        int maxPage = (int) ((float) maxElement % 5 == 0 ? (float) maxElement / 5 : ((float) maxElement / 5 + 1));
+
+        request.setAttribute(Constant.MAX_ELEMENT, maxElement);
+        request.setAttribute(Constant.CURRENT_PAGE, currentPage);
+        request.setAttribute(Constant.MAX_PAGE, maxPage);
         request.setAttribute(Constant.USER_LIST, userList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_ADMIN_INFO);
         try {

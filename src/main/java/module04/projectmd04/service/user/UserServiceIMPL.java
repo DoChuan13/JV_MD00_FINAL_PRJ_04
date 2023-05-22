@@ -390,6 +390,24 @@ public class UserServiceIMPL implements IUserService {
         }
     }
 
+    @Override
+    public List<User> getUserListByPage(String page) {
+        List<User> userList = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("select * from user limit ?,?");
+            preparedStatement.setInt(1, (Integer.parseInt(page) - 1) * 5);
+            preparedStatement.setInt(2, 5);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                User user = generateUserInfo(resultSet);
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userList;
+    }
+
     private User generateUserInfo(ResultSet resultSet) throws SQLException {
         int userId = resultSet.getInt(Constant.USER_ID);
         String name = resultSet.getString(Constant.NAME);

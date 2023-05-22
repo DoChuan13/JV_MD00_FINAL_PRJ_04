@@ -208,6 +208,15 @@ public class UserController extends HttpServlet {
     }
 
     public static void logoutUser(HttpServletRequest request, HttpServletResponse response) {
+        User currentUser = userService.getCurrentUser(request);
+        if (currentUser == null) {
+            try {
+                response.sendRedirect(URL.PATH_USER_LOGIN);
+                return;
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         HttpSession session = request.getSession(false);
         if (session.getAttribute(Constant.LOGIN_USER) != null) {
             session.removeAttribute(Constant.LOGIN_USER);

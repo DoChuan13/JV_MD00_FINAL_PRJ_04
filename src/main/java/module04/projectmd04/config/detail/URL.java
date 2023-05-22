@@ -17,4 +17,5 @@ public final class URL {
     public static final String PATH_USER_INFO = "/user?action=changeProfile";
     public static final String PATH_USER_PASSWORD = "/user?action=changePassword";
     public static final String CHAT_DETAIL = "/chat?action=chatSession&chatId=";
+    public static final String PATH_ADMIN_PAGE = "/admin?page=";
 }

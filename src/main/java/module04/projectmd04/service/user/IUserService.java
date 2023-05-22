@@ -35,4 +35,6 @@ public interface IUserService extends IGenericService<User> {
     List<User> findUserByName(HttpServletRequest request, String name);
 
     void updateCurrentUser(User user);
+
+    List<User> getUserListByPage(String page);
 }
