@@ -80,10 +80,10 @@
         <div class="right-dashboard-info">
             <div class="right-dashboard-info-top">
                 <a href="/friend">
-                    <button type="button"><i class="fas fa-user-plus"></i> Friends</button>
+                    <button type="button"><i class="fas fa-user-plus"></i> Find Friends</button>
                 </a>
                 <a href="/chat">
-                    <button type="button"><i class="far fa-envelope"></i> messages</button>
+                    <button type="button"><i class="far fa-envelope"></i> Messages</button>
                 </a>
             </div>
             <div class="right-div-single-logo"><a href="#"> <i class="fas fa-ellipsis-h"></i></a></div>

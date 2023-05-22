@@ -159,27 +159,29 @@
                                             <a href="/post?action=deleteComment&postId=${post.getPostId()}&commentId=${comment.getCommentId()}"
                                                type="submit"
                                                style="position: absolute; right: 19px; margin-top: 8px; background: inherit; border: none">
-                                                <i  class="bi bi-trash"
+                                                <i class="bi bi-trash"
                                                    style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
                                             </a>
                                             <button type="button" onclick="activeEditComment(${comment.getCommentId()})"
-                                               style="position: absolute; right: 19px; margin-top: -18px; background: inherit; border: none">
-                                                    <i class="bi bi-pencil"
-                                                       style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
+                                                    style="position: absolute; right: 19px; margin-top: -18px; background: inherit; border: none">
+                                                <i class="bi bi-pencil"
+                                                   style="position: relative; right: -1px;color: rgb(166, 160, 160); font-size: 12px"></i>
                                             </button>
 
                                         </c:if>
                                         <h4>${comment.getCommentUser().getName()}</h4>
-<%--                                        <p>${comment.getComment()}</p>--%>
+                                            <%--                                        <p>${comment.getComment()}</p>--%>
                                         <form method="post">
                                             <input name="action" value="editComment" type="text" hidden/>
                                             <input name="postId" value="${post.getPostId()}" type="text" hidden/>
-                                            <input name="commentId" value="${comment.getCommentId()}" type="text" hidden="">
+                                            <input name="commentId" value="${comment.getCommentId()}" type="text"
+                                                   hidden="">
 
                                             <input name="comment" id="post_comment_${comment.getCommentId()}"
                                                    value="${comment.getComment()}" readonly
                                                    style="width: 95%;border: none;background: none"/>
-                                            <button id="summit_content_${comment.getCommentId()}" type="submit" style="display: none">update
+                                            <button id="summit_content_${comment.getCommentId()}" type="submit"
+                                                    style="display: none">update
                                             </button>
                                         </form>
                                         <ul class="child_replay">
@@ -250,32 +252,39 @@
                 <a href="#">More Info</a>
             </div>
         </div>
-        <%--        <div class="events">--%>
-        <%--            <div class="left-event">--%>
-        <%--                <h4>18</h4>--%>
-        <%--                <span>January</span>--%>
-        <%--            </div>--%>
-        <%--        </div>--%>
-
-        <%--        <div class="heading-link">--%>
-        <%--            <h4>Advertisement</h4>--%>
-        <%--            <a href="">Close</a>--%>
-        <%--        </div>--%>
-        <%--<div class="advertisement">--%>
-        <%--<img src="../../images/advertisement.png" class="advertisement-image" alt="">--%>
-        <%--</div>--%>
-
         <div class="heading-link">
             <h4>Conversation</h4>
-            <a href="">Hide Chat</a>
+            <button style="display: inline; border: none; background: none" onclick="hideChatList()" id="hideAction">
+                Hide Chat
+            </button>
         </div>
 
-        <div class="online-list">
-            <div class="online">
-                <img src="../../images/member-1.png" alt="">
-            </div>
-            <p>Alison Mina</p>
-        </div>
+        <c:if test='${requestScope["chatList"]!=null}'>
+            <c:forEach items='${requestScope["chatList"]}' var="chat">
+                <c:if test='${chat.getStartUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                    <div class="online-list">
+                        <div class="online">
+                            <img style="height: 40px; width: 40px;"
+                                 src="${chat.getTargetUser().getAvatar()}" alt="avatar">
+                        </div>
+                        <p><a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                ${chat.getTargetUser().getName()}
+                        </a></p>
+                    </div>
+                </c:if>
+                <c:if test='${chat.getTargetUser().getUserId()==sessionScope["loginUser"].getUserId()}'>
+                    <div class="online-list">
+                        <div class="online">
+                            <img style="height: 40px; width: 40px;"
+                                 src="${chat.getStartUser().getAvatar()}" alt="avatar">
+                        </div>
+                        <p><a href="/chat?action=chatSession&chatId=${chat.getChatId()}">
+                                ${chat.getStartUser().getName()}
+                        </a></p>
+                    </div>
+                </c:if>
+            </c:forEach>
+        </c:if>
     </div>
 </div>
 </body>
@@ -292,13 +301,35 @@
         options.style.display = "block";
     }
 
-    function activeEditComment(commentId){
+    function activeEditComment(commentId) {
         let comment = document.getElementById("post_comment_" + commentId);
         comment.removeAttribute("readonly");
-        comment.style.background="rgb(222, 214, 214)";
+        comment.style.background = "rgb(222, 214, 214)";
 
-        let summit = document.getElementById("summit_content_"+ commentId);
-        summit.style.display ="block";
+        let summit = document.getElementById("summit_content_" + commentId);
+        summit.style.display = "block";
+    }
+
+    let hide_show = document.getElementById("hideAction");
+
+    function hideChatList() {
+        let chatList = document.querySelectorAll(".online-list");
+        console.log(chatList)
+        for (let i = 0; i < chatList.length; i++) {
+            chatList[i].style.display = "none";
+        }
+        hide_show.setAttribute("onclick", "showChatList()")
+        hide_show.innerHTML="Show Chat";
+    }
+
+    function showChatList() {
+        let chatList = document.querySelectorAll(".online-list");
+        console.log(chatList)
+        for (let i = 0; i < chatList.length; i++) {
+            chatList[i].style.display = "flex";
+        }
+        hide_show.setAttribute("onclick", "hideChatList()")
+        hide_show.innerHTML="Hide Chat";
     }
 </script>
 <%--<jsp:include page="../bootstrap/footer.jsp">--%>

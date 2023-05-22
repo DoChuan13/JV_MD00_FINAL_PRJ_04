@@ -4,9 +4,11 @@ import module04.projectmd04.config.detail.Constant;
 import module04.projectmd04.config.detail.JSPLink;
 import module04.projectmd04.config.detail.URL;
 import module04.projectmd04.controller.user.UserController;
+import module04.projectmd04.model.Chat;
 import module04.projectmd04.model.Post;
 import module04.projectmd04.model.User;
 import module04.projectmd04.service.Services;
+import module04.projectmd04.service.chat.IChatService;
 import module04.projectmd04.service.post.IPostService;
 import module04.projectmd04.service.user.IUserService;
 
@@ -25,6 +27,7 @@ import java.util.List;
 public class PostController extends HttpServlet {
     private static final IUserService userService = Services.getInstance().getUserService();
     private static final IPostService postService = Services.getInstance().getPostService();
+    public IChatService chatService = Services.getInstance().getChatService();
 
     public PostController() {
     }
@@ -33,7 +36,7 @@ public class PostController extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
-        if (UserController.invalidPermissionUser(request,response))return;
+        if (UserController.invalidPermissionUser(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -51,7 +54,7 @@ public class PostController extends HttpServlet {
                 likePost(request, response);
                 break;
             case "deleteComment":
-                deleteCurrentComment(request,response);
+                deleteCurrentComment(request, response);
                 break;
             default:
                 showPostInfo(request, response);
@@ -61,7 +64,7 @@ public class PostController extends HttpServlet {
     private void deleteCurrentComment(HttpServletRequest request, HttpServletResponse response) {
         int postId = Integer.parseInt(request.getParameter(Constant.POST_ID));
         int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
-        postService.deleteCurrentComment(postId,commentId);
+        postService.deleteCurrentComment(postId, commentId);
         try {
             response.sendRedirect(URL.PATH_POST);
         } catch (IOException e) {
@@ -84,7 +87,7 @@ public class PostController extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         User currentUser = UserController.checkLoginStatus(request, response);
         if (currentUser == null) return;
-        if (UserController.invalidPermissionUser(request,response))return;
+        if (UserController.invalidPermissionUser(request, response)) return;
 
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
@@ -105,7 +108,7 @@ public class PostController extends HttpServlet {
                 actionCreateComment(request, response);
                 break;
             case "editComment":
-                actionEditComment(request,response);
+                actionEditComment(request, response);
                 break;
         }
     }
@@ -113,7 +116,7 @@ public class PostController extends HttpServlet {
     private void actionEditComment(HttpServletRequest request, HttpServletResponse response) {
         int commentId = Integer.parseInt(request.getParameter(Constant.COMMENT_ID));
         String comment = request.getParameter(Constant.COMMENT);
-        postService.updateComment(commentId,comment);
+        postService.updateComment(commentId, comment);
         try {
             response.sendRedirect(URL.PATH_POST);
         } catch (IOException e) {
@@ -135,7 +138,15 @@ public class PostController extends HttpServlet {
     private void showPostInfo(HttpServletRequest request, HttpServletResponse response) {
         User currentUser = userService.getCurrentUser(request);
         List<Post> postList = postService.showAllPostListRelativeUser(currentUser);
+        try {
+            if (UserController.invalidPermissionUser(request, response)) return;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<Chat> chatList = chatService.getChatListByUser(currentUser);
         request.setAttribute(Constant.POST_LIST, postList);
+        request.setAttribute(Constant.CHAT_LIST, chatList);
         RequestDispatcher dispatcher = request.getRequestDispatcher(JSPLink.PATH_POST_INFO);
         postService.showAllPostList(currentUser);
         try {
@@ -170,7 +181,7 @@ public class PostController extends HttpServlet {
 
 
     private void actionEditCurrentPost(HttpServletRequest request, HttpServletResponse response) {
-        int postID= Integer.parseInt(request.getParameter("postId"));
+        int postID = Integer.parseInt(request.getParameter("postId"));
         String content = request.getParameter(Constant.POST_CONTENT);
         String status = request.getParameter(Constant.POST_STATUS);
         if (content.equals("") || status.equals("")) {
@@ -178,7 +189,7 @@ public class PostController extends HttpServlet {
             return;
         }
         User currentUser = userService.getCurrentUser(request);
-        Post post = new Post(postID,content, status, currentUser);
+        Post post = new Post(postID, content, status, currentUser);
         postService.updateCurrentPost(post);
         try {
             response.sendRedirect(URL.PATH_POST);
