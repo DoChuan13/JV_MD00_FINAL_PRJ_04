@@ -119,13 +119,13 @@
                                             <a href="/friend?action=cancelFriend&userId=${friend.getFriend2().getUserId()}">
                                                 <button
                                                         style=" border: none;
-                                                background-color: #1876f2;
+                                                background-color: red;
                                                 font-size: 17px;
                                                 margin-top: 20px;
                                                 border-radius: 10px;
                                                 padding: 6px;
                                                 color: white;"
-                                                        type="button">Friends
+                                                        type="button">Un-Friend
                                                 </button>
                                             </a></div>
                                     </c:if>
@@ -205,7 +205,7 @@
                                                         border-radius: 10px;
                                                         padding: 6px;
                                                         color: white;"
-                                                        type="button">Friends
+                                                        type="button">Un-Friend
                                                 </button>
                                             </a></div>
                                     </c:if>
