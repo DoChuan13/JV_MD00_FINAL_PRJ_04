@@ -258,7 +258,7 @@
                             <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
                             <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
                             <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
-                            <button type="submit" style="font-size: 15px">Post</button>
+                            <button type="submit" style="  border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;     color: white;">Post</button>
                         </div>
                     </div>
                 </div>

@@ -29,17 +29,6 @@
                 </div>
             </div>
         </div>
-        <div class="right-dashboard-info">
-            <div class="right-dashboard-info-top">
-                <a href="/friend">
-                    <button type="button"><i class="fas fa-user-plus"></i> Find Friends</button>
-                </a>
-                <a href="/chat">
-                    <button type="button"><i class="far fa-envelope"></i> Messages</button>
-                </a>
-            </div>
-            <div class="right-div-single-logo"><a href="#"> <i class="fas fa-ellipsis-h"></i></a></div>
-        </div>
     </div>
 
 
@@ -48,15 +37,15 @@
             <div class="left-profile-sidebar-top">
                 <div class="intro-bio">
                     <a href="/friend">
-                        <button>List Friend</button>
+                        <button style=" border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; "">List Friend</button>
                     </a>
                     <br/>
                     <a href="/friend?action=showSentRequest">
-                        <button>Sent Request</button>
+                        <button style=" border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; "">Sent Request</button>
                     </a>
                     <br/>
                     <a href="/friend?action=showRequestFriend">
-                        <button>Friend Request</button>
+                        <button style=" border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; "">Friend Request</button>
                     </a>
                     <hr>
                 </div>
@@ -73,7 +62,7 @@
                     <input name="name" placeholder="Input name to find..."
                            style="width: 100%; height: 40px;border-radius:10px;border: none;background-color: rgb(245, 242, 242);">
 
-                    <button type="submit" style="font-size: 15px">Search</button>
+                    <button type="submit" style=" border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;    color: white; ">Search</button>
                 </form>
             </div>
             <c:if test='${requestScope["friendList"].size()==0}'>
