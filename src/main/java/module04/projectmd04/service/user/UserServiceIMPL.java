@@ -25,7 +25,7 @@ public class UserServiceIMPL implements IUserService {
     String SELECT_ROLE_BY_USER_ID = "select r.roleId, r.roleName from role r " +
             "join userRole ur on r.roleId = ur.roleId where ur.userId = ?;";
     String SELECT_LOGIN_USER = "select * from user " +
-            "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ?;";
+            "where userName = ? and convert(password using utf8mb4) collate utf8mb4_bin = ? and status = 0;";
     String UPDATE_AVATAR = "update user set avatar = ? where userId = ?;";
     String SELECT_USER_BY_ID = "select * from user where userId = ?;";
     String UN_BLOCK_USER = "update user set status = ? where userId = ?;";
@@ -235,10 +235,10 @@ public class UserServiceIMPL implements IUserService {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                boolean status = resultSet.getBoolean(Constant.STATUS);
-                if (status) {
-                    return null;
-                }
+//                boolean status = resultSet.getBoolean(Constant.STATUS);
+//                if (status) {
+//                    return null;
+//                }
                 user = generateUserInfo(resultSet);
             }
         } catch (SQLException e) {
