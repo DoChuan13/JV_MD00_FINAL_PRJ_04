@@ -41,15 +41,15 @@
                 <p>Post Story</p>
             </div>
             <div class="story story2">
-                <img src="../../images/member-1.png" alt="">
+                <img src="../../images/1.jpg" alt="">
                 <p>Alison</p>
             </div>
             <div class="story story3">
-                <img src="../../images/member-2.png" alt="">
+                <img src="../../images/2.jpg" alt="">
                 <p>Jackson</p>
             </div>
             <div class="story story4">
-                <img src="../../images/member-3.png" alt="">
+                <img src="../../images/3.jpg" alt="">
                 <p>Samona</p>
             </div>
             <div class="story story5">

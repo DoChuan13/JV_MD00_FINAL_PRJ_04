@@ -311,23 +311,23 @@
     }
 
     .story.story1 {
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBuTAmZ-I3O4EvlDRDK1fy76FK0B0J0b6Mgw&usqp=CAU) no-repeat center center /cover;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(${sessionScope["loginUser"].getAvatar()}) no-repeat center center /cover;
     }
 
     .story.story2 {
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBuTAmZ-I3O4EvlDRDK1fy76FK0B0J0b6Mgw&usqp=CAU) no-repeat center center /cover;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(../../images/1.4.jpg) no-repeat center center /cover;
     }
 
     .story.story3 {
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBuTAmZ-I3O4EvlDRDK1fy76FK0B0J0b6Mgw&usqp=CAU) no-repeat center center /cover;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(../../images/1.5.jpg) no-repeat center center /cover;
     }
 
     .story.story4 {
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBuTAmZ-I3O4EvlDRDK1fy76FK0B0J0b6Mgw&usqp=CAU) no-repeat center center /cover;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(../../images/1.6.jpg) no-repeat center center /cover;
     }
 
     .story.story5 {
-        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBuTAmZ-I3O4EvlDRDK1fy76FK0B0J0b6Mgw&usqp=CAU) no-repeat center center /cover;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.5)), url(../../images/1.7.jpg) no-repeat center center /cover;
     }
 
     .story.story1 img {
