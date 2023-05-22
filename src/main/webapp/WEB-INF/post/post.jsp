@@ -37,23 +37,23 @@
     <div class="content-area">
         <div class="story-gallery">
             <div class="story story1">
-                <img src="../../images/upload.png" alt="">
+                <img src="../../images/upload.png" alt="" style="width: 45px;height: 45px">
                 <p>Post Story</p>
             </div>
             <div class="story story2">
-                <img src="../../images/1.jpg" alt="">
+                <img src="../../images/1.jpg" alt=""style="width: 45px;height: 45px">
                 <p>Alison</p>
             </div>
             <div class="story story3">
-                <img src="../../images/2.jpg" alt="">
+                <img src="../../images/2.jpg" alt=""style="width: 45px;height: 45px">
                 <p>Jackson</p>
             </div>
             <div class="story story4">
-                <img src="../../images/3.jpg" alt="">
+                <img src="../../images/3.jpg" alt=""style="width: 45px;height: 45px">
                 <p>Samona</p>
             </div>
             <div class="story story5">
-                <img src="../../images/member-4.png" alt="">
+                <img src="../../images/member-4.png" alt=""style="width: 45px;height: 45px">
                 <p>John</p>
             </div>
         </div>
@@ -90,7 +90,7 @@
                         <a href="#"><img src="../../images/live-video.png" alt="">Live Video</a>
                         <a href="#"><img src="../../images/photo.png" alt="">Photo/Video</a>
                         <a href="#"><img src="../../images/feeling.png" alt="">Feeling Activity</a>
-                        <button type="submit" style="font-size: 15px">Post</button>
+                        <button type="submit" style="  border: none;background-color: #1876f2;font-size: 17px;margin-top: 20px;border-radius: 10px;padding: 6px;     color: white;">Post</button>
                     </div>
                 </div>
             </form>

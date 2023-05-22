@@ -291,15 +291,20 @@
                 <div id="plist" class="people-list">
                     <form method="get" style="position:relative;">
                         <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            <span class="input-group-text"><i class="fa fa-search" style="    margin-top: 12px;
+    margin-left: -17px;
+    position: absolute;"></i></span>
                             <input name="action" value="findChat" hidden style="position: absolute;"/>
                             <input name="name" type="text" class="form-control" placeholder="Find chat..."
-                                   style="width: 80%">
+                                   style="width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);padding: 15px;">
                         </div>
                         <div class="input-group">
                             <button type="submit" hidden>Search</button>
                         </div>
-                        <a href="/chat?action=newChat" style="position: absolute; right: 8px;top: 5px;">
+                        <a href="/chat?action=newChat"
+                           style="position: absolute; right: 8px;top: 5px;
+    margin-top: 10px;
+    margin-left: 11px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-cloud-plus" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd"
@@ -407,7 +412,7 @@
                                         <div class="col-lg-6">
                                             <input type="text" name="action" value="findName" hidden>
                                             <input type="text" name="name" placeholder="Find Name to start..."
-                                                   style="width: 100%; padding: 5px;background: lightgoldenrodyellow">
+                                                   style="width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);padding: 15px;">
                                         </div>
                                     </div>
                                 </c:if>
@@ -417,7 +422,7 @@
                                             <input type="text" name="action" value="findName" hidden>
                                             <input type="text" name="name" placeholder="Find Name to start..."
                                                    value="${requestScope["name"]}"
-                                                   style="width: 100%; padding: 5px;background: lightgoldenrodyellow">
+                                                   style="width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);padding: 15px;">
                                         </div>
                                     </div>
                                 </c:if>

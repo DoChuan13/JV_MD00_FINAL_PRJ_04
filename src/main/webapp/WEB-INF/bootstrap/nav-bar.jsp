@@ -967,7 +967,7 @@
 
 </style>
 <body>
-<nav class="navbar">
+<nav class="navbar" style="height: 57px !important;">
     <div class="nav-left"><a href="/"><img class="logo" src="../../images/logo.png" alt=""></a>
         <ul class="navlogo">
             <li><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16" color="white">
@@ -991,7 +991,7 @@
 
                 <span></span></a>
             <div class="dropdown">
-                <button class="dropbtn"><img src="${sessionScope["loginUser"].getAvatar()}" alt=""></button>
+                <button class="dropbtn" style="    padding: 0px !important;"><img src="${sessionScope["loginUser"].getAvatar()}" alt=""></button>
                 <div class="dropdown-content">
                     <a href="/user"><img src="${sessionScope["loginUser"].getAvatar()}" alt=""></a>
                     <a href="/user?action=logout" class="btn btn-secondary"><p>Log out</p></a>

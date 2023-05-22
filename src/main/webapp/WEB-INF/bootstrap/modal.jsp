@@ -46,7 +46,8 @@
                 <form>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Recipient:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <input type="text" class="form-control" id="recipient-name"
+                               style="width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);padding: 15px;">
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="col-form-label">Message:</label>
