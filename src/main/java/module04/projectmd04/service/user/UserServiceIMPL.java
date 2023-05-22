@@ -235,10 +235,6 @@ public class UserServiceIMPL implements IUserService {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-//                boolean status = resultSet.getBoolean(Constant.STATUS);
-//                if (status) {
-//                    return null;
-//                }
                 user = generateUserInfo(resultSet);
             }
         } catch (SQLException e) {

@@ -91,7 +91,7 @@
                                 <div>
                                     <input id="userName-field" type='text' name='userName'
                                            style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
-                                           value='     ${sessionScope['loginUser'].getUserName()}'/></div>
+                                           value='${sessionScope['loginUser'].getUserName()}'/></div>
                             </div>
                         </div>
                         <div class="user-profile-box" style="display: block !important;">
@@ -104,7 +104,7 @@
                                 <div>
                                     <input id="name-field" type='text' name='name'
                                            style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
-                                           value='     ${sessionScope["loginUser"].getName()}'/>
+                                           value='${sessionScope["loginUser"].getName()}'/>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +118,7 @@
                                 <div>
                                     <input id="email-field" type='text' name='email'
                                            style="    width: 100%;height: 40px;border-radius: 10px;border: none;background-color: rgb(245, 242, 242);"
-                                           value='     ${sessionScope["loginUser"].getEmail()}'/>
+                                           value='${sessionScope["loginUser"].getEmail()}'/>
                                 </div>
                             </div>
                         </div>
